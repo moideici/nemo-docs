@@ -1,4 +1,4 @@
-# nemo
+# nemo-docs
 
 Point d'entrée de Nemo (révision espacée pour un élève : planning, sessions, blocage pendant les créneaux).
 Ce dépôt ne contient **pas de code** : il regroupe la charte graphique et l'architecture, et renvoie vers les dépôts qui font tourner Nemo.
@@ -12,7 +12,8 @@ Dernière mise à jour : 27/10/2026
 | Serveur + site (Cloudflare) | [moidefr/nemo-https](https://github.com/moidefr/nemo-https) | MCP, cours, planning, API, site | `master` | automatique : la CI teste puis déploie à chaque fusion |
 | App PC Windows | [moidefr/nemo-pc](https://github.com/moidefr/nemo-pc) | surveillance et blocage, sessions sur le PC, Phiby | `main` | `scripts/install.ps1` (dernier build CI) |
 | App Android | [moidefr/nemo-app](https://github.com/moidefr/nemo-app) | app téléphone | `main` | `scripts/update-app.ps1` (dernier APK construit par la CI) |
-| Charte graphique | ce dépôt | identité visuelle | `main` | n/a |
+| Charte + architecture | ce dépôt ([moidefr/nemo-docs](https://github.com/moidefr/nemo-docs)) | identité visuelle, vue d'ensemble | `main` | n/a |
+| Serveur local d'origine (historique) | [moidefr/nemo](https://github.com/moidefr/nemo) | ancien serveur MCP en local (stdio), remplacé par nemo-https depuis octobre 2026 | `main` | plus maintenu, candidat à l'archivage |
 | Délégation à Codex | [moidefr/agent-hub](https://github.com/moidefr/agent-hub) | outil `ah` : Claude Code délègue des tâches à Codex | `main` | `npm link` |
 
 Comment les briques s'articulent, comment chacune se met à jour et les règles de travail : voir [ARCHITECTURE.md](ARCHITECTURE.md).

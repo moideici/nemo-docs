@@ -31,7 +31,8 @@ Dernière mise à jour : 27/10/2026. Les détails de chaque brique sont dans le 
 | nemo-https | Node 22, Cloudflare Workers, R2 (`nemo-courses`, `nemo-class-courses`), Durable Objects | `nemo.moideici.tech` |
 | nemo-pc | C# / .NET 9, WPF, WebView2 | `%LOCALAPPDATA%\Programs\NemoPc`, démarrage avec Windows |
 | nemo-app | Kotlin, Android 9+ | téléphone de l'élève |
-| charte | Markdown, PDF, HTML | ce dépôt |
+| charte (ce dépôt, `nemo-docs`) | Markdown, PDF, HTML | GitHub `moidefr/nemo-docs` |
+| nemo (historique) | Node, serveur MCP local en stdio | plus utilisé: remplacé par nemo-https |
 
 ## Mises à jour : qui construit, qui installe
 
