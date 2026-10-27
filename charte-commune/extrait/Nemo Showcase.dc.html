@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Atkinson+Hyperlegible:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html { scroll-behavior: smooth; }
+body { margin: 0; background: oklch(98.5% 0.008 95); }
+a { color: oklch(20% 0.02 262); text-decoration: none; }
+a:hover { color: oklch(48% 0.18 262); }
+::selection { background: oklch(92% 0.17 105); color: oklch(20% 0.02 262); }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" data-nemo-root style="font-family: 'Atkinson Hyperlegible', sans-serif; color: oklch(20% 0.02 262); background: oklch(98.5% 0.008 95); overflow-x: clip;">
+
+  <canvas data-fx style="position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 90;"></canvas>
+  <div data-halo style="position: fixed; left: 0; top: 0; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: oklch(92% 0.17 105); mix-blend-mode: multiply; pointer-events: none; z-index: 80; opacity: 0;"></div>
+  <div data-progress style="position: fixed; left: 0; top: 0; right: 0; height: 6px; background: oklch(92% 0.17 105); border-bottom: 2px solid oklch(20% 0.02 262); transform-origin: left center; transform: scaleX(0); z-index: 95;"></div>
+
+  <nav data-nav style="position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 85; display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; box-shadow: 3px 3px 0 oklch(20% 0.02 262); max-width: calc(100vw - 32px); box-sizing: border-box;">
+    <a href="#top" style="flex: none; display: flex; align-items: baseline; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.04em;"><span style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%); padding: 0 2px;">nem</span><span style="display: inline-block; width: 13px; height: 13px; border-radius: 50%; background: oklch(76% 0.15 35); border: 2px solid oklch(20% 0.02 262); margin-left: 2px; box-sizing: border-box;"></span></a>
+    <div style="display: flex; gap: 2px; overflow-x: auto; font-size: 14px; font-weight: 700;">
+      <a href="#logo" style="padding: 7px 12px; border-radius: 99px; white-space: nowrap;" style-hover="background: oklch(92% 0.17 105)">Logo</a>
+      <a href="#couleurs" style="padding: 7px 12px; border-radius: 99px; white-space: nowrap;" style-hover="background: oklch(92% 0.17 105)">Couleurs</a>
+      <a href="#typo" style="padding: 7px 12px; border-radius: 99px; white-space: nowrap;" style-hover="background: oklch(92% 0.17 105)">Typo</a>
+      <a href="#composants" style="padding: 7px 12px; border-radius: 99px; white-space: nowrap;" style-hover="background: oklch(92% 0.17 105)">Composants</a>
+      <a href="#jeu" style="padding: 7px 12px; border-radius: 99px; white-space: nowrap;" style-hover="background: oklch(92% 0.17 105)">Jeu</a>
+      <a href="#app" style="padding: 7px 12px; border-radius: 99px; white-space: nowrap;" style-hover="background: oklch(92% 0.17 105)">App</a>
+      <a href="#site" style="padding: 7px 12px; border-radius: 99px; white-space: nowrap; background: oklch(48% 0.18 262); color: white;">Site</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="top" data-hero data-screen-label="Hero" style="position: relative; height: 100vh; min-height: 680px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; overflow: hidden;">
+    <div data-grid style="position: absolute; inset: 0; background-image: linear-gradient(oklch(93% 0.02 240) 1.5px, transparent 1.5px), linear-gradient(90deg, oklch(93% 0.02 240) 1.5px, transparent 1.5px); background-size: 36px 36px;"></div>
+
+    <div data-float data-depth="0.9" style="position: absolute; left: 8%; top: 24%; z-index: 3;"><div data-st style="font-weight: 700; font-size: 24px; padding: 8px 18px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(92% 0.17 105); box-shadow: 3px 3px 0 oklch(20% 0.02 262); transform: rotate(-8deg);">+80 XP</div></div>
+    <div data-float data-depth="1.3" style="position: absolute; right: 7%; top: 20%; z-index: 3;"><div data-st style="background: oklch(76% 0.15 35); border: 2.5px solid oklch(20% 0.02 262); border-radius: 18px; padding: 14px 20px; display: flex; flex-direction: column; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transform: rotate(5deg);"><span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Série</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; line-height: 1;">12 jours</span></div></div>
+    <div data-float data-depth="1.1" style="position: absolute; left: 6%; bottom: 14%; z-index: 3;"><div data-st style="width: 230px; background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transform: rotate(-4deg);"><span style="align-self: flex-start; font-size: 12px; font-weight: 700; padding: 2px 9px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 262);">Maths</span><b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px;">2x + 3 = 11</b><div style="display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 12px; background: oklch(84% 0.15 150); border: 2px solid oklch(20% 0.02 262); font-weight: 700;"><span style="width: 20px; height: 20px; border-radius: 50%; background: oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 13 9 18 20 6"></polyline></svg></span>x = 4</div></div></div>
+    <div data-float data-depth="1.6" style="position: absolute; right: 11%; bottom: 17%; z-index: 3;"><div data-st style="width: 96px; height: 96px; border-radius: 50%; background: oklch(92% 0.17 105); border: 3px solid oklch(20% 0.02 262); display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; line-height: 1; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transform: rotate(6deg);"><span style="font-size: 12px; font-weight: 800;">NIV.</span><span style="font-size: 40px; font-weight: 800;">7</span></div></div>
+    <div data-float data-depth="0.5" style="position: absolute; left: 29%; top: 13%; z-index: 3;"><div data-st style="font-family: 'DM Mono', monospace; font-size: 22px; padding: 6px 14px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 12px; background: white; transform: rotate(3deg);">04:32</div></div>
+    <div data-float data-depth="0.7" style="position: absolute; right: 29%; top: 11%; z-index: 3;"><div data-st style="font-weight: 700; font-size: 18px; padding: 6px 14px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 12px; background: oklch(84% 0.15 150); transform: rotate(-5deg);">Juste</div></div>
+    <div data-float data-depth="1.9" style="position: absolute; right: 30%; bottom: 9%; z-index: 3;"><div data-st style="width: 62px; height: 62px; border-radius: 50%; background: oklch(88% 0.07 262); border: 2.5px solid oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; transform: rotate(-8deg);">7j</div></div>
+
+    <div data-herologo style="position: relative; z-index: 2;">
+      <div style="display: flex; align-items: baseline; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(120px, 23vw, 350px); line-height: .95; letter-spacing: -0.05em;">
+        <span style="position: relative; display: inline-flex; isolation: isolate; padding: 0 .02em;">
+          <span data-hl style="position: absolute; left: 0; right: 0; top: 56%; bottom: 6%; background: oklch(92% 0.17 105); z-index: -1; transform-origin: left center;"></span>
+          <span data-letter style="display: inline-block; transition: transform .4s cubic-bezier(.34,1.56,.64,1);" style-hover="transform: translateY(-.1em) rotate(-5deg)">n</span>
+          <span data-letter style="display: inline-block; transition: transform .4s cubic-bezier(.34,1.56,.64,1);" style-hover="transform: translateY(-.1em) rotate(4deg)">e</span>
+          <span data-letter style="display: inline-block; transition: transform .4s cubic-bezier(.34,1.56,.64,1);" style-hover="transform: translateY(-.1em) rotate(-3deg)">m</span>
+        </span>
+        <span data-bubwrap style="display: inline-block; margin-left: .04em;"><span data-bubble style="display: block; width: .6em; height: .6em; border-radius: 50%; background: oklch(76% 0.15 35); border: .032em solid oklch(20% 0.02 262); box-sizing: border-box; cursor: pointer; transform-origin: 50% 100%;"></span></span>
+      </div>
+    </div>
+    <div data-tag style="position: relative; z-index: 2; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(26px, 3.6vw, 52px); letter-spacing: -0.03em; text-align: center; padding: 0 24px; text-wrap: balance;">Révise ce que tu as <span data-hsweep style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%) no-repeat; padding: 0 4px;">vraiment</span> appris.</div>
+    <div data-cue style="position: absolute; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; z-index: 2;"><span>Charte Nemo · v1</span><span style="width: 14px; height: 14px; border-radius: 50%; background: oklch(76% 0.15 35); border: 2px solid oklch(20% 0.02 262);"></span><span>Fais défiler</span></div>
+  </header>
+
+  <!-- MANIFESTE -->
+  <section data-man data-screen-label="Manifeste" style="position: relative; height: 300vh; background: oklch(20% 0.02 262);">
+    <div style="position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; gap: 36px; padding: 0 clamp(20px, 7vw, 120px); box-sizing: border-box; color: oklch(96% 0.008 95);">
+      <span style="font-family: 'DM Mono', monospace; font-size: 15px;">— Trois règles, pas une de plus</span>
+      <p data-src style="margin: 0; max-width: 1180px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(32px, 5vw, 78px); line-height: 1.1; letter-spacing: -0.03em;">Le texte est toujours à l'encre. La couleur se met derrière, jamais dans les lettres. <span data-hlc="yel">Jaune</span> pour l'XP, <span data-hlc="cor">corail</span> pour la série, <span data-hlc="grn">vert</span> quand c'est juste, <span data-hlc="pnk">rose</span> quand c'est faux, <span data-hlc="sky">bleu</span> pour agir. Coins ronds, trait franc, ombre pleine.</p>
+    </div>
+  </section>
+
+  <!-- LOGO MORPH -->
+  <section id="logo" data-morph data-screen-label="Logo" style="position: relative; height: 340vh;">
+    <div data-morphstage style="position: sticky; top: 0; height: 100vh; overflow: hidden;">
+      <div data-layer="1" style="position: absolute; inset: 0; background-color: oklch(98.5% 0.008 95); background-image: linear-gradient(oklch(93% 0.02 240) 1.5px, transparent 1.5px), linear-gradient(90deg, oklch(93% 0.02 240) 1.5px, transparent 1.5px); background-size: 36px 36px; color: oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center;">
+        <span style="position: absolute; top: 92px; left: clamp(20px, 5vw, 72px); font-family: 'DM Mono', monospace; font-size: 15px;">01 — Logo</span>
+        <div data-mlogo style="display: flex; align-items: baseline; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(110px, 20vw, 300px); line-height: .95; letter-spacing: -0.05em;"><span style="background: linear-gradient(transparent 56%, oklch(92% 0.17 105) 56%, oklch(92% 0.17 105) 94%, transparent 94%); padding: 0 .02em;">nem</span><span style="display: inline-block; margin-left: .04em;"><span data-mbub data-lbub style="display: block; width: .6em; height: .6em; border-radius: 50%; background: oklch(76% 0.15 35); border: .032em solid oklch(20% 0.02 262); box-sizing: border-box;"></span></span></div>
+        <div style="position: absolute; left: clamp(20px, 5vw, 72px); right: clamp(20px, 5vw, 72px); bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px;">1 / 3</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.02em;">Principal · sur papier</span></div>
+          <span style="max-width: 360px; font-size: 17px; line-height: 1.5;">La bulle remplace le « o » : c'est la marque à elle seule.</span>
+        </div>
+      </div>
+      <div data-layer="2" style="position: absolute; inset: 0; background: oklch(20% 0.02 262); color: oklch(98.5% 0.008 95); display: flex; align-items: center; justify-content: center; clip-path: circle(0px at 50% 50%);">
+        <span style="position: absolute; top: 92px; left: clamp(20px, 5vw, 72px); font-family: 'DM Mono', monospace; font-size: 15px;">01 — Logo</span>
+        <div data-mlogo style="display: flex; align-items: baseline; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(110px, 20vw, 300px); line-height: .95; letter-spacing: -0.05em;"><span style="background: linear-gradient(transparent 56%, oklch(48% 0.18 262) 56%, oklch(48% 0.18 262) 94%, transparent 94%); padding: 0 .02em;">nem</span><span style="display: inline-block; margin-left: .04em;"><span data-mbub style="display: block; width: .6em; height: .6em; border-radius: 50%; background: oklch(76% 0.15 35); border: .032em solid oklch(98.5% 0.008 95); box-sizing: border-box;"></span></span></div>
+        <div style="position: absolute; left: clamp(20px, 5vw, 72px); right: clamp(20px, 5vw, 72px); bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px;">2 / 3</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.02em;">Sur encre · mode sombre</span></div>
+          <span style="max-width: 360px; font-size: 17px; line-height: 1.5;">En sombre, le surligneur passe au bleu Nemo et le trait à la craie.</span>
+        </div>
+      </div>
+      <div data-layer="3" style="position: absolute; inset: 0; background: oklch(48% 0.18 262); color: white; display: flex; align-items: center; justify-content: center; clip-path: circle(0px at 50% 50%);">
+        <span style="position: absolute; top: 92px; left: clamp(20px, 5vw, 72px); font-family: 'DM Mono', monospace; font-size: 15px;">01 — Logo</span>
+        <div data-mlogo style="display: flex; align-items: baseline; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(110px, 20vw, 300px); line-height: .95; letter-spacing: -0.05em;"><span style="padding: 0 .02em;">nem</span><span style="display: inline-block; margin-left: .04em;"><span data-mbub style="display: block; width: .6em; height: .6em; border-radius: 50%; background: oklch(92% 0.17 105); border: .032em solid oklch(20% 0.02 262); box-sizing: border-box;"></span></span></div>
+        <div style="position: absolute; left: clamp(20px, 5vw, 72px); right: clamp(20px, 5vw, 72px); bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px;">3 / 3</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.02em;">Sur bleu · sans surlignage</span></div>
+          <span style="max-width: 360px; font-size: 17px; line-height: 1.5;">Sur fond d'action, pas de surligneur : la bulle passe au jaune.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ICÔNE -->
+  <section data-screen-label="Icône" style="padding: 140px clamp(20px, 5vw, 72px); background-image: linear-gradient(oklch(93% 0.02 240) 1.5px, transparent 1.5px), linear-gradient(90deg, oklch(93% 0.02 240) 1.5px, transparent 1.5px); background-size: 36px 36px; border-top: 2.5px solid oklch(20% 0.02 262);">
+    <div style="max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 64px; align-items: center;">
+      <div data-tiltzone style="display: flex; justify-content: center; align-items: center; padding: 40px 0;">
+        <div data-tilt style="width: 260px; height: 260px; border-radius: 70px; background: oklch(92% 0.17 105); border: 4px solid oklch(20% 0.02 262); box-shadow: 8px 8px 0 oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center; box-sizing: border-box; transform-style: preserve-3d; cursor: pointer;" data-burst>
+          <span style="width: 130px; height: 130px; border-radius: 50%; background: oklch(76% 0.15 35); border: 4px solid oklch(20% 0.02 262); box-sizing: border-box; transform: translateZ(70px);"></span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div data-r="up" style="display: flex; align-items: center; gap: 12px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; padding: 3px 10px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: white;">01</span><span style="font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Icône</span></div>
+        <h2 data-r="up" data-d="80" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(44px, 6.5vw, 100px); line-height: .95; letter-spacing: -0.045em;">La bulle, <span data-sweep data-d="500" style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%) no-repeat; padding: 0 6px;">seule.</span></h2>
+        <p data-r="up" data-d="160" style="margin: 0; font-size: 19px; line-height: 1.55; max-width: 520px;">Icône d'app, favicon, notifications : la bulle corail suffit à signer Nemo.</p>
+        <div style="display: flex; align-items: flex-end; gap: 28px; flex-wrap: wrap;">
+          <div data-r="pop" data-d="200" style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><div style="width: 88px; height: 88px; border-radius: 24px; background: oklch(92% 0.17 105); border: 2.5px solid oklch(20% 0.02 262); box-shadow: 3px 3px 0 oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center; box-sizing: border-box;"><span style="width: 44px; height: 44px; border-radius: 50%; background: oklch(76% 0.15 35); border: 2.5px solid oklch(20% 0.02 262); box-sizing: border-box;"></span></div><span style="font-family: 'DM Mono', monospace; font-size: 13px;">88</span></div>
+          <div data-r="pop" data-d="320" style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><div style="width: 32px; height: 32px; border-radius: 9px; background: oklch(92% 0.17 105); border: 2px solid oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center; box-sizing: border-box;"><span style="width: 15px; height: 15px; border-radius: 50%; background: oklch(76% 0.15 35); border: 2px solid oklch(20% 0.02 262); box-sizing: border-box;"></span></div><span style="font-family: 'DM Mono', monospace; font-size: 13px;">32</span></div>
+          <div data-r="pop" data-d="440" style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><div style="width: 18px; height: 18px; border-radius: 5px; background: oklch(76% 0.15 35); border: 1.5px solid oklch(20% 0.02 262); box-sizing: border-box;"></div><span style="font-family: 'DM Mono', monospace; font-size: 13px;">16</span></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+          <div data-r="up" data-d="250" style="background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px;"><b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px;">Taille mini</b><span style="font-size: 15px; line-height: 1.45;">80 px de large pour le logotype, 16 px pour la bulle seule.</span></div>
+          <div data-r="up" data-d="350" style="background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px;"><b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px;">À éviter</b><span style="font-size: 15px; line-height: 1.45;">Surligner en corail, mettre le logo en couleur, ajouter un dégradé.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COULEURS -->
+  <section id="couleurs" data-screen-label="Couleurs" style="padding: 140px clamp(20px, 5vw, 72px) 0; border-top: 2.5px solid oklch(20% 0.02 262);">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px;">
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <div data-r="up" style="display: flex; align-items: center; gap: 12px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; padding: 3px 10px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: white;">02</span><span style="font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Couleurs</span></div>
+        <h2 data-r="up" data-d="80" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(44px, 7vw, 112px); line-height: .95; letter-spacing: -0.045em; text-wrap: balance;">Cinq fluos, <span data-sweep data-d="500" style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%) no-repeat; padding: 0 6px;">un sens</span> chacun.</h2>
+        <p data-r="up" data-d="160" style="margin: 0; font-size: 19px; line-height: 1.55;">Identiques en clair et en sombre. Texte toujours à l'encre dessus. Survole pour ouvrir.</p>
+      </div>
+      <div style="display: flex; gap: 12px; height: 400px; flex-wrap: wrap;">
+        <div data-r="drop" data-d="0" style="flex: 1 1 150px; min-width: 0; background: oklch(92% 0.17 105); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transition: flex-grow .7s cubic-bezier(.16,1,.3,1); box-sizing: border-box;" style-hover="flex-grow: 3"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">92 0.17 105</span><div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.03em; line-height: 1;">Jaune</span><span style="font-size: 15px; white-space: nowrap;">XP, niveau, surlignage</span><span style="align-self: flex-start; font-weight: 700; padding: 4px 11px; background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; white-space: nowrap;">+80 XP</span></div></div>
+        <div data-r="drop" data-d="90" style="flex: 1 1 150px; min-width: 0; background: oklch(76% 0.15 35); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transition: flex-grow .7s cubic-bezier(.16,1,.3,1); box-sizing: border-box;" style-hover="flex-grow: 3"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">76 0.15 35</span><div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.03em; line-height: 1;">Corail</span><span style="font-size: 15px; white-space: nowrap;">série, bulle, énergie</span><span style="align-self: flex-start; font-weight: 700; padding: 4px 11px; background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; white-space: nowrap;">12 jours</span></div></div>
+        <div data-r="drop" data-d="180" style="flex: 1 1 150px; min-width: 0; background: oklch(84% 0.15 150); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transition: flex-grow .7s cubic-bezier(.16,1,.3,1); box-sizing: border-box;" style-hover="flex-grow: 3"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">84 0.15 150</span><div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.03em; line-height: 1;">Vert</span><span style="font-size: 15px; white-space: nowrap;">bonne réponse, connecté</span><span style="align-self: flex-start; font-weight: 700; padding: 4px 11px; background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; white-space: nowrap;">Juste</span></div></div>
+        <div data-r="drop" data-d="270" style="flex: 1 1 150px; min-width: 0; background: oklch(80% 0.13 355); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transition: flex-grow .7s cubic-bezier(.16,1,.3,1); box-sizing: border-box;" style-hover="flex-grow: 3"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">80 0.13 355</span><div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.03em; line-height: 1;">Rose</span><span style="font-size: 15px; white-space: nowrap;">erreur, à revoir</span><span style="align-self: flex-start; font-weight: 700; padding: 4px 11px; background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; white-space: nowrap; text-decoration: line-through;">Faux</span></div></div>
+        <div data-r="drop" data-d="360" style="flex: 1 1 150px; min-width: 0; background: oklch(88% 0.07 262); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transition: flex-grow .7s cubic-bezier(.16,1,.3,1); box-sizing: border-box;" style-hover="flex-grow: 3"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">88 0.07 262</span><div style="display: flex; flex-direction: column; gap: 8px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.03em; line-height: 1;">Ciel</span><span style="font-size: 15px; white-space: nowrap;">sélection, focus</span><span style="align-self: flex-start; font-weight: 700; padding: 4px 11px; background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; white-space: nowrap;">Choisi</span></div></div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 20px;">
+        <div data-r="left" style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Base · clair</span>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;">
+            <div data-r="pop" data-d="150" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;"><span style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid oklch(20% 0.02 262); background: oklch(98.5% 0.008 95); box-sizing: border-box;"></span><b>Papier</b><span style="font-family: 'DM Mono', monospace; font-size: 12px;">98.5 0.008 95</span></div>
+            <div data-r="pop" data-d="230" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;"><span style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid oklch(20% 0.02 262); background: white; box-sizing: border-box;"></span><b>Feuille</b><span style="font-family: 'DM Mono', monospace; font-size: 12px;">100 0 0</span></div>
+            <div data-r="pop" data-d="310" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;"><span style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid oklch(20% 0.02 262); background: oklch(20% 0.02 262); box-sizing: border-box;"></span><b>Encre</b><span style="font-family: 'DM Mono', monospace; font-size: 12px;">20 0.02 262</span></div>
+            <div data-r="pop" data-d="390" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;"><span style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid oklch(20% 0.02 262); background: oklch(48% 0.18 262); box-sizing: border-box;"></span><b>Bleu Nemo</b><span style="font-family: 'DM Mono', monospace; font-size: 12px;">48 0.18 262</span></div>
+          </div>
+        </div>
+        <div data-r="right" style="background: oklch(19% 0.025 262); color: oklch(96% 0.008 95); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Base · sombre</span>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;">
+            <div data-r="pop" data-d="150" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;"><span style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid oklch(42% 0.03 262); background: oklch(19% 0.025 262); box-sizing: border-box;"></span><b>Nuit</b><span style="font-family: 'DM Mono', monospace; font-size: 12px;">19 0.025 262</span></div>
+            <div data-r="pop" data-d="230" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;"><span style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid oklch(42% 0.03 262); background: oklch(25% 0.03 262); box-sizing: border-box;"></span><b>Ardoise</b><span style="font-family: 'DM Mono', monospace; font-size: 12px;">25 0.03 262</span></div>
+            <div data-r="pop" data-d="310" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;"><span style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid oklch(42% 0.03 262); background: oklch(96% 0.008 95); box-sizing: border-box;"></span><b>Craie</b><span style="font-family: 'DM Mono', monospace; font-size: 12px;">96 0.008 95</span></div>
+            <div data-r="pop" data-d="390" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;"><span style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid oklch(42% 0.03 262); background: oklch(74% 0.13 262); box-sizing: border-box;"></span><b>Bleu nuit</b><span style="font-family: 'DM Mono', monospace; font-size: 12px;">74 0.13 262</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 80px; border-top: 2.5px solid oklch(20% 0.02 262); border-bottom: 2.5px solid oklch(20% 0.02 262); background: white; overflow: hidden; padding: 22px 0;">
+      <div data-marquee style="display: flex; gap: 14px; width: max-content; font-size: 22px; font-weight: 700; will-change: transform;">
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 262); white-space: nowrap;">Maths</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 35); white-space: nowrap;">Français</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 150); white-space: nowrap;">SVT</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 300); white-space: nowrap;">Histoire-Géo</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(90% 0.08 100); white-space: nowrap;">Anglais</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 200); white-space: nowrap;">Physique-Chimie</span>
+        <span style="padding: 8px 20px; white-space: nowrap; font-family: 'DM Mono', monospace; font-weight: 400; font-size: 18px; align-self: center;">· pastels des fluos, même clarté ·</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 262); white-space: nowrap;">Maths</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 35); white-space: nowrap;">Français</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 150); white-space: nowrap;">SVT</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 300); white-space: nowrap;">Histoire-Géo</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(90% 0.08 100); white-space: nowrap;">Anglais</span>
+        <span style="padding: 8px 20px; border: 2.5px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 200); white-space: nowrap;">Physique-Chimie</span>
+        <span style="padding: 8px 20px; white-space: nowrap; font-family: 'DM Mono', monospace; font-weight: 400; font-size: 18px; align-self: center;">· pastels des fluos, même clarté ·</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPO -->
+  <section id="typo" data-screen-label="Typographie" style="padding: 140px clamp(20px, 5vw, 72px);">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px;">
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <div data-r="up" style="display: flex; align-items: center; gap: 12px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; padding: 3px 10px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: white;">03</span><span style="font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Typographie · approche la souris</span></div>
+      </div>
+      <div data-prox style="font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(64px, 14vw, 220px); line-height: 1; letter-spacing: -0.03em; font-variation-settings: 'wght' 300, 'wdth' 85, 'opsz' 96; user-select: none;"><span data-src>Révise mieux.</span></div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px;">
+        <div data-r="up" data-d="0" style="background: oklch(92% 0.17 105); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 6px; box-shadow: 4px 4px 0 oklch(20% 0.02 262);"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 80px; line-height: 1; letter-spacing: -0.03em;">Aa</span><b style="font-size: 18px;">Bricolage Grotesque</b><span style="font-size: 15px; line-height: 1.45;">Titres, logo, chiffres-clés · 700 / 800. Expressive, un peu « faite main ».</span></div>
+        <div data-r="up" data-d="120" style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 80px; line-height: 1; font-weight: 700;">Il1 0O</span><b style="font-size: 18px;">Atkinson Hyperlegible</b><span style="font-size: 15px; line-height: 1.45;">Texte, boutons, réponses · 400 / 700. Chaque lettre se distingue, utile pour les formules.</span></div>
+        <div data-r="up" data-d="240" style="background: oklch(20% 0.02 262); color: oklch(96% 0.008 95); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 6px;"><span data-chrono style="font-family: 'DM Mono', monospace; font-size: 80px; line-height: 1; letter-spacing: -0.04em;">04:32</span><b style="font-size: 18px;">DM Mono</b><span style="font-size: 15px; line-height: 1.45;">Chrono, scores, horaires. Les chiffres ne bougent pas quand ils changent.</span></div>
+      </div>
+      <div style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: clamp(20px, 3vw, 32px); display: flex; flex-direction: column; gap: 16px;">
+        <div data-r="left" data-d="0" style="display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding-bottom: 14px; border-bottom: 2px dashed oklch(88% 0.02 262);"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">Titre 1<br>48 / 32 sp</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -0.03em;">Révise ce que tu as <span data-sweep data-d="400" style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%) no-repeat; padding: 0 3px;">vraiment</span> appris.</span></div>
+        <div data-r="left" data-d="90" style="display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding-bottom: 14px; border-bottom: 2px dashed oklch(88% 0.02 262);"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">Titre 2<br>28 / 22 sp</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.02em;">Prochaine session</span></div>
+        <div data-r="left" data-d="180" style="display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding-bottom: 14px; border-bottom: 2px dashed oklch(88% 0.02 262);"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">Question<br>20 / 18 sp</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 20px;">Quelle est la valeur de x dans 2x + 3 = 11 ?</span></div>
+        <div data-r="left" data-d="270" style="display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding-bottom: 14px; border-bottom: 2px dashed oklch(88% 0.02 262);"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">Texte<br>16 / 16 sp</span><span style="font-size: 16px; line-height: 1.55;">Nemo génère des exercices à partir de tes vrais cours et cale les sessions dans ton agenda EcoleDirecte.</span></div>
+        <div data-r="left" data-d="360" style="display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline;"><span style="font-family: 'DM Mono', monospace; font-size: 13px;">Légende<br>12 caps</span><span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Notions à revoir · Maths</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPOSANTS -->
+  <section id="composants" data-screen-label="Composants" style="padding: 140px clamp(20px, 5vw, 72px); background-image: linear-gradient(oklch(93% 0.02 240) 1.5px, transparent 1.5px), linear-gradient(90deg, oklch(93% 0.02 240) 1.5px, transparent 1.5px); background-size: 36px 36px; border-top: 2.5px solid oklch(20% 0.02 262);">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px;">
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <div data-r="up" style="display: flex; align-items: center; gap: 12px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; padding: 3px 10px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: white;">04</span><span style="font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Composants</span></div>
+        <h2 data-r="up" data-d="80" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(44px, 7vw, 112px); line-height: .95; letter-spacing: -0.045em; text-wrap: balance;">Rond, franc, <span data-sweep data-d="500" style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%) no-repeat; padding: 0 6px;">cliquable.</span></h2>
+        <p data-r="up" data-d="160" style="margin: 0; font-size: 19px; line-height: 1.55;">Tout ce bloc répond : appuie, réponds, retourne.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; align-items: start;">
+
+        <div data-r="up" data-d="0" style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Boutons</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;"><button data-burst style="font: inherit; font-weight: 700; font-size: 17px; padding: 14px 22px; border-radius: 14px; border: 2px solid oklch(20% 0.02 262); background: oklch(48% 0.18 262); color: white; box-shadow: 3px 3px 0 oklch(20% 0.02 262); cursor: pointer; transition: transform .12s, box-shadow .12s;" style-hover="transform: translate(-2px, -2px); box-shadow: 5px 5px 0 oklch(20% 0.02 262)" style-active="transform: translate(3px, 3px); box-shadow: 0 0 0 oklch(20% 0.02 262)">Réviser maintenant</button><span style="font-size: 13px;">Principal</span></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;"><button data-burst style="font: inherit; font-weight: 700; font-size: 17px; padding: 14px 22px; border-radius: 14px; border: 2px solid oklch(20% 0.02 262); background: oklch(92% 0.17 105); color: oklch(20% 0.02 262); box-shadow: 3px 3px 0 oklch(20% 0.02 262); cursor: pointer; transition: transform .12s, box-shadow .12s;" style-hover="transform: translate(-2px, -2px); box-shadow: 5px 5px 0 oklch(20% 0.02 262)" style-active="transform: translate(3px, 3px); box-shadow: 0 0 0 oklch(20% 0.02 262)">Session complète</button><span style="font-size: 13px;">Récompense</span></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;"><button style="font: inherit; font-weight: 700; font-size: 17px; padding: 14px 22px; border-radius: 14px; border: 2px solid oklch(20% 0.02 262); background: white; color: oklch(20% 0.02 262); cursor: pointer; transition: background .2s;" style-hover="background: oklch(88% 0.07 262)">Plus tard</button><span style="font-size: 13px;">Secondaire</span></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;"><button style="font: inherit; font-weight: 700; font-size: 17px; padding: 14px 22px; border-radius: 14px; border: 2px dashed oklch(70% 0.02 262); background: transparent; color: oklch(55% 0.02 262); cursor: not-allowed;">Hors ligne</button><span style="font-size: 13px;">Désactivé</span></div>
+        </div>
+
+        <div data-qcm data-r="up" data-d="100" style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px; font-weight: 700; padding: 2px 9px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 262);">Maths</span><span style="font-family: 'DM Mono', monospace; font-size: 13px;">04/10</span></div>
+          <b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 21px; line-height: 1.2;">Quelle est la valeur de x dans 2x + 3 = 11 ?</b>
+          <button data-opt data-l="A" style="font: inherit; text-align: left; color: oklch(20% 0.02 262); display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 14px; background: white; border: 2px solid oklch(20% 0.02 262); font-size: 17px; cursor: pointer; transition: opacity .3s, box-shadow .15s;" style-hover="box-shadow: 3px 3px 0 oklch(20% 0.02 262)"><span data-pas style="flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; box-sizing: border-box;">A</span><span data-txt>x = 7</span></button>
+          <button data-opt data-l="B" data-ok="1" style="font: inherit; text-align: left; color: oklch(20% 0.02 262); display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 14px; background: white; border: 2px solid oklch(20% 0.02 262); font-size: 17px; cursor: pointer; transition: opacity .3s, box-shadow .15s;" style-hover="box-shadow: 3px 3px 0 oklch(20% 0.02 262)"><span data-pas style="flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; box-sizing: border-box;">B</span><span data-txt>x = 4</span></button>
+          <button data-opt data-l="C" style="font: inherit; text-align: left; color: oklch(20% 0.02 262); display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 14px; background: white; border: 2px solid oklch(20% 0.02 262); font-size: 17px; cursor: pointer; transition: opacity .3s, box-shadow .15s;" style-hover="box-shadow: 3px 3px 0 oklch(20% 0.02 262)"><span data-pas style="flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; box-sizing: border-box;">C</span><span data-txt>x = 14</span></button>
+          <div data-qexp style="display: none; background: white; border: 2px dashed oklch(20% 0.02 262); border-radius: 12px; padding: 10px 12px; font-size: 15px; line-height: 1.45;">2x = 11 − 3 = 8, donc <span style="background: oklch(92% 0.17 105); padding: 0 3px; font-weight: 700;">x = 4</span>.</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 34px;"><span data-qxp style="visibility: hidden; font-size: 14px; font-weight: 700; padding: 4px 11px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(92% 0.17 105); transform: rotate(-2deg);">+10 XP</span><button data-qreset style="font: inherit; font-size: 14px; font-weight: 700; padding: 6px 12px; border-radius: 10px; border: 2px solid oklch(20% 0.02 262); background: white; color: oklch(20% 0.02 262); cursor: pointer;">Rejouer</button></div>
+        </div>
+
+        <div data-r="up" data-d="200" style="display: flex; flex-direction: column; gap: 20px;">
+          <div data-flip style="position: relative; height: 230px; perspective: 1200px; cursor: pointer;">
+            <div style="position: absolute; inset: 12px 0 0 12px; background: oklch(20% 0.02 262); border-radius: 20px;"></div>
+            <div data-flipi style="position: absolute; inset: 0 12px 12px 0; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.34,1.35,.64,1);">
+              <div style="position: absolute; inset: 0; backface-visibility: hidden; background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Flashcard · recto</span>
+                <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.02em;">Photosynthèse</span>
+                <span style="font-size: 14px;">Touche pour retourner</span>
+              </div>
+              <div style="position: absolute; inset: 0; backface-visibility: hidden; transform: rotateY(180deg); background: oklch(76% 0.15 35); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Verso · SVT</span>
+                <span style="font-size: 18px; line-height: 1.45; font-weight: 700;">La plante fabrique son sucre avec la lumière, l'eau et le CO₂, et rejette de l'oxygène.</span>
+                <span style="font-size: 14px;">Touche pour revenir</span>
+              </div>
+            </div>
+          </div>
+          <div data-on="type" style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Texte à trous</span><button data-treplay style="font: inherit; font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 8px; border: 2px solid oklch(20% 0.02 262); background: white; color: oklch(20% 0.02 262); cursor: pointer;">Rejouer</button></div>
+            <p style="margin: 0; font-size: 18px; line-height: 2.1;">Le passé composé se forme avec l'auxiliaire <span style="display: inline-block; min-width: 70px; padding: 0 8px; border-bottom: 2.5px solid oklch(48% 0.18 262); background: oklch(88% 0.07 262); border-radius: 6px 6px 0 0; font-weight: 700; line-height: 1.6;">avoir</span> ou <span data-blank style="display: inline-flex; align-items: center; min-width: 70px; height: 1.6em; vertical-align: -0.35em; padding: 0 8px; border-bottom: 2.5px solid oklch(20% 0.02 262); border-radius: 6px 6px 0 0; font-weight: 700; box-sizing: border-box; transition: background .3s, border-color .3s;"><span data-tt></span><span data-caret style="width: 2px; height: 1.05em; background: oklch(20% 0.02 262); margin-left: 1px;"></span></span> suivi du participe passé.</p>
+          </div>
+        </div>
+
+        <div data-r="up" data-d="0" style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px;"><span style="padding: 3px 9px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 262); font-size: 12px; font-weight: 700;">Maths</span><div style="display: flex; flex-direction: column;"><b style="font-size: 17px;">Fractions</b><span style="font-size: 14px;">QCM · 10 questions</span></div></div>
+          <span style="font-family: 'DM Mono', monospace; font-size: 15px; padding: 3px 9px; border: 2px solid oklch(20% 0.02 262); border-radius: 8px; background: oklch(84% 0.15 150);">9/10</span>
+        </div>
+        <div data-r="up" data-d="100" style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; font-weight: 700;">Jeton d'accès</label>
+          <input value="nm_4f2a…" style="font-family: 'DM Mono', monospace; font-size: 15px; padding: 10px 12px; border: 2px solid oklch(20% 0.02 262); border-radius: 10px; outline: none; color: oklch(20% 0.02 262); transition: box-shadow .2s, border-color .2s;" style-focus="border-color: oklch(48% 0.18 262); box-shadow: 0 0 0 4px oklch(88% 0.07 262)">
+        </div>
+        <div data-r="up" data-d="200" style="background: white; border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+          <div style="display: flex; flex-direction: column;"><b style="font-size: 16px;">Blocage du téléphone</b><span style="font-size: 13px;">Aux heures du planning</span></div>
+          <button data-toggle aria-label="Blocage du téléphone" style="flex: none; width: 56px; height: 32px; border-radius: 99px; background: oklch(48% 0.18 262); border: 2px solid oklch(20% 0.02 262); position: relative; box-sizing: border-box; cursor: pointer; padding: 0; transition: background .3s;"><span data-knob style="position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: white; border: 2px solid oklch(20% 0.02 262); box-sizing: border-box; transform: translateX(24px); transition: transform .5s cubic-bezier(.34,1.56,.64,1);"></span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMIFICATION -->
+  <section id="jeu" data-screen-label="Gamification" style="padding: 140px clamp(20px, 5vw, 72px); background: oklch(19% 0.025 262); color: oklch(96% 0.008 95);">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px;">
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <div data-r="up" style="display: flex; align-items: center; gap: 12px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; padding: 3px 10px; border: 2px solid oklch(96% 0.008 95); border-radius: 99px; background: oklch(25% 0.03 262);">05</span><span style="font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">Gamification</span></div>
+        <h2 data-r="up" data-d="80" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(44px, 7vw, 112px); line-height: .95; letter-spacing: -0.045em; text-wrap: balance;">Chaque session <span data-sweep data-d="500" style="background: linear-gradient(transparent 58%, oklch(48% 0.18 262) 58%, oklch(48% 0.18 262) 92%, transparent 92%) no-repeat; padding: 0 6px;">compte.</span></h2>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px;">
+        <div data-on="xp" data-r="up" style="grid-column: 1 / -1; background: oklch(25% 0.03 262); border: 2px solid oklch(42% 0.03 262); border-radius: 24px; padding: clamp(20px, 3vw, 36px); display: flex; align-items: center; gap: clamp(20px, 3vw, 44px); flex-wrap: wrap;">
+          <div data-lvlbadge style="flex: none; width: 132px; height: 132px; border-radius: 50%; background: oklch(92% 0.17 105); color: oklch(20% 0.02 262); border: 3px solid oklch(96% 0.008 95); display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; line-height: 1; box-shadow: 5px 5px 0 oklch(76% 0.15 35);"><span style="font-size: 16px; font-weight: 800;">NIV.</span><span data-lvl style="font-size: 62px; font-weight: 800;">7</span></div>
+          <div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;"><b data-lvlname style="font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(32px, 4vw, 54px); letter-spacing: -0.03em;">Plongeur</b><span style="font-family: 'DM Mono', monospace; font-size: 19px;"><span data-xpnum>640</span> / <span data-xpmax>900</span> XP</span></div>
+            <div style="height: 34px; border: 2.5px solid oklch(96% 0.008 95); border-radius: 99px; overflow: hidden; background: oklch(19% 0.025 262);"><div data-xpbar style="width: 71%; height: 100%; background: repeating-linear-gradient(-45deg, oklch(92% 0.17 105) 0 8px, oklch(85% 0.17 105) 8px 16px); border-right: 2.5px solid oklch(96% 0.008 95); border-radius: 99px; box-sizing: border-box; transition: width 1s cubic-bezier(.16,1,.3,1);"></div></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;"><span data-xpsub style="font-size: 17px;">Encore 260 XP pour « Explorateur »</span><button data-levelup style="font: inherit; font-weight: 700; font-size: 17px; padding: 12px 20px; border-radius: 14px; border: 2px solid oklch(96% 0.008 95); background: oklch(74% 0.13 262); color: oklch(19% 0.025 262); box-shadow: 3px 3px 0 oklch(76% 0.15 35); cursor: pointer; transition: transform .12s, box-shadow .12s;" style-active="transform: translate(3px, 3px); box-shadow: 0 0 0 oklch(76% 0.15 35)">Gagner 260 XP</button></div>
+          </div>
+        </div>
+        <div data-on="dots" data-r="up" data-d="0" style="background: oklch(76% 0.15 35); color: oklch(20% 0.02 262); border: 2px solid oklch(96% 0.008 95); border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 6px; box-shadow: 4px 4px 0 oklch(96% 0.008 95);">
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Série</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 64px; line-height: 1; letter-spacing: -0.03em;"><span data-count="12" data-dur="1600">12</span> jours</span>
+          <div style="display: grid; grid-template-columns: repeat(7, 22px); gap: 8px; margin-top: 12px; font-size: 12px; font-weight: 700; text-align: center;">
+            <span data-dot style="width: 22px; height: 22px; border-radius: 50%; background: oklch(20% 0.02 262);"></span><span data-dot style="width: 22px; height: 22px; border-radius: 50%; background: oklch(20% 0.02 262);"></span><span data-dot style="width: 22px; height: 22px; border-radius: 50%; background: oklch(20% 0.02 262);"></span><span data-dot style="width: 22px; height: 22px; border-radius: 50%; background: oklch(20% 0.02 262);"></span><span data-dot style="width: 22px; height: 22px; border-radius: 50%; background: oklch(20% 0.02 262);"></span><span data-dot data-today style="width: 22px; height: 22px; border-radius: 50%; background: white; border: 2.5px solid oklch(20% 0.02 262); box-sizing: border-box;"></span><span data-dot style="width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid oklch(20% 0.02 262); box-sizing: border-box;"></span>
+            <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+          </div>
+        </div>
+        <div style="background: oklch(25% 0.03 262); border: 2px solid oklch(42% 0.03 262); border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Badges</span>
+          <div style="display: flex; gap: 12px;">
+            <span data-r="spin" data-d="100" style="width: 72px; height: 72px; border-radius: 50%; background: oklch(84% 0.15 150); color: oklch(20% 0.02 262); border: 2.5px solid oklch(96% 0.008 95); display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px;">10</span>
+            <span data-r="spin" data-d="250" style="width: 72px; height: 72px; border-radius: 50%; background: oklch(88% 0.07 262); color: oklch(20% 0.02 262); border: 2.5px solid oklch(96% 0.008 95); display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px;">7j</span>
+            <span data-r="spin" data-d="400" style="width: 72px; height: 72px; border-radius: 50%; border: 2.5px dashed oklch(55% 0.03 262); display: flex; align-items: center; justify-content: center; font-size: 24px; color: oklch(70% 0.03 262); box-sizing: border-box;">?</span>
+          </div>
+          <span style="font-size: 15px;">Toujours une bulle : la forme du logo.</span>
+        </div>
+        <div style="background: oklch(25% 0.03 262); border: 2px solid oklch(42% 0.03 262); border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Fin de session</span>
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 76px; line-height: 1; letter-spacing: -0.04em;"><span data-count="8" data-dur="1200">8</span>/10</span>
+          <span data-r="stamp" data-d="700" style="font-size: 20px; font-weight: 700; padding: 5px 14px; border-radius: 10px; background: oklch(92% 0.17 105); color: oklch(20% 0.02 262); border: 2.5px solid oklch(96% 0.008 95); transform: rotate(-4deg);">+80 XP</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app" data-hpin data-screen-label="App Android" style="position: relative; height: 420vh; background-image: linear-gradient(oklch(93% 0.02 240) 1.5px, transparent 1.5px), linear-gradient(90deg, oklch(93% 0.02 240) 1.5px, transparent 1.5px); background-size: 36px 36px;">
+    <div data-hstage style="position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
+      <div style="padding: 92px clamp(20px, 5vw, 72px) 0; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 12px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; padding: 3px 10px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: white;">06</span><span style="font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">App Android</span></div>
+          <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(36px, 5vw, 72px); line-height: .95; letter-spacing: -0.045em;">Dans la poche.</h2>
+        </div>
+        <span data-hcount style="font-family: 'DM Mono', monospace; font-size: 22px; padding: 4px 12px; border: 2px solid oklch(20% 0.02 262); border-radius: 10px; background: white;">01 / 04</span>
+      </div>
+      <div style="flex: 1; display: flex; align-items: center; min-height: 0;">
+        <div data-track style="position: relative; display: flex; gap: 90px; align-items: center; padding: 0 calc(50vw - 135px); width: max-content; will-change: transform;">
+
+          <div data-phone style="flex: none; display: flex; flex-direction: column; gap: 12px; align-items: center;">
+            <div style="width: 270px; height: 570px; border-radius: 38px; background: oklch(20% 0.02 262); padding: 9px; box-sizing: border-box; box-shadow: 8px 8px 0 oklch(76% 0.15 35);">
+              <div style="height: 100%; border-radius: 30px; background-color: oklch(98.5% 0.008 95); background-image: linear-gradient(oklch(93% 0.02 240) 1px, transparent 1px), linear-gradient(90deg, oklch(93% 0.02 240) 1px, transparent 1px); background-size: 20px 20px; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="padding: 24px 16px 14px; display: flex; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; flex-direction: column;"><span style="font-size: 12px;">Mercredi 1 oct.</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -0.02em;">Salut Léo</span></div>
+                  <span style="font-size: 13px; font-weight: 700; padding: 5px 10px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(76% 0.15 35);">12 j</span>
+                </div>
+                <div style="padding: 0 14px; display: flex; flex-direction: column; gap: 12px; flex: 1;">
+                  <div style="background: oklch(48% 0.18 262); color: white; border: 2px solid oklch(20% 0.02 262); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 6px; box-shadow: 3px 3px 0 oklch(20% 0.02 262);">
+                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;">Prochaine session</span>
+                    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px;">Maths · <span style="font-family: 'DM Mono', monospace; font-weight: 500; font-size: 20px;">17:30</span></span>
+                    <span style="font-size: 13px;">45 min · Fractions, équations</span>
+                    <button style="margin-top: 8px; font: inherit; font-weight: 700; font-size: 15px; padding: 10px; border-radius: 12px; border: 2px solid oklch(20% 0.02 262); background: oklch(92% 0.17 105); color: oklch(20% 0.02 262);">Commencer</button>
+                  </div>
+                  <div style="background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;"><b style="font-size: 15px;">6 notions à revoir</b><span style="font-size: 12px; font-weight: 700; padding: 1px 6px; background: oklch(92% 0.17 105); border-radius: 4px;">+60 XP</span></div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 262);">Maths ×3</span><span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 35);">Français ×2</span><span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 150);">SVT</span></div>
+                  </div>
+                  <div style="background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 18px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; font-size: 14px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(84% 0.15 150); border: 2px solid oklch(20% 0.02 262);"></span>PC connecté</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4,1fr); padding: 10px 8px 14px; background: white; border-top: 2px solid oklch(20% 0.02 262); font-size: 11px; font-weight: 700; text-align: center;">
+                  <span style="background: oklch(92% 0.17 105); border: 2px solid oklch(20% 0.02 262); border-radius: 99px; padding: 3px 0;">Accueil</span><span style="padding: 5px 0;">Planning</span><span style="padding: 5px 0;">Algo</span><span style="padding: 5px 0;">Réglages</span>
+                </div>
+              </div>
+            </div>
+            <span style="font-size: 15px; font-weight: 700;">Accueil · clair</span>
+          </div>
+
+          <div data-phone style="flex: none; display: flex; flex-direction: column; gap: 12px; align-items: center;">
+            <div style="width: 270px; height: 570px; border-radius: 38px; background: oklch(20% 0.02 262); padding: 9px; box-sizing: border-box; box-shadow: 8px 8px 0 oklch(92% 0.17 105);">
+              <div style="height: 100%; border-radius: 30px; background: oklch(98.5% 0.008 95); overflow: hidden; display: flex; flex-direction: column; padding: 24px 16px 16px; box-sizing: border-box; gap: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px; font-weight: 700; padding: 2px 9px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 262);">Maths</span><span style="font-family: 'DM Mono', monospace; font-size: 13px;">04/10 · 00:42</span></div>
+                <div style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px;"><span style="height: 10px; border-radius: 99px; background: oklch(84% 0.15 150); border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; background: oklch(84% 0.15 150); border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; background: oklch(80% 0.13 355); border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; background: oklch(84% 0.15 150); border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; border: 1.5px solid oklch(20% 0.02 262);"></span><span style="height: 10px; border-radius: 99px; border: 1.5px solid oklch(20% 0.02 262);"></span></div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 21px; line-height: 1.2;">Quelle est la valeur de x dans 2x + 3 = 11 ?</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 14px; background: oklch(84% 0.15 150); border: 2px solid oklch(20% 0.02 262); font-weight: 700; font-size: 15px;"><span style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: oklch(20% 0.02 262); display: flex; align-items: center; justify-content: center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 13 9 18 20 6"></polyline></svg></span>x = 4</div>
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 14px; background: white; border: 2px solid oklch(20% 0.02 262); font-size: 15px;"><span style="flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid oklch(20% 0.02 262); box-sizing: border-box;"></span>x = 7</div>
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 14px; background: white; border: 2px solid oklch(20% 0.02 262); font-size: 15px;"><span style="flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid oklch(20% 0.02 262); box-sizing: border-box;"></span>x = 14</div>
+                </div>
+                <div style="background: white; border: 2px dashed oklch(20% 0.02 262); border-radius: 12px; padding: 10px 12px; font-size: 13px; line-height: 1.45;">2x = 11 − 3 = 8, donc <span style="background: oklch(92% 0.17 105); padding: 0 3px; font-weight: 700;">x = 4</span>.</div>
+                <div style="flex: 1;"></div>
+                <div style="display: flex; justify-content: center;"><span style="font-size: 13px; font-weight: 700; padding: 4px 11px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(92% 0.17 105); transform: rotate(-2deg);">+10 XP · série de 3</span></div>
+                <button style="font: inherit; font-weight: 700; font-size: 16px; padding: 12px; border-radius: 14px; border: 2px solid oklch(20% 0.02 262); background: oklch(48% 0.18 262); color: white; box-shadow: 3px 3px 0 oklch(20% 0.02 262);">Question suivante</button>
+              </div>
+            </div>
+            <span style="font-size: 15px; font-weight: 700;">Lecteur QCM · clair</span>
+          </div>
+
+          <div data-phone style="flex: none; display: flex; flex-direction: column; gap: 12px; align-items: center;">
+            <div style="width: 270px; height: 570px; border-radius: 38px; background: oklch(10% 0.02 262); padding: 9px; box-sizing: border-box; box-shadow: 8px 8px 0 oklch(48% 0.18 262);">
+              <div style="height: 100%; border-radius: 30px; background: oklch(19% 0.025 262); color: oklch(96% 0.008 95); overflow: hidden; display: flex; flex-direction: column; padding: 28px 16px 16px; box-sizing: border-box; gap: 14px;">
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Fractions · terminé</span>
+                <div style="display: flex; align-items: flex-end; gap: 12px;">
+                  <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 72px; line-height: .9; letter-spacing: -0.04em;">8/10</span>
+                  <span style="width: 40px; height: 40px; border-radius: 50%; background: oklch(76% 0.15 35); border: 2.5px solid oklch(96% 0.008 95); margin-bottom: 6px;"></span>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <span style="font-size: 14px; font-weight: 700; padding: 4px 11px; border-radius: 99px; background: oklch(92% 0.17 105); color: oklch(20% 0.02 262);">+80 XP</span>
+                  <span style="font-size: 14px; font-weight: 700; padding: 4px 11px; border-radius: 99px; background: oklch(76% 0.15 35); color: oklch(20% 0.02 262);">13 jours</span>
+                </div>
+                <div style="background: oklch(25% 0.03 262); border: 2px solid oklch(42% 0.03 262); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 13px;"><b>Niveau 7</b><span style="font-family: 'DM Mono', monospace;">720 / 900</span></div>
+                  <div style="height: 14px; border: 2px solid oklch(96% 0.008 95); border-radius: 99px; overflow: hidden;"><div style="width: 80%; height: 100%; background: oklch(92% 0.17 105); border-radius: 99px;"></div></div>
+                </div>
+                <div style="background: oklch(25% 0.03 262); border: 2px solid oklch(42% 0.03 262); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+                  <b style="font-size: 14px;">2 erreurs</b>
+                  <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: oklch(80% 0.13 355);"></span>Simplifier 12/18</div>
+                  <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: oklch(80% 0.13 355);"></span>Somme de fractions</div>
+                </div>
+                <div style="flex: 1;"></div>
+                <button style="font: inherit; font-weight: 700; font-size: 16px; padding: 12px; border-radius: 14px; border: 2px solid oklch(96% 0.008 95); background: oklch(74% 0.13 262); color: oklch(19% 0.025 262); box-shadow: 3px 3px 0 oklch(76% 0.15 35);">Refaire les erreurs</button>
+                <button style="font: inherit; font-weight: 700; font-size: 15px; padding: 11px; border-radius: 14px; border: 2px solid oklch(42% 0.03 262); background: transparent; color: oklch(96% 0.008 95);">Retour à l'accueil</button>
+              </div>
+            </div>
+            <span style="font-size: 15px; font-weight: 700;">Fin de session · sombre</span>
+          </div>
+
+          <div data-phone style="flex: none; display: flex; flex-direction: column; gap: 12px; align-items: center;">
+            <div style="width: 270px; height: 570px; border-radius: 38px; background: oklch(10% 0.02 262); padding: 9px; box-sizing: border-box; box-shadow: 8px 8px 0 oklch(84% 0.15 150);">
+              <div style="height: 100%; border-radius: 30px; background: oklch(19% 0.025 262); color: oklch(96% 0.008 95); overflow: hidden; display: flex; flex-direction: column;">
+                <div style="padding: 24px 16px 12px; display: flex; flex-direction: column; gap: 10px;">
+                  <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px;">Planning</span>
+                  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; font-size: 11px; font-weight: 700; text-align: center;">
+                    <span style="padding: 5px 0; border-radius: 10px; border: 2px solid oklch(42% 0.03 262);">L 29</span><span style="padding: 5px 0; border-radius: 10px; border: 2px solid oklch(42% 0.03 262);">M 30</span><span style="padding: 5px 0; border-radius: 10px; background: oklch(92% 0.17 105); color: oklch(20% 0.02 262); border: 2px solid oklch(96% 0.008 95);">M 1</span><span style="padding: 5px 0; border-radius: 10px; border: 2px solid oklch(42% 0.03 262);">J 2</span><span style="padding: 5px 0; border-radius: 10px; border: 2px solid oklch(42% 0.03 262);">V 3</span>
+                  </div>
+                </div>
+                <div style="padding: 0 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; font-size: 13px;">
+                  <div style="display: grid; grid-template-columns: 44px 1fr; gap: 8px; align-items: stretch;"><span style="font-family: 'DM Mono', monospace; font-size: 12px; padding-top: 8px;">08:00</span><div style="padding: 10px; border-radius: 12px; border: 2px dashed oklch(42% 0.03 262); height: 60px; box-sizing: border-box;">Cours</div></div>
+                  <div style="display: grid; grid-template-columns: 44px 1fr; gap: 8px;"><span style="font-family: 'DM Mono', monospace; font-size: 12px; padding-top: 8px;">14:00</span><div style="padding: 10px; border-radius: 12px; border: 2px dashed oklch(42% 0.03 262); height: 44px; box-sizing: border-box;">Cours</div></div>
+                  <div style="display: grid; grid-template-columns: 44px 1fr; gap: 8px;"><span style="font-family: 'DM Mono', monospace; font-size: 12px; padding-top: 8px;">17:30</span><div style="padding: 10px; border-radius: 12px; background: oklch(74% 0.13 262); color: oklch(19% 0.025 262); border: 2px solid oklch(96% 0.008 95); display: flex; flex-direction: column; gap: 2px; box-shadow: 3px 3px 0 oklch(76% 0.15 35);"><b>Révision Maths</b><span style="font-size: 12px;">45 min · verrou actif</span></div></div>
+                  <div style="display: grid; grid-template-columns: 44px 1fr; gap: 8px;"><span style="font-family: 'DM Mono', monospace; font-size: 12px; padding-top: 8px;">18:15</span><div style="padding: 10px; border-radius: 12px; background: oklch(92% 0.17 105); color: oklch(20% 0.02 262); border: 2px solid oklch(96% 0.008 95);"><b>Notions du jour</b></div></div>
+                  <div style="display: grid; grid-template-columns: 44px 1fr; gap: 8px;"><span style="font-family: 'DM Mono', monospace; font-size: 12px; padding-top: 8px;">19:00</span><div style="padding: 10px; border-radius: 12px; border: 2px solid oklch(42% 0.03 262); background: oklch(25% 0.03 262);">Libre</div></div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4,1fr); padding: 10px 8px 14px; background: oklch(25% 0.03 262); border-top: 2px solid oklch(42% 0.03 262); font-size: 11px; font-weight: 700; text-align: center;">
+                  <span style="padding: 5px 0;">Accueil</span><span style="background: oklch(92% 0.17 105); color: oklch(20% 0.02 262); border-radius: 99px; padding: 5px 0;">Planning</span><span style="padding: 5px 0;">Algo</span><span style="padding: 5px 0;">Réglages</span>
+                </div>
+              </div>
+            </div>
+            <span style="font-size: 15px; font-weight: 700;">Planning · sombre</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SITE -->
+  <section id="site" data-screen-label="Site" style="padding: 140px clamp(20px, 5vw, 72px) 160px; border-top: 2.5px solid oklch(20% 0.02 262); overflow: hidden;">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px;">
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <div data-r="up" style="display: flex; align-items: center; gap: 12px;"><span style="font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; padding: 3px 10px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: white;">07</span><span style="font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;">nemo.moideici.tech</span></div>
+        <h2 data-r="up" data-d="80" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(44px, 7vw, 112px); line-height: .95; letter-spacing: -0.045em;">Et sur le <span data-sweep data-d="500" style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%) no-repeat; padding: 0 6px;">web.</span></h2>
+      </div>
+      <div data-sitewrap>
+        <div data-site style="transform-origin: 50% 0%; background: oklch(98.5% 0.008 95); border: 2.5px solid oklch(20% 0.02 262); border-radius: 20px; overflow: hidden; box-shadow: 8px 8px 0 oklch(20% 0.02 262); will-change: transform;">
+          <div style="display: flex; gap: 6px; align-items: center; padding: 10px 14px; border-bottom: 2px solid oklch(20% 0.02 262); background: white;"><span style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid oklch(20% 0.02 262);"></span><span style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid oklch(20% 0.02 262);"></span><span style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid oklch(20% 0.02 262);"></span><span style="margin-left: 12px; font-family: 'DM Mono', monospace; font-size: 12px;">nemo.moideici.tech</span></div>
+          <div style="padding: 20px clamp(16px, 3vw, 40px); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid oklch(20% 0.02 262);">
+            <div style="display: flex; align-items: baseline; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.04em;"><span style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%); padding: 0 2px;">nem</span><span style="display: inline-block; width: 17px; height: 17px; border-radius: 50%; background: oklch(76% 0.15 35); border: 2px solid oklch(20% 0.02 262); margin-left: 2px; box-sizing: border-box;"></span></div>
+            <div style="display: flex; gap: 24px; align-items: center; font-size: 15px; font-weight: 700; flex-wrap: wrap;"><span>Comment ça marche</span><span>Listes à réviser</span><span>Rejoindre la classe</span><button data-burst style="font: inherit; font-weight: 700; font-size: 15px; padding: 10px 18px; border-radius: 12px; border: 2px solid oklch(20% 0.02 262); background: oklch(48% 0.18 262); color: white; box-shadow: 3px 3px 0 oklch(20% 0.02 262); cursor: pointer;" style-active="transform: translate(3px, 3px); box-shadow: 0 0 0 oklch(20% 0.02 262)">Accéder à mon espace</button></div>
+          </div>
+          <div style="padding: clamp(28px, 5vw, 56px) clamp(16px, 3vw, 40px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 48px; align-items: center; background-image: linear-gradient(oklch(93% 0.02 240) 1px, transparent 1px), linear-gradient(90deg, oklch(93% 0.02 240) 1px, transparent 1px); background-size: 24px 24px;">
+            <div style="display: flex; flex-direction: column; gap: 22px;">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;">Révision scolaire assistée</span>
+              <h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(36px, 4.5vw, 58px); line-height: 1; letter-spacing: -0.035em; text-wrap: balance;">Réviser avec ses <span style="background: linear-gradient(transparent 58%, oklch(92% 0.17 105) 58%, oklch(92% 0.17 105) 92%, transparent 92%); padding: 0 4px;">vrais cours</span>, pas avec des questions génériques.</h3>
+              <p style="margin: 0; font-size: 18px; line-height: 1.55; max-width: 520px;">Nemo relie tes cours, ton agenda EcoleDirecte et un modèle d'IA pour créer des exercices sur ce que tu étudies vraiment.</p>
+              <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                <button data-burst style="font: inherit; font-weight: 700; font-size: 16px; padding: 13px 22px; border-radius: 14px; border: 2px solid oklch(20% 0.02 262); background: oklch(92% 0.17 105); color: oklch(20% 0.02 262); box-shadow: 3px 3px 0 oklch(20% 0.02 262); cursor: pointer;" style-active="transform: translate(3px, 3px); box-shadow: 0 0 0 oklch(20% 0.02 262)">Rejoindre la classe</button>
+                <button style="font: inherit; font-weight: 700; font-size: 16px; padding: 13px 22px; border-radius: 14px; border: 2px solid oklch(20% 0.02 262); background: white; color: oklch(20% 0.02 262); cursor: pointer;">Installer l'app Android</button>
+              </div>
+            </div>
+            <div style="position: relative; height: 300px;">
+              <div style="position: absolute; left: 30px; top: 0; right: 0; background: white; border: 2px solid oklch(20% 0.02 262); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 10px; box-shadow: 4px 4px 0 oklch(20% 0.02 262);">
+                <span style="font-size: 12px; font-weight: 700; padding: 2px 9px; border: 2px solid oklch(20% 0.02 262); border-radius: 99px; background: oklch(88% 0.07 300); align-self: flex-start;">Histoire-Géo</span>
+                <b style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px;">En quelle année débute la Révolution française ?</b>
+                <div style="padding: 10px 12px; border: 2px solid oklch(20% 0.02 262); border-radius: 12px; background: oklch(84% 0.15 150); font-weight: 700;">1789</div>
+                <div style="padding: 10px 12px; border: 2px solid oklch(20% 0.02 262); border-radius: 12px;">1792</div>
+              </div>
+              <div data-r="pop" data-d="300" style="position: absolute; left: 0; bottom: 0; background: oklch(76% 0.15 35); border: 2px solid oklch(20% 0.02 262); border-radius: 16px; padding: 14px 18px; display: flex; flex-direction: column; box-shadow: 4px 4px 0 oklch(20% 0.02 262); transform: rotate(-3deg);">
+                <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;">Série</span>
+                <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 32px; line-height: 1;">12 jours</span>
+              </div>
+              <div data-r="pop" data-d="500" style="position: absolute; right: 20px; bottom: 30px; background: oklch(92% 0.17 105); border: 2px solid oklch(20% 0.02 262); border-radius: 99px; padding: 6px 14px; font-weight: 700; transform: rotate(4deg);">+10 XP</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer data-foot data-screen-label="Marée" style="position: relative; height: 90vh; min-height: 560px; background: oklch(20% 0.02 262); color: oklch(98.5% 0.008 95); overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;">
+    <canvas data-tide style="position: absolute; inset: 0; width: 100%; height: 100%;"></canvas>
+    <div data-r="pop" style="position: relative; display: flex; align-items: baseline; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(100px, 18vw, 260px); line-height: .95; letter-spacing: -0.05em; pointer-events: none;"><span style="background: linear-gradient(transparent 56%, oklch(48% 0.18 262) 56%, oklch(48% 0.18 262) 94%, transparent 94%); padding: 0 .02em;">nem</span><span style="display: inline-block; width: .6em; height: .6em; border-radius: 50%; background: oklch(76% 0.15 35); border: .032em solid oklch(98.5% 0.008 95); margin-left: .04em; box-sizing: border-box;"></span></div>
+    <div data-r="up" data-d="200" style="position: relative; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; font-size: 15px; font-weight: 700; pointer-events: none;"><span>Papier, encre, fluo.</span><span style="font-family: 'DM Mono', monospace; font-weight: 400;">Charte Nemo · v1 · 2026</span></div>
+    <a href="#top" data-r="up" data-d="300" style="position: relative; font-weight: 700; font-size: 16px; padding: 12px 20px; border-radius: 14px; border: 2px solid oklch(96% 0.008 95); background: oklch(74% 0.13 262); color: oklch(19% 0.025 262); box-shadow: 3px 3px 0 oklch(76% 0.15 35);">Remonter à la surface</a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;confetti&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Animations&quot;},&quot;halo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Animations&quot;},&quot;speed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.25,&quot;max&quot;:2.5,&quot;step&quot;:0.25,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Animations&quot;}}">
+class Component extends DCLogic {
+  rootRef = React.createRef();
+  renderVals() { return { rootRef: this.rootRef }; }
+  componentDidMount() {
+    this.off = []; this.timers = []; let tries = 0;
+    const attempt = () => {
+      if (this.dead || this.inited) return;
+      const root = this.rootRef.current || document.querySelector('[data-nemo-root]');
+      if (root && root.querySelector('[data-foot]')) { this.root = root; this.init(); return; }
+      if (tries++ < 600) this.raf = requestAnimationFrame(attempt);
+    };
+    attempt();
+  }
+  componentDidUpdate() { if (!this.inited && !this.dead) this.componentDidMount(); }
+  componentWillUnmount() {
+    this.dead = true; cancelAnimationFrame(this.raf); clearInterval(this.chrono);
+    (this.off || []).forEach(f => f()); (this.timers || []).forEach(clearTimeout);
+  }
+  init() {
+    const root = this.root; if (!root || this.inited) return; this.inited = true;
+    const q = s => root.querySelector(s), qa = s => Array.from(root.querySelectorAll(s));
+    const on = (t, e, f, o) => { if (!t) return; t.addEventListener(e, f, o); this.off.push(() => t.removeEventListener(e, f, o)); };
+    const later = (f, ms) => this.timers.push(setTimeout(() => { if (!this.dead) f(); }, ms));
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const SPRING = 'cubic-bezier(.34,1.56,.64,1)', OUT = 'cubic-bezier(.16,1,.3,1)';
+    const C = { ink: 'oklch(20% 0.02 262)', pap: 'oklch(98.5% 0.008 95)', blu: 'oklch(48% 0.18 262)', yel: 'oklch(92% 0.17 105)', cor: 'oklch(76% 0.15 35)', grn: 'oklch(84% 0.15 150)', pnk: 'oklch(80% 0.13 355)', sky: 'oklch(88% 0.07 262)', chk: 'oklch(96% 0.008 95)' };
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const M = { x: innerWidth / 2, y: innerHeight / 2, sx: innerWidth / 2, sy: innerHeight / 2, in: false };
+    on(window, 'pointermove', e => { M.x = e.clientX; M.y = e.clientY; M.in = true; });
+    on(document, 'pointerleave', () => { M.in = false; });
+    const prog = el => { const r = el.getBoundingClientRect(); return clamp(-r.top / (r.height - innerHeight)); };
+    const visible = el => { if (!el) return false; const r = el.getBoundingClientRect(); return r.bottom > -50 && r.top < innerHeight + 50; };
+    const centerOf = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+    const dpr = Math.min(2, devicePixelRatio || 1);
+
+    // particles
+    const fx = q('[data-fx]'), fctx = fx.getContext('2d'); let parts = [], fxDirty = false;
+    const sizeFx = () => { fx.width = innerWidth * dpr; fx.height = innerHeight * dpr; };
+    sizeFx(); on(window, 'resize', sizeFx);
+    const PAL = [C.yel, C.cor, C.grn, C.pnk, C.sky, C.blu];
+    const burst = (x, y, n = 30) => {
+      if (reduce || this.props.confetti === false) return;
+      for (let i = 0; i < n; i++) { const a = Math.random() * Math.PI * 2, s = 3 + Math.random() * 10; parts.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 5, r: 5 + Math.random() * 9, c: PAL[i % PAL.length], life: 1, rot: Math.random() * 6, vr: (Math.random() - .5) * .3, sq: Math.random() < .45 }); }
+    };
+    const drawFx = () => {
+      if (!parts.length && !fxDirty) return;
+      fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.clearRect(0, 0, innerWidth, innerHeight);
+      parts = parts.filter(p => p.life > 0 && p.y < innerHeight + 60); fxDirty = parts.length > 0;
+      for (const p of parts) {
+        p.vy += .32; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life -= .009;
+        fctx.save(); fctx.globalAlpha = Math.min(1, p.life * 2); fctx.translate(p.x, p.y); fctx.rotate(p.rot);
+        fctx.fillStyle = p.c; fctx.strokeStyle = C.ink; fctx.lineWidth = 2; fctx.beginPath();
+        if (p.sq) { if (fctx.roundRect) fctx.roundRect(-p.r, -p.r * .55, p.r * 2, p.r * 1.1, 3); else fctx.rect(-p.r, -p.r * .55, p.r * 2, p.r * 1.1); }
+        else fctx.arc(0, 0, p.r * .8, 0, Math.PI * 2);
+        fctx.fill(); fctx.stroke(); fctx.restore();
+      }
+    };
+    qa('[data-burst]').forEach(el => on(el, 'click', e => burst(e.clientX, e.clientY, 26)));
+
+    // enter helper (preserves inline transform)
+    const enter = (el, from, opts, done) => {
+      const orig = el.style.transform || ''; el.style.opacity = '0';
+      const a = el.animate([{ opacity: 0, transform: `${from} ${orig}` }, { opacity: 1, transform: orig || 'none' }], Object.assign({ fill: 'both' }, opts));
+      a.onfinish = () => { el.style.opacity = ''; a.cancel(); done && done(); };
+      return a;
+    };
+    const FROM = { up: 'translateY(60px)', left: 'translateX(-80px)', right: 'translateX(80px)', pop: 'scale(.4) rotate(-8deg)', drop: 'translateY(-110%) rotate(-5deg)', spin: 'perspective(600px) rotateY(180deg) scale(.6)', stamp: 'scale(3) rotate(-25deg)' };
+    const play = el => {
+      const k = el.dataset.r, springy = ['pop', 'drop', 'spin', 'stamp'].includes(k);
+      enter(el, FROM[k] || FROM.up, { duration: k === 'stamp' ? 600 : 1000, delay: +(el.dataset.d || 0), easing: springy ? SPRING : OUT },
+        k === 'stamp' ? () => { const [x, y] = centerOf(el); burst(x, y, 34); } : null);
+    };
+    const count = (el, from, to, dur = 1400, delay = 0) => {
+      const t0 = performance.now() + delay;
+      const step = now => { if (this.dead) return; const t = clamp((now - t0) / dur); el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - t, 3))); if (t < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    };
+    const sweep = (el, delay) => el.animate([{ backgroundSize: '0% 100%' }, { backgroundSize: '100% 100%' }], { duration: 850, delay, easing: OUT, fill: 'both' });
+
+    // hooks
+    const xpBar = q('[data-xpbar]'), xpNum = q('[data-xpnum]'), xpTr = xpBar.style.transition;
+    const hooks = {
+      xp: () => { later(() => { xpBar.style.width = '71%'; }, 250); count(xpNum, 0, 640, 1200, 250); },
+      dots: el => {
+        el.querySelectorAll('[data-dot]').forEach((d, i) => enter(d, 'scale(0)', { duration: 600, delay: 300 + i * 110, easing: SPRING }, d.hasAttribute('data-today') ? () => d.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }], { duration: 700, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' }) : null));
+      },
+      type: () => typeIt()
+    };
+    const io = new IntersectionObserver(es => es.forEach(en => {
+      if (!en.isIntersecting) return; const el = en.target; io.unobserve(el);
+      if (el.dataset.r && !reduce) play(el);
+      if (el.dataset.count && !reduce) count(el, 0, +el.dataset.count, +(el.dataset.dur || 1400));
+      if (el.hasAttribute('data-sweep') && !reduce) sweep(el, +(el.dataset.d || 200));
+      if (el.dataset.on && hooks[el.dataset.on]) hooks[el.dataset.on](el);
+    }), { threshold: .2 });
+    this.off.push(() => io.disconnect());
+    if (!reduce) {
+      qa('[data-r]').forEach(el => { el.style.opacity = '0'; });
+      qa('[data-sweep]').forEach(el => { el.style.backgroundSize = '0% 100%'; });
+      xpBar.style.width = '0%';
+    }
+    qa('[data-r],[data-count],[data-sweep],[data-on]').forEach(el => io.observe(el));
+
+    // hero intro
+    const hero = q('[data-hero]'), heroLogo = q('[data-herologo]'), heroTag = q('[data-tag]'), bubWrap = q('[data-bubwrap]'), bubble = q('[data-bubble]'), floats = qa('[data-float]'), letters = qa('[data-letter]');
+    if (!reduce) {
+      q('[data-grid]').animate([{ opacity: 0, transform: 'scale(1.2)' }, { opacity: 1, transform: 'none' }], { duration: 1800, easing: OUT, fill: 'both' });
+      letters.forEach((el, i) => { const a = el.animate([{ transform: 'translateY(-150%) rotate(-14deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 950, delay: 150 + i * 110, easing: SPRING, fill: 'both' }); a.onfinish = () => a.cancel(); });
+      q('[data-hl]').animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 800, delay: 620, easing: OUT, fill: 'both' });
+      bubble.animate([
+        { transform: 'translateY(-110vh)', easing: 'cubic-bezier(.55,0,1,.45)' },
+        { transform: 'translateY(0) scale(1.35,.65)', offset: .6, easing: 'ease-out' },
+        { transform: 'translateY(-22%) scale(.9,1.1)', offset: .76, easing: 'ease-in' },
+        { transform: 'translateY(0) scale(1.08,.92)', offset: .88, easing: 'ease-out' },
+        { transform: 'none' }
+      ], { duration: 1300, delay: 820, fill: 'both' });
+      later(() => {
+        const [x, y] = centerOf(bubble); burst(x, y + bubble.offsetHeight * .4, 22);
+        letters.forEach((el, i) => el.animate([{ transform: 'none' }, { transform: 'translateY(-9%)' }, { transform: 'none' }], { duration: 380, delay: (2 - i) * 50, easing: 'ease-out' }));
+      }, 820 + 780);
+      qa('[data-st]').forEach((el, i) => enter(el, 'scale(0) rotate(-30deg)', { duration: 800, delay: 1650 + i * 90, easing: SPRING }));
+      enter(heroTag, 'translateY(40px)', { duration: 900, delay: 1450, easing: OUT });
+      const hs = q('[data-hsweep]'); hs.style.backgroundSize = '0% 100%'; sweep(hs, 2150);
+      enter(q('[data-nav]'), 'translateY(-90px)', { duration: 900, delay: 1900, easing: SPRING });
+      enter(q('[data-cue]'), 'translateY(20px)', { duration: 700, delay: 2300, easing: OUT });
+    }
+    on(bubble, 'click', () => {
+      const [x, y] = centerOf(bubble); burst(x, y, 50);
+      bubble.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.4,.6)' }, { transform: 'scale(.85,1.2)' }, { transform: 'scale(1.05,.95)' }, { transform: 'none' }], { duration: 650, easing: 'ease-out' });
+    });
+
+    // manifesto split (clone; React-owned node stays hidden)
+    const man = q('[data-man]'), units = [];
+    { const src = man.querySelector('[data-src]'), clone = src.cloneNode(true); clone.removeAttribute('data-src');
+      Array.from(clone.childNodes).forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(w => { if (!w) return; if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(w)); return; } const s = document.createElement('span'); s.textContent = w; s.style.opacity = '.16'; frag.appendChild(s); units.push({ el: s }); });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && n.dataset.hlc) {
+          const word = n.textContent; n.textContent = ''; Object.assign(n.style, { position: 'relative', display: 'inline-block' });
+          const base = document.createElement('span'); base.textContent = word; base.style.opacity = '.16';
+          const over = document.createElement('span'); over.textContent = word;
+          Object.assign(over.style, { position: 'absolute', top: '-.02em', bottom: '-.02em', left: '-.12em', right: '-.12em', padding: '.02em .12em', background: C[n.dataset.hlc], color: C.ink, borderRadius: '.14em', clipPath: 'inset(0 100% 0 0)' });
+          n.append(base, over); units.push({ el: base, over });
+        }
+      });
+      src.style.display = 'none'; src.after(clone);
+    }
+
+    // proximity type
+    const prox = q('[data-prox]'), pl = [];
+    { const src = prox.querySelector('[data-src]'), out = document.createElement('span');
+      for (const ch of src.textContent.trim()) { const s = document.createElement('span'); s.textContent = ch === ' ' ? '\u00a0' : ch; s.style.display = 'inline-block'; out.appendChild(s); pl.push({ el: s, v: 0 }); }
+      src.style.display = 'none'; src.after(out);
+    }
+
+    // chrono
+    const chrono = q('[data-chrono]'); let secs = 272;
+    this.chrono = setInterval(() => { secs = secs <= 0 ? 272 : secs - 1; chrono.textContent = String(Math.floor(secs / 60)).padStart(2, '0') + ':' + String(secs % 60).padStart(2, '0'); }, 1000);
+
+    // QCM
+    const qcm = q('[data-qcm]'), opts = Array.from(qcm.querySelectorAll('[data-opt]')), qexp = qcm.querySelector('[data-qexp]'), qxp = qcm.querySelector('[data-qxp]'); let qDone = false;
+    const CHECK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 13 9 18 20 6"></polyline></svg>';
+    const mark = (o, ok) => {
+      const pas = o.querySelector('[data-pas]'), txt = o.querySelector('[data-txt]');
+      o.style.background = ok ? C.grn : C.pnk; o.style.fontWeight = '700'; o.style.opacity = '1';
+      pas.style.background = C.ink; pas.style.color = 'white'; pas.innerHTML = ok ? CHECK : '✕';
+      if (!ok) txt.style.textDecoration = 'line-through';
+      pas.animate([{ transform: 'scale(0) rotate(-120deg)' }, { transform: 'none' }], { duration: 550, easing: SPRING });
+      if (ok) o.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.05)' }, { transform: 'none' }], { duration: 420, easing: OUT });
+      else o.animate([0, -12, 10, -7, 4, 0].map(x => ({ transform: `translateX(${x}px)` })), { duration: 460 });
+    };
+    opts.forEach(o => on(o, 'click', () => {
+      if (qDone) return; qDone = true; const ok = o.dataset.ok === '1';
+      opts.forEach(x => { if (x !== o) x.style.opacity = '.45'; });
+      mark(o, ok);
+      if (ok) { const [x, y] = centerOf(o); burst(x, y, 40); qxp.textContent = '+10 XP · série de 4'; qxp.style.background = C.yel; }
+      else { later(() => mark(opts.find(x => x.dataset.ok === '1'), true), 550); qxp.textContent = 'Série remise à zéro'; qxp.style.background = C.pnk; }
+      qexp.style.display = 'block'; qexp.animate([{ opacity: 0, transform: 'translateY(-10px)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: OUT });
+      qxp.style.visibility = 'visible'; qxp.animate([{ opacity: 0, transform: 'scale(2.6) rotate(-20deg)' }, { opacity: 1, transform: 'rotate(-2deg)' }], { duration: 600, delay: ok ? 0 : 600, easing: SPRING, fill: 'backwards' });
+    }));
+    on(qcm.querySelector('[data-qreset]'), 'click', () => {
+      qDone = false; qexp.style.display = 'none'; qxp.style.visibility = 'hidden';
+      opts.forEach(o => { const pas = o.querySelector('[data-pas]'); o.style.background = 'white'; o.style.fontWeight = '400'; o.style.opacity = '1'; pas.style.background = 'transparent'; pas.style.color = C.ink; pas.textContent = o.dataset.l; o.querySelector('[data-txt]').style.textDecoration = 'none'; });
+    });
+
+    // flashcard, toggle, typing
+    const flip = q('[data-flip]'), flipi = q('[data-flipi]'); let flipped = false;
+    on(flip, 'click', () => { flipped = !flipped; flipi.style.transform = flipped ? 'rotateY(180deg)' : 'none'; });
+    const tog = q('[data-toggle]'), knob = q('[data-knob]'); let tOn = true;
+    on(tog, 'click', () => { tOn = !tOn; tog.style.background = tOn ? C.blu : 'white'; knob.style.transform = tOn ? 'translateX(24px)' : 'none'; knob.animate([{ scale: '1 1' }, { scale: '1.35 .8' }, { scale: '1 1' }], { duration: 400, easing: 'ease-out' }); });
+    const blank = q('[data-blank]'), tt = q('[data-tt]'), caret = q('[data-caret]');
+    caret.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, iterations: Infinity, direction: 'alternate', easing: 'steps(1)' });
+    let typing = 0;
+    const typeIt = () => {
+      const id = ++typing; tt.textContent = ''; blank.style.background = 'transparent'; blank.style.borderBottomColor = C.ink; caret.style.display = 'block';
+      const w = 'être'; let i = 0;
+      const go = () => { if (id !== typing) return; tt.textContent = w.slice(0, ++i); if (i < w.length) later(go, 150 + Math.random() * 130); else later(() => { if (id !== typing) return; blank.style.background = C.sky; blank.style.borderBottomColor = C.blu; caret.style.display = 'none'; blank.animate([{ transform: 'none' }, { transform: 'scale(1.18) rotate(-3deg)' }, { transform: 'none' }], { duration: 480, easing: SPRING }); }, 260); };
+      later(go, 700);
+    };
+    on(q('[data-treplay]'), 'click', typeIt);
+
+    // level up
+    const lvBtn = q('[data-levelup]'), lvl = q('[data-lvl]'), lvName = q('[data-lvlname]'), xpMax = q('[data-xpmax]'), xpSub = q('[data-xpsub]'), lvBadge = q('[data-lvlbadge]');
+    xpBar.animate([{ backgroundPosition: '0 0' }, { backgroundPosition: '22.63px 0' }], { duration: 700, iterations: Infinity });
+    let leveled = false, busy = false;
+    on(lvBtn, 'click', () => {
+      if (busy) return; busy = true;
+      if (!leveled) {
+        xpBar.style.width = '100%'; count(xpNum, 640, 900, 900);
+        later(() => {
+          const [x, y] = centerOf(lvBadge); burst(x, y, 70);
+          lvl.textContent = '8'; lvName.textContent = 'Explorateur';
+          lvBadge.animate([{ transform: 'none' }, { transform: 'scale(1.4) rotate(-14deg)' }, { transform: 'scale(.94) rotate(5deg)' }, { transform: 'none' }], { duration: 850, easing: OUT });
+          lvName.animate([{ opacity: 0, transform: 'translateY(24px) rotate(3deg)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: SPRING });
+          xpBar.style.transition = 'none'; xpBar.style.width = '0%'; void xpBar.offsetWidth; xpBar.style.transition = xpTr;
+          later(() => { xpBar.style.width = '8%'; }, 30);
+          xpNum.textContent = '100'; xpMax.textContent = '1200'; xpSub.textContent = 'Niveau 8 atteint · nouveau badge débloqué';
+          lvBtn.textContent = 'Recommencer'; leveled = true; busy = false;
+        }, 1000);
+      } else {
+        lvl.textContent = '7'; lvName.textContent = 'Plongeur'; xpMax.textContent = '900'; xpSub.textContent = 'Encore 260 XP pour « Explorateur »';
+        xpBar.style.width = '71%'; count(xpNum, 100, 640, 900); lvBtn.textContent = 'Gagner 260 XP'; leveled = false; busy = false;
+      }
+    });
+
+    // tilt icon
+    const tiltZone = q('[data-tiltzone]'), tilt = q('[data-tilt]'), T = { rx: 0, ry: 0, tx: 0, ty: 0, hover: false };
+    on(tiltZone, 'pointermove', e => { const r = tilt.getBoundingClientRect(); T.ty = (e.clientX - (r.left + r.width / 2)) / r.width * 50; T.tx = -(e.clientY - (r.top + r.height / 2)) / r.height * 50; T.hover = true; });
+    on(tiltZone, 'pointerleave', () => { T.hover = false; });
+
+    // halo
+    const halo = q('[data-halo]'); let haloS = 1, haloT = 1;
+    on(document, 'pointerover', e => { haloT = e.target.closest && e.target.closest('button,a,input,[data-flip],[data-bubble],[data-tilt]') ? 2.3 : 1; });
+
+    // morph, marquee, phones, site, tide refs
+    const morph = q('[data-morph]'), stage = q('[data-morphstage]'), L2 = q('[data-layer="2"]'), L3 = q('[data-layer="3"]'), lbub = q('[data-lbub]'), mbubs = qa('[data-mbub]');
+    const mq = q('[data-marquee]'); let mx = 0;
+    const hpin = q('[data-hpin]'), hstage = q('[data-hstage]'), track = q('[data-track]'), phones = qa('[data-phone]'), hcount = q('[data-hcount]'); let lastIdx = -1;
+    const siteWrap = q('[data-sitewrap]'), site = q('[data-site]');
+    const bar = q('[data-progress]');
+    const foot = q('[data-foot]'), tide = q('[data-tide]'), tctx = tide.getContext('2d'); let TW = 0, TH = 0;
+    const sizeT = () => { TW = foot.clientWidth; TH = foot.clientHeight; tide.width = TW * dpr; tide.height = TH * dpr; };
+    sizeT(); on(window, 'resize', sizeT);
+    const TP = [C.cor, C.yel, C.sky, C.grn, C.pnk];
+    const bubs = Array.from({ length: 44 }, (_, i) => ({ x: Math.random() * TW, y: Math.random() * TH, r: 6 + Math.random() * 28, c: TP[i % 5], s: .3 + Math.random() * 1.2, ph: Math.random() * 6, vx: 0 }));
+    on(foot, 'click', e => burst(e.clientX, e.clientY, 34));
+
+    let lastY = scrollY, vs = 0;
+    const tick = t => {
+      if (this.dead) return;
+      const sp = this.props.speed ?? 1, sy = scrollY, vh = innerHeight, vw = innerWidth, vel = sy - lastY; lastY = sy; vs += (Math.abs(vel) - vs) * .1;
+      M.sx += (M.x - M.sx) * .14; M.sy += (M.y - M.sy) * .14;
+      const de = document.documentElement; bar.style.transform = `scaleX(${clamp(sy / Math.max(1, de.scrollHeight - vh))})`;
+
+      if (fine && !reduce && this.props.halo !== false && M.in) { haloS += (haloT - haloS) * .15; halo.style.opacity = '.85'; halo.style.transform = `translate(${M.sx}px,${M.sy}px) scale(${haloS})`; }
+      else halo.style.opacity = '0';
+
+      if (sy < vh * 1.3) {
+        const hp = sy / vh;
+        heroLogo.style.transform = `translateY(${sy * .45}px) scale(${1 - hp * .18})`; heroLogo.style.opacity = String(clamp(1 - hp * 1.1));
+        heroTag.style.transform = `translateY(${sy * .25}px)`; heroTag.style.opacity = String(clamp(1 - hp * 1.5));
+        const nx = M.sx / vw - .5, ny = M.sy / vh - .5, fl = reduce ? 0 : 1;
+        floats.forEach((f, i) => { const d = +f.dataset.depth; f.style.transform = `translate(${-nx * 70 * d + Math.sin(t / 1000 * sp * (.6 + i * .11) + i) * 9 * fl}px, ${-ny * 70 * d + Math.cos(t / 1000 * sp * (.5 + i * .09) + i * 2) * 11 * fl - sy * d * .9}px)`; });
+        const br = bubWrap.getBoundingClientRect(), bx = br.left + br.width / 2, by = br.top + br.height / 2;
+        const dx = clamp((M.sx - bx) / vw, -.5, .5) * 60, dy = clamp((M.sy - by) / vh, -.5, .5) * 60;
+        bubWrap.style.transform = `translate(${dx * fl}px,${dy * fl}px) scale(${1 + Math.sin(t / 700 * sp) * .03 * fl})`;
+      }
+
+      if (visible(man)) {
+        const p = prog(man), N = units.length, rv = p * 1.3 * N - 1;
+        units.forEach((u, i) => { u.el.style.opacity = String(.16 + .84 * clamp(rv - i)); if (u.over) u.over.style.clipPath = `inset(0 ${100 - clamp((rv - i) / 1.6) * 100}% 0 0)`; });
+      }
+
+      if (visible(morph)) {
+        const p = prog(morph), sr = stage.getBoundingClientRect(), br = lbub.getBoundingClientRect();
+        const x = br.left + br.width / 2 - sr.left, y = br.top + br.height / 2 - sr.top;
+        const R = Math.max(Math.hypot(x, y), Math.hypot(sr.width - x, y), Math.hypot(x, sr.height - y), Math.hypot(sr.width - x, sr.height - y)) + 20;
+        L2.style.clipPath = `circle(${ease(clamp((p - .12) / .3)) * R}px at ${x}px ${y}px)`;
+        L3.style.clipPath = `circle(${ease(clamp((p - .58) / .3)) * R}px at ${x}px ${y}px)`;
+        const w = reduce ? 1 : 1 + Math.sin(t / 600 * sp) * .04; mbubs.forEach(b => { b.style.transform = `scale(${w})`; });
+      }
+
+      if (visible(tilt)) {
+        const tx = T.hover ? clamp(T.tx, -28, 28) : Math.sin(t / 1500) * 8, ty = T.hover ? clamp(T.ty, -28, 28) : Math.cos(t / 1800) * 12;
+        T.rx += (tx - T.rx) * .1; T.ry += (ty - T.ry) * .1;
+        tilt.style.transform = `perspective(900px) rotateX(${T.rx}deg) rotateY(${T.ry}deg)`;
+        tilt.style.boxShadow = `${8 - T.ry * .45}px ${8 + T.rx * .45}px 0 ${C.ink}`;
+      }
+
+      if (visible(mq) && !reduce) {
+        mx -= (.7 + vs * .5) * sp; const half = mq.scrollWidth / 2; if (-mx >= half) mx += half;
+        mq.style.transform = `translateX(${mx}px) skewX(${clamp(-vel * .4, -14, 14)}deg)`;
+      }
+
+      if (visible(prox)) pl.forEach((L, i) => {
+        let tg; if (fine && M.in) { const r = L.el.getBoundingClientRect(); tg = 1 - clamp(Math.hypot(r.left + r.width / 2 - M.sx, r.top + r.height / 2 - M.sy) / 380); }
+        else tg = .5 + .5 * Math.sin(t / 450 * sp - i * .55);
+        L.v += (tg - L.v) * .14;
+        L.el.style.fontVariationSettings = `'wght' ${Math.round(200 + 600 * L.v)}, 'wdth' ${Math.round(75 + 25 * L.v)}, 'opsz' 96`;
+        L.el.style.transform = `translateY(${-L.v * 5}%)`;
+      });
+
+      if (visible(hpin)) {
+        const p = prog(hpin), W = hstage.clientWidth, off = (track.scrollWidth - W) * p; let best = 0, bd = 1e9;
+        track.style.transform = `translateX(${-off}px)`;
+        phones.forEach((ph, i) => {
+          const d = (ph.offsetLeft + ph.offsetWidth / 2 - off - W / 2) / W, ad = Math.abs(d); if (ad < bd) { bd = ad; best = i; }
+          ph.style.transform = `perspective(1400px) rotateY(${clamp(d * -70, -50, 50)}deg) scale(${1.04 - Math.min(.28, ad * .35)}) translateY(${ad * 30}px)`;
+          ph.style.opacity = String(1 - Math.min(.55, ad * .5));
+        });
+        if (best !== lastIdx) { lastIdx = best; hcount.textContent = `0${best + 1} / 04`; hcount.animate([{ transform: 'scale(1.25) rotate(-4deg)' }, { transform: 'none' }], { duration: 400, easing: SPRING }); }
+      }
+
+      if (visible(siteWrap)) {
+        const r = siteWrap.getBoundingClientRect(), k = ease(clamp((vh - r.top) / (vh * .85)));
+        site.style.transform = `perspective(1600px) rotateX(${(1 - k) * 34}deg) scale(${.8 + .2 * k}) translateY(${(1 - k) * 80}px)`;
+      }
+
+      if (visible(foot)) {
+        tctx.setTransform(dpr, 0, 0, dpr, 0, 0); tctx.clearRect(0, 0, TW, TH);
+        const fr = foot.getBoundingClientRect(), fmx = M.sx - fr.left, fmy = M.sy - fr.top;
+        for (const b of bubs) {
+          if (!reduce) { b.y -= b.s * sp; b.x += Math.sin(t / 1000 + b.ph) * .5 + b.vx; }
+          b.vx *= .92; const ddx = b.x - fmx, ddy = b.y - fmy, d = Math.hypot(ddx, ddy);
+          if (M.in && d < 150 && d > 0) { b.vx += ddx / d * 1.3; b.y += ddy / d * 1.3; }
+          if (b.y < -b.r - 10) { b.y = TH + b.r + Math.random() * 80; b.x = Math.random() * TW; }
+          tctx.beginPath(); tctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); tctx.fillStyle = b.c; tctx.fill(); tctx.lineWidth = 2.5; tctx.strokeStyle = C.chk; tctx.stroke();
+          tctx.beginPath(); tctx.arc(b.x - b.r * .35, b.y - b.r * .35, b.r * .2, 0, Math.PI * 2); tctx.fillStyle = 'rgba(255,255,255,.75)'; tctx.fill();
+        }
+      }
+
+      drawFx();
+      this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+}
+</script>
+</body>
+</html>

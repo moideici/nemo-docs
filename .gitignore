@@ -1,0 +1,5 @@
+﻿# APK : construits uniquement par la CI GitHub des dépôts d'app, jamais ici
+*.apk
+# Retours bruts de test (extraits de cours de l'élève) : restent en local
+retour/
+.thumbnail
