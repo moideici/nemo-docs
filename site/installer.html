@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installer — Nemo</title>
+<meta name="description" content="Installer et mettre à jour Nemo, règles de travail et dépôts.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+<script>
+  try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body data-page="installer">
+<div id="progress" aria-hidden="true"></div>
+<header class="nav" id="nav"></header>
+<main id="top">
+<div class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Accueil</a> / Installer</div>
+    <h1><span>Installer</span><span>et</span><span>mettre</span><span>à</span><span>jour</span></h1>
+    <p class="lead">Aucun build ne se fait sur une machine : tout vient de la CI GitHub avec une clé de signature unique. <b>Choisissez une brique</b> pour voir qui construit, qui installe et quand.</p>
+  </div>
+</div>
+<div class="wrap">
+<section id="install" class="page-sec">
+  <div class="tabs reveal" id="itabs" role="tablist"></div>
+  <div class="reveal" id="ipanes"></div>
+  <div class="note reveal"><b>Pourquoi la CI seulement ?</b> Décision du 12/10/2026 : des builds locaux avaient chacun une clé de debug différente, donc une mise à jour ne s'installait plus par-dessus (perte du jeton et des réglages).</div>
+</section>
+<section id="regles" class="page-sec">
+  <div class="sec-head reveal">
+    <div class="cap">Règles de travail</div>
+    <h2>Pousser, documenter, <mark>prioriser</mark>.</h2>
+    <p>Le projet se développe depuis plusieurs machines et avec plusieurs outils IA. Quelques règles évitent de se perdre.</p>
+  </div>
+  <div class="grid g3" data-stagger>
+    <div class="card"><span class="pill y">1</span><h3 style="margin:10px 0 6px">Tout est poussé</h3><p style="margin:0">Cette machine n'est pas la principale : chaque changement est commité <b>et</b> poussé, avec un message clair.</p></div>
+    <div class="card"><span class="pill g">2</span><h3 style="margin:10px 0 6px">Doc toujours à jour</h3><p style="margin:0">Chaque dépôt a un <code>README.md</code> et un <code>docs/README.md</code> qui donne le statut de chaque plan : Réalisé, En cours, Obsolète, Idée.</p></div>
+    <div class="card"><span class="pill p">3</span><h3 style="margin:10px 0 6px">Priorités d'abord</h3><p style="margin:0">Une grosse nouveauté alors qu'un point plus grave attend ? On le dit avant de commencer. Si tu insistes, on le fait, puis on rappelle la priorité sautée.</p></div>
+  </div>
+  <h3 style="margin:34px 0 12px" class="reveal">Pipeline du serveur</h3>
+  <div class="flow reveal"><span class="st" style="--i:0">Pull request</span><span class="ar">→</span><span class="st" style="--i:1">Fusion sur <code>master</code></span><span class="ar">→</span><span class="st" style="--i:2">Tests (Node 22)</span><span class="ar">→</span><span class="st" style="--i:3">wrangler deploy</span><span class="ar">→</span><span class="st" style="--i:4">nemo.moideici.tech</span></div>
+  <div class="note reveal"><b><code>[skip ci]</code></b> dans le message d'un commit de documentation seule : sans lui, chaque push sur <code>master</code> relance les tests et un déploiement, et chaque push sur une app relance un build.</div>
+  <h3 style="margin:30px 0 12px" class="reveal">Les dépôts</h3>
+  <div class="table-wrap reveal"><table>
+    <thead><tr><th>Dépôt</th><th>Rôle</th><th>Branche</th><th>Mise à jour</th></tr></thead>
+    <tbody data-stagger>
+      <tr><td><a href="https://github.com/moidefr/nemo-https">nemo-https</a></td><td>Serveur + site (Cloudflare)</td><td><code>master</code></td><td>automatique à la fusion</td></tr>
+      <tr><td><a href="https://github.com/moidefr/nemo-pc">nemo-pc</a></td><td>App Windows</td><td><code>main</code></td><td><code>scripts/install.ps1</code></td></tr>
+      <tr><td><a href="https://github.com/moidefr/nemo-app">nemo-app</a></td><td>App Android</td><td><code>main</code></td><td><code>scripts/update-app.ps1</code></td></tr>
+      <tr><td><a href="https://github.com/moidefr/nemo-docs">nemo-docs</a></td><td>Charte, architecture, ce site</td><td><code>main</code></td><td>—</td></tr>
+      <tr><td><a href="https://github.com/moidefr/agent-hub">agent-hub</a></td><td><code>ah</code> : Claude délègue à Codex</td><td><code>main</code></td><td><code>npm link</code></td></tr>
+      <tr><td><a href="https://github.com/moidefr/nemo">nemo</a></td><td>Ancien serveur local (historique)</td><td><code>main</code></td><td>plus maintenu</td></tr>
+    </tbody>
+  </table></div>
+</section>
+<nav class="pager" id="pager"></nav>
+</div>
+</main>
+<footer id="footer"></footer>
+<button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
+<div id="pal" role="dialog" aria-modal="true" aria-label="Recherche">
+  <div class="box"><input id="palIn" type="text" placeholder="Rechercher une page, un outil, un format…" autocomplete="off"><ul id="palList"></ul></div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/diagrams.js"></script>
+<script src="js/sims.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>

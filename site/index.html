@@ -5,315 +5,72 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nemo — Documentation</title>
 <meta name="description" content="Documentation interactive de Nemo : révision espacée, planning, blocage pendant les créneaux, serveur MCP, app PC et app Android.">
-<meta name="theme-color" content="#FCFAF4">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
 <script>
-  // Thème avant le premier rendu (évite le flash). try/catch : le stockage peut être bloqué.
   try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
 </head>
-<body>
+<body data-page="index">
 <div id="progress" aria-hidden="true"></div>
-
-<header class="nav">
-  <div class="wrap">
-    <a class="logo" href="#top" aria-label="Nemo, haut de page"><i></i>Nemo</a>
-    <nav class="links" aria-label="Sections">
-      <a href="#vue">Vue</a>
-      <a href="#cycle">Session</a>
-      <a href="#planning">Planning</a>
-      <a href="#exercices">Exercices</a>
-      <a href="#memoire">Mémoire</a>
-      <a href="#jeu">Jeu</a>
-      <a href="#mcp">MCP</a>
-      <a href="#garde-fous">Verrou</a>
-      <a href="#install">Installer</a>
-      <a href="#regles">Règles</a>
-    </nav>
-    <div class="tools">
-      <button class="ico search" id="open-pal" aria-label="Rechercher (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button>
-      <button class="ico" id="theme" aria-label="Changer de thème">◐</button>
-    </div>
-  </div>
-</header>
-
+<header class="nav" id="nav"></header>
 <main id="top">
-<!-- ============================ HERO ============================ -->
 <div class="hero">
   <div class="wrap">
     <div>
       <span class="eyebrow"><i></i>Documentation · révision scolaire assistée</span>
       <h1>Réviser <mark>au bon moment</mark>, sur <span class="swap" id="swap">les maths</span>.</h1>
-      <p class="lead">Nemo lit l'emploi du temps de l'élève, repère les créneaux libres, <b>verrouille le PC et le téléphone</b> à l'heure de la séance, fait construire une session sur mesure par une IA, puis libère l'élève une fois la session terminée. Cette page explique comment tout s'articule.</p>
+      <p class="lead">Nemo lit l'emploi du temps de l'élève, repère les créneaux libres, <b>verrouille le PC et le téléphone</b> à l'heure de la séance, fait construire une session sur mesure par une IA, puis libère l'élève une fois la session terminée.</p>
       <div class="cta">
-        <a class="btn reward" href="#vue">Voir l'architecture</a>
-        <a class="btn" href="#cycle">Suivre une session pas à pas</a>
+        <a class="btn reward" href="architecture.html">Voir l'architecture</a>
+        <a class="btn" href="session.html">Suivre une session pas à pas</a>
       </div>
       <div class="stats">
         <div class="stat"><b data-count="4">0</b><span>briques</span></div>
-        <div class="stat"><b data-count="22" id="stat-formats">0</b><span>formats d'exercice</span></div>
+        <div class="stat"><b data-count="22">0</b><span>formats d'exercice</span></div>
         <div class="stat"><b data-count="6">0</b><span>boîtes Leitner</span></div>
         <div class="stat"><b data-count="30">0</b><span>jours max entre 2 révisions</span></div>
       </div>
     </div>
-    <div>
-      <div class="demo-card" id="heroCard">
-        <span class="tag xp">+10 XP</span>
-        <span class="pill s">SVT · QCM</span> <span class="pill">Essayez-le</span>
-        <h4>Quel organite produit l'énergie de la cellule ?</h4>
-        <div id="heroAns"></div>
-        <div class="explain" id="heroExp" hidden></div>
-        <span class="tag streak" id="heroStreak">SÉRIE 0 jour</span>
-      </div>
+    <div class="floatx">
+      <div class="nm nm-hero" id="heroCard"><span class="demo-tag">aperçu en direct</span></div>
+      <p class="nm-frame-cap">Rendu fidèle d'une page d'exercice Nemo. Cliquez une réponse pour reprendre la main.</p>
     </div>
   </div>
 </div>
-
 <div class="wrap">
-<!-- ============================ 01 VUE D'ENSEMBLE ============================ -->
-<section id="vue">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">01</span> Vue d'ensemble</div>
-    <h2>Un serveur au centre, <mark>deux apps</mark> autour.</h2>
-    <p>Le serveur est la source de vérité. Les apps PC et Android sont des clientes. Cliquez sur un bloc ou un lien du schéma, ou filtrez par « couche » pour suivre un type de flux.</p>
-  </div>
-  <div class="layers reveal" id="layers" role="group" aria-label="Couches du schéma"></div>
-  <div class="diagram reveal"><svg id="arch" viewBox="0 0 960 530" role="img" aria-label="Schéma de l'architecture de Nemo"></svg></div>
-  <div class="info reveal" id="archInfo" aria-live="polite"></div>
-
-  <div class="grid g4" style="margin-top:34px" id="bricks"></div>
-</section>
-
-<!-- ============================ 02 UNE SESSION ============================ -->
-<section id="cycle">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">02</span> Cycle d'une session</div>
-    <h2>De l'emploi du temps au <mark>déverrouillage</mark>.</h2>
-    <p>Un seul appareil prépare la session d'un créneau, les autres reprennent son lien. Avancez étape par étape (boutons ou flèches ← →) ou lancez la lecture automatique.</p>
-  </div>
-  <div class="diagram reveal"><svg id="seq" viewBox="0 0 960 560" role="img" aria-label="Diagramme de séquence d'une session"></svg></div>
-  <div class="seq-ctrl reveal">
-    <button class="btn small" id="seqPrev">← Précédent</button>
-    <button class="btn small primary" id="seqNext">Suivant →</button>
-    <button class="btn small reward" id="seqPlay">▶ Lecture</button>
-    <button class="btn small" id="seqReset">↺ Recommencer</button>
-    <span class="count" id="seqCount"></span>
-  </div>
-  <div class="info reveal" id="seqInfo" aria-live="polite"></div>
-  <div class="note ok reveal"><b>Sans serveur ?</b> Chaque appareil retombe sur sa génération locale. Au bout de 6 minutes d'attente d'un autre appareil, le téléphone génère lui-même sa session.</div>
-</section>
-
-<!-- ============================ 03 PLANNING ============================ -->
-<section id="planning">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">03</span> Planificateur</div>
-    <h2>Emploi du temps <mark>moins</mark> plages indisponibles.</h2>
-    <p>Le serveur lit l'emploi du temps EcoleDirecte, retire les plages déclarées indisponibles, et ce qui reste devient des créneaux de révision. Essayez : cliquez sur des heures pour les déclarer occupées.</p>
-  </div>
-  <div class="card reveal">
-    <div class="cap">Mercredi · cliquer une heure libre = indisponible</div>
-    <div class="day" id="day"></div>
-    <div class="legend">
-      <span><i style="background:transparent;border-style:dashed"></i>cours (EcoleDirecte)</span>
-      <span><i style="background:var(--pink)"></i>indisponible</span>
-      <span><i style="background:var(--sky)"></i>créneau de révision</span>
+  <section class="page-sec" id="comment">
+    <div class="sec-head reveal">
+      <div class="cap">En bref</div>
+      <h2>Cinq temps, <mark>un seul</mark> parcours.</h2>
+      <p>Chaque créneau de révision déroule la même séquence, de la lecture du planning à la libération de l'élève.</p>
     </div>
-    <p style="margin:16px 0 0" id="dayOut"></p>
-  </div>
-  <div class="grid g3" style="margin-top:22px">
-    <div class="card reveal"><span class="pill b">Préavis</span><h3 style="margin:10px 0 6px">5 min avant</h3><p style="margin:0">Notification, puis verrou. Réglable par <code>warnLeadMinutes</code>. La pré-construction de la session démarre au même moment.</p></div>
-    <div class="card reveal"><span class="pill g">Rattrapage</span><h3 style="margin:10px 0 6px">PC allumé en retard</h3><p style="margin:0">Allumé pendant un créneau, il se verrouille aussitôt, sauf s'il reste moins de 5 min (<code>minRemainingToStartMinutes</code>).</p></div>
-    <div class="card reveal"><span class="pill y">Heures calmes</span><h3 style="margin:10px 0 6px">Jamais le verrou</h3><p style="margin:0">Pas d'annonce ni de préavis pendant les heures calmes. Réglées une fois sur le site, valables partout.</p></div>
-  </div>
-</section>
-
-<!-- ============================ 04 EXERCICES ============================ -->
-<section id="exercices">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">04</span> Formats d'exercice</div>
-    <h2>Pas que des QCM : <mark>22 formats</mark>.</h2>
-    <p>Chaque format se joue dans une page web (hors ligne compris), alimente la liste d'erreurs et le jeu. Filtrez, cliquez sur une carte : les formats marqués ▶ ont une mini-démo jouable.</p>
-  </div>
-  <div class="filters reveal" id="ffilters"></div>
-  <div class="fgrid reveal" id="fgrid"></div>
-  <div class="card fdemo reveal" id="fdemo"></div>
-</section>
-
-<!-- ============================ 05 MEMOIRE ============================ -->
-<section id="memoire">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">05</span> Révision espacée</div>
-    <h2>Une boîte de plus à chaque <mark>bonne réponse</mark>.</h2>
-    <p>Méthode de Leitner : 6 boîtes (0 à 5), intervalles <code>1 · 2 · 4 · 7 · 14 · 30</code> jours. Juste, on monte d'une boîte ; faux, retour à la boîte 0. Simulez le parcours d'une notion.</p>
-  </div>
-  <div class="sim">
-    <div class="card reveal">
-      <div class="cap">Notion : « formule du discriminant »</div>
-      <div class="boxes" id="boxes"></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn primary" id="lRight">Je savais</button>
-        <button class="btn" id="lWrong">Raté</button>
-        <button class="btn small" id="lReset">↺</button>
-      </div>
-      <p style="margin:16px 0 0" id="lOut"></p>
+    <div class="card reveal zoom"><div class="pipe" id="pipe"></div></div>
+  </section>
+  <section class="page-sec" id="plan">
+    <div class="sec-head reveal">
+      <div class="cap">Documentation</div>
+      <h2>Parcourir <mark>par thème</mark>.</h2>
+      <p>La documentation est répartie en pages courtes. Chaque page contient un schéma ou un simulateur interactif.</p>
     </div>
-    <div class="card reveal">
-      <div class="cap">Journal</div>
-      <div class="log" id="lLog"></div>
-      <p class="cap" style="margin:14px 0 0">Code : <code>nemo-https/src/spacedRepetition.js</code> (fonction pure <code>nextSchedule</code>) · API : <code>GET /api/review/today</code>, <code>PUT /api/progression/:id</code></p>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ 06 JEU ============================ -->
-<section id="jeu">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">06</span> Gamification</div>
-    <h2>On récompense l'<mark>apprentissage</mark>, pas le volume.</h2>
-    <p>Aucun classement, aucune comparaison, aucun bonus de vitesse. Chaque notion ne rapporte <b>qu'une fois par jour</b>. La série de bonnes réponses multiplie les points. Testez le barème.</p>
-  </div>
-  <div class="sim">
-    <div class="card reveal">
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-        <div><div class="cap">Niveau</div><div class="big-num" id="gLevel">1</div></div>
-        <div style="flex:1;min-width:160px"><div class="cap" id="gXp">0 XP</div><div class="track"><i id="gBar"></i></div></div>
-        <div><div class="cap">Série</div><div class="big-num" id="gCombo">0</div></div>
-      </div>
-      <div class="mult" id="gMult"></div>
-      <div class="cap">Boucliers <span id="gShields"></span> · boost <b id="gBoost">0</b></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-        <button class="btn primary" id="gRight">Bonne réponse (+1)</button>
-        <button class="btn reward" id="gRecall">Rappel actif (+2)</button>
-        <button class="btn" id="gWrong">Erreur</button>
-        <button class="btn small" id="gReset">↺</button>
-      </div>
-      <p class="cap" style="margin:14px 0 0">Chaque clic = une nouvelle notion. Une même notion déjà comptée aujourd'hui rapporte 0.</p>
-    </div>
-    <div class="card reveal">
-      <div class="cap">Barème (source : <code>public/static/game/rules.js</code>)</div>
-      <div class="table-wrap" style="box-shadow:none;margin-top:10px"><table>
-        <tr><th>Réponse</th><th>Points</th></tr>
-        <tr><td>Bonne réponse à choix (QCM, vrai/faux, tri…)</td><td>+1</td></tr>
-        <tr><td>Rappel actif (texte à trous, pas-à-pas, memory du 1<sup>er</sup> coup)</td><td>+2</td></tr>
-        <tr><td>Notion maîtrisée (session hybride)</td><td>+2, +3 si « due »</td></tr>
-        <tr><td>Bonne réponse avec indice ouvert</td><td>−25 % (min. −1)</td></tr>
-        <tr><td>Réponse fausse</td><td>0, mais mémorisée</td></tr>
-      </table></div>
-      <div class="log" id="gLog" style="margin-top:14px;height:120px"></div>
-    </div>
-  </div>
-  <p class="reveal" style="margin-top:20px"><b>Trois intensités</b> de retour visuel : <span class="pill">Éteint</span> <span class="pill s">Discret</span> <span class="pill y">Complet</span> (défaut). Récompense à chaque dizaine de série : bouclier, boost (×2 sur 3 réponses) ou couleur de logo.</p>
-</section>
-
-<!-- ============================ 07 MCP ============================ -->
-<section id="mcp">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">07</span> Serveur MCP</div>
-    <h2>Les outils que l'assistant <mark>appelle</mark>.</h2>
-    <p>Claude ou ChatGPT se branchent sur <code>/mcp</code> du serveur. Les briefs en un appel remplacent une dizaine d'appels : l'IA reçoit le squelette de la session et n'a plus qu'à écrire le contenu. Recherchez un outil par nom, rôle ou catégorie.</p>
-  </div>
-  <div class="tools-bar reveal">
-    <input class="field" id="toolQ" type="search" placeholder="Filtrer : brief, cours, publier, exercice…" aria-label="Filtrer les outils">
-    <div class="layers" id="toolCats" style="margin:0"></div>
-  </div>
-  <div class="table-wrap reveal"><table><thead><tr><th>Outil</th><th>Catégorie</th><th>Rôle</th></tr></thead><tbody id="toolRows"></tbody></table></div>
-  <p class="cap reveal" id="toolCount" style="margin-top:10px"></p>
-  <div class="grid g2" style="margin-top:26px">
-    <div class="reveal">
-      <h3 style="margin-bottom:12px">Brancher Claude Code</h3>
-<pre><button class="copy">Copier</button>claude mcp add --transport http nemo "https://nemo.moideici.tech/mcp" \
-  --header "Authorization: Bearer &lt;NEMO_TOKEN&gt;"</pre>
-      <p>Claude Desktop ou mobile : Réglages › Connecteurs › connecteur personnalisé, avec <code>https://nemo.moideici.tech/mcp?key=&lt;NEMO_TOKEN&gt;</code>.</p>
-    </div>
-    <div class="reveal">
-      <h3 style="margin-bottom:12px">Brancher ChatGPT</h3>
-      <p>Même un compte gratuit : chatgpt.com/plugins › serveur MCP personnalisé, authentification « Aucune ». Nemo PC et l'app Android remplissent le formulaire <b>tout seuls</b> (« Ajouter Nemo à ChatGPT »).</p>
-    </div>
-  </div>
-  <div class="note warn reveal"><b>Le jeton est un mot de passe.</b> Ne le collez jamais dans un dépôt, un message de commit ou une capture. Pour relier un appareil sans le copier, utilisez le <b>code de liaison</b> (5 min, usage unique).</div>
-</section>
-
-<!-- ============================ 08 GARDE-FOUS ============================ -->
-<section id="garde-fous">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">08</span> Blocage & garde-fous</div>
-    <h2>Un verrou qui <mark>ne piège jamais l'élève</mark>.</h2>
-    <p>Sélectionnez un état du PC pour voir ce qui se passe et comment en sortir. Le blocage est un contrôle parental volontaire : il doit toujours avoir une issue.</p>
-  </div>
-  <div class="diagram reveal"><svg id="lock" viewBox="0 0 960 300" role="img" aria-label="Machine à états du verrou"></svg></div>
-  <div class="info reveal" id="lockInfo" aria-live="polite"></div>
-  <div style="margin-top:26px" class="reveal">
-    <details open><summary>Concentration et blocage des sites</summary><div>Pendant une session, la navigation est limitée aux pages utiles (l'assistant, la page de l'exercice). Le mode « Réviser maintenant (sans verrou) » existe depuis l'icône de la barre des tâches.</div></details>
-    <details><summary>Notification « Blocage pas configuré »</summary><div>Si rien ne verrouillera jamais ce PC, une notification le dit au lancement puis au plus une fois par jour. Raisons, dans l'ordre : planning jamais lu, Nemo ne démarre pas avec Windows, verrouillage désactivé, planning non fiable, planning en cache trop vieux, aucun créneau à venir.</div></details>
-    <details><summary>Planning non fiable ou trop vieux</summary><div>Le cache disque du planning est fiable 24 h par défaut. Au-delà, ou si l'emploi du temps est jugé non fiable, aucun verrou ne se déclenche : mieux vaut ne pas bloquer que bloquer à tort.</div></details>
-    <details><summary>Fin de session : le bilan reste à l'écran</summary><div>Dès la session menée au bout, le PC est libéré mais la page de résultats reste affichée. Le bouton « Retour à Claude » bascule la même fenêtre sur la conversation qui a construit la session, pour le débrief. « Terminer maintenant » ne déverrouille pas tant que la session n'est pas allée à son terme une première fois.</div></details>
-    <details><summary>Sur le téléphone</summary><div>Le blocage est désactivé par défaut et se règle dans Réglages (statistiques d'usage, affichage par-dessus les apps, alarmes exactes). Aucun service d'accessibilité n'est utilisé. Bloqué, le téléphone vérifie l'état du créneau toutes les 30 s.</div></details>
-    <details><summary>Hors connexion</summary><div>Un parcours est pré-chargé en entier dès son ouverture. Les résultats sont écrits en local puis envoyés dans l'ordre au retour du réseau : une coupure ne fait perdre aucune réponse et n'empêche pas de finir la session.</div></details>
-  </div>
-</section>
-
-<!-- ============================ 09 INSTALLER ============================ -->
-<section id="install">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">09</span> Installer & mettre à jour</div>
-    <h2>Qui construit, <mark>qui installe</mark>.</h2>
-    <p>Aucun build ne se fait sur une machine : tout vient de la CI GitHub avec une clé de signature unique. Choisissez une brique.</p>
-  </div>
-  <div class="tabs reveal" id="itabs" role="tablist"></div>
-  <div class="reveal" id="ipanes"></div>
-  <div class="note reveal"><b>Pourquoi la CI seulement ?</b> Décision du 12/10/2026 : des builds locaux avaient chacun une clé de debug différente, donc une mise à jour ne s'installait plus par-dessus (perte du jeton et des réglages).</div>
-</section>
-
-<!-- ============================ 10 REGLES ============================ -->
-<section id="regles">
-  <div class="sec-head reveal">
-    <div class="cap"><span class="num">10</span> Règles de travail</div>
-    <h2>Pousser, documenter, <mark>prioriser</mark>.</h2>
-    <p>Le projet se développe depuis plusieurs machines et avec plusieurs outils IA. Quelques règles évitent de se perdre.</p>
-  </div>
-  <div class="grid g3">
-    <div class="card reveal"><span class="pill y">1</span><h3 style="margin:10px 0 6px">Tout est poussé</h3><p style="margin:0">Cette machine n'est pas la principale : chaque changement est commité <b>et</b> poussé, avec un message clair.</p></div>
-    <div class="card reveal"><span class="pill g">2</span><h3 style="margin:10px 0 6px">Doc toujours à jour</h3><p style="margin:0">Chaque dépôt a un <code>README.md</code> et un <code>docs/README.md</code> qui donne le statut de chaque plan : Réalisé, En cours, Obsolète, Idée.</p></div>
-    <div class="card reveal"><span class="pill p">3</span><h3 style="margin:10px 0 6px">Priorités d'abord</h3><p style="margin:0">Une grosse nouveauté alors qu'un point plus grave attend ? On le dit avant de commencer. Si tu insistes, on le fait, puis on rappelle la priorité sautée.</p></div>
-  </div>
-  <h3 style="margin:34px 0 12px" class="reveal">Pipeline du serveur</h3>
-  <div class="flow reveal"><span class="st" style="--i:0">Pull request</span><span class="ar">→</span><span class="st" style="--i:1">Fusion sur <code>master</code></span><span class="ar">→</span><span class="st" style="--i:2">Tests (Node 22)</span><span class="ar">→</span><span class="st" style="--i:3">wrangler deploy</span><span class="ar">→</span><span class="st" style="--i:4">nemo.moideici.tech</span></div>
-  <div class="note reveal"><b><code>[skip ci]</code></b> dans le message d'un commit de documentation seule : sans lui, chaque push sur <code>master</code> relance les tests et un déploiement, et chaque push sur une app relance un build.</div>
-  <h3 style="margin:30px 0 12px" class="reveal">Les dépôts</h3>
-  <div class="table-wrap reveal"><table>
-    <thead><tr><th>Dépôt</th><th>Rôle</th><th>Branche</th><th>Mise à jour</th></tr></thead>
-    <tbody>
-      <tr><td><a href="https://github.com/moidefr/nemo-https">nemo-https</a></td><td>Serveur + site (Cloudflare)</td><td><code>master</code></td><td>automatique à la fusion</td></tr>
-      <tr><td><a href="https://github.com/moidefr/nemo-pc">nemo-pc</a></td><td>App Windows</td><td><code>main</code></td><td><code>scripts/install.ps1</code></td></tr>
-      <tr><td><a href="https://github.com/moidefr/nemo-app">nemo-app</a></td><td>App Android</td><td><code>main</code></td><td><code>scripts/update-app.ps1</code></td></tr>
-      <tr><td><a href="https://github.com/moidefr/nemo-docs">nemo-docs</a></td><td>Charte, architecture, ce site</td><td><code>main</code></td><td>—</td></tr>
-      <tr><td><a href="https://github.com/moidefr/agent-hub">agent-hub</a></td><td><code>ah</code> : Claude délègue à Codex</td><td><code>main</code></td><td><code>npm link</code></td></tr>
-      <tr><td><a href="https://github.com/moidefr/nemo">nemo</a></td><td>Ancien serveur local (historique)</td><td><code>main</code></td><td>plus maintenu</td></tr>
-    </tbody>
-  </table></div>
-</section>
+    <div class="tiles" id="tiles" data-stagger></div>
+  </section>
 </div>
+
 </main>
+<footer id="footer"></footer>
 
-<footer>
-  <div class="wrap">
-    <div><a class="logo" href="#top"><i></i>Nemo</a><p class="cap" style="margin:8px 0 0">Documentation · mise à jour le 11/11/2026</p></div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <a class="btn small" href="https://github.com/moidefr/nemo-docs">GitHub · nemo-docs</a>
-    </div>
-  </div>
-</footer>
 <button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
-
 <div id="pal" role="dialog" aria-modal="true" aria-label="Recherche">
-  <div class="box"><input id="palIn" type="text" placeholder="Aller à une section, un outil, un format…" autocomplete="off"><ul id="palList"></ul></div>
+  <div class="box"><input id="palIn" type="text" placeholder="Rechercher une page, un outil, un format…" autocomplete="off"><ul id="palList"></ul></div>
 </div>
-
 <script src="js/data.js"></script>
+<script src="js/data2.js"></script>
 <script src="js/diagrams.js"></script>
 <script src="js/sims.js"></script>
 <script src="js/ui.js"></script>

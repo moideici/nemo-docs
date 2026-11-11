@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verrou — Nemo</title>
+<meta name="description" content="États du blocage Nemo et garde-fous.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+<script>
+  try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body data-page="verrou">
+<div id="progress" aria-hidden="true"></div>
+<header class="nav" id="nav"></header>
+<main id="top">
+<div class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Accueil</a> / Verrou</div>
+    <h1><span>Un</span><span>verrou</span><span>qui</span><span>ne</span><span>piège</span><span>jamais</span></h1>
+    <p class="lead">Le blocage est un contrôle parental <b>volontaire</b> : il doit toujours avoir une issue. Sélectionnez un état du PC pour voir ce qui se passe et comment en sortir.</p>
+  </div>
+</div>
+<div class="wrap">
+<section id="garde-fous" class="page-sec">
+  <div class="diagram reveal"><svg id="lock" viewBox="0 0 960 300" role="img" aria-label="Machine à états du verrou"></svg></div>
+  <div style="margin-top:12px"><span class="live" id="lockLive">parcours automatique des états</span></div>
+  <div class="info reveal" id="lockInfo" aria-live="polite"></div>
+  <div style="margin-top:26px" class="reveal">
+    <details open><summary>Concentration et blocage des sites</summary><div>Pendant une session, la navigation est limitée aux pages utiles (l'assistant, la page de l'exercice). Le mode « Réviser maintenant (sans verrou) » existe depuis l'icône de la barre des tâches.</div></details>
+    <details><summary>Notification « Blocage pas configuré »</summary><div>Si rien ne verrouillera jamais ce PC, une notification le dit au lancement puis au plus une fois par jour. Raisons, dans l'ordre : planning jamais lu, Nemo ne démarre pas avec Windows, verrouillage désactivé, planning non fiable, planning en cache trop vieux, aucun créneau à venir.</div></details>
+    <details><summary>Planning non fiable ou trop vieux</summary><div>Le cache disque du planning est fiable 24 h par défaut. Au-delà, ou si l'emploi du temps est jugé non fiable, aucun verrou ne se déclenche : mieux vaut ne pas bloquer que bloquer à tort.</div></details>
+    <details><summary>Fin de session : le bilan reste à l'écran</summary><div>Dès la session menée au bout, le PC est libéré mais la page de résultats reste affichée. Le bouton « Retour à Claude » bascule la même fenêtre sur la conversation qui a construit la session, pour le débrief. « Terminer maintenant » ne déverrouille pas tant que la session n'est pas allée à son terme une première fois.</div></details>
+    <details><summary>Sur le téléphone</summary><div>Le blocage est désactivé par défaut et se règle dans Réglages (statistiques d'usage, affichage par-dessus les apps, alarmes exactes). Aucun service d'accessibilité n'est utilisé. Bloqué, le téléphone vérifie l'état du créneau toutes les 30 s.</div></details>
+    <details><summary>Hors connexion</summary><div>Un parcours est pré-chargé en entier dès son ouverture. Les résultats sont écrits en local puis envoyés dans l'ordre au retour du réseau : une coupure ne fait perdre aucune réponse et n'empêche pas de finir la session.</div></details>
+  </div>
+</section>
+<nav class="pager" id="pager"></nav>
+</div>
+</main>
+<footer id="footer"></footer>
+<button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
+<div id="pal" role="dialog" aria-modal="true" aria-label="Recherche">
+  <div class="box"><input id="palIn" type="text" placeholder="Rechercher une page, un outil, un format…" autocomplete="off"><ul id="palList"></ul></div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/diagrams.js"></script>
+<script src="js/sims.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>

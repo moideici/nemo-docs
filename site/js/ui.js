@@ -1,15 +1,32 @@
-/* Interface générale : thème, progression, révélations, compteurs, curseur-bulle, palette de recherche, easter egg. */
+/* Interface commune à toutes les pages : navigation, pied de page, pager, thème, progression,
+   apparitions au scroll (avec cascade), compteurs, palette de recherche (Ctrl K ou /). */
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduce = NEMO.reduce;
+  var page = document.body.getAttribute("data-page") || "index";
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  /* ----- navigation, pied de page, pager (construits ici : une seule source pour toutes les pages) ----- */
+  $("nav").innerHTML = '<div class="wrap"><a class="logo" href="index.html" aria-label="Nemo, accueil"><i></i>Nemo</a>' +
+    '<nav class="links" aria-label="Pages">' + NEMO.pages.filter(function (p) { return p.nav; }).map(function (p) {
+      return '<a href="' + p.href + '"' + (p.id === page ? ' aria-current="page"' : "") + ">" + esc(p.t) + "</a>";
+    }).join("") + '</nav><div class="tools"><button class="ico search" id="open-pal" aria-label="Rechercher (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button><button class="ico" id="theme" aria-label="Changer de thème">◐</button></div></div>';
+  $("footer").innerHTML = '<div class="wrap"><div><a class="logo" href="index.html"><i></i>Nemo</a><p class="cap" style="margin:10px 0 0">Documentation · mise à jour le 11/11/2026</p></div>' +
+    '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px">' + NEMO.pages.filter(function (p) { return p.nav; }).map(function (p) { return '<a href="' + p.href + '">' + esc(p.t) + "</a>"; }).join("") + "</div>" +
+    '<a class="btn small" href="https://github.com/moidefr/nemo-docs">GitHub · nemo-docs</a></div>';
+  var pager = $("pager");
+  if (pager) {
+    var ix = NEMO.pages.map(function (p) { return p.id; }).indexOf(page), pv = NEMO.pages[ix - 1], nx = NEMO.pages[ix + 1];
+    pager.innerHTML = (pv ? '<a class="prev" href="' + pv.href + '"><small>Page précédente</small><b>' + esc(pv.t) + "</b></a>" : "") + (nx ? '<a class="next" href="' + nx.href + '"><small>Page suivante</small><b>' + esc(nx.t) + "</b></a>" : "");
+  }
 
   NEMO.initDiagrams();
   NEMO.initSims();
 
-  /* thème */
+  /* ----- thème ----- */
   function systemDark() { return matchMedia("(prefers-color-scheme: dark)").matches; }
   function isDark() { var t = document.documentElement.dataset.theme; return t ? t === "dark" : systemDark(); }
-  function paintMeta() { var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = isDark() ? "#0E141F" : "#FCFAF4"; }
+  function paintMeta() { var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = isDark() ? "#0A0C10" : "#FFFFFF"; }
   $("theme").addEventListener("click", function () {
     var t = isDark() ? "light" : "dark"; document.documentElement.dataset.theme = t;
     try { localStorage.setItem("nemo-theme", t); } catch (e) {}
@@ -17,55 +34,57 @@
   });
   paintMeta();
 
-  /* progression + bouton haut + section active */
-  var bar = $("progress"), top = $("toTop"), links = [].slice.call(document.querySelectorAll(".links a"));
-  var secs = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+  /* ----- progression de lecture + bouton haut ----- */
+  var bar = $("progress"), top = $("toTop");
   function onScroll() {
     var h = document.documentElement, p = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
     bar.style.width = (p * 100) + "%"; top.classList.toggle("on", h.scrollTop > 900);
-    var cur = -1; secs.forEach(function (s, i) { if (s && s.getBoundingClientRect().top < innerHeight * .35) cur = i; });
-    links.forEach(function (a, i) { a.classList.toggle("on", i === cur); });
-    if (cur >= 0 && links[cur] && links[cur].scrollIntoView && innerWidth < 900) { var l = links[cur].parentNode; l.scrollLeft = links[cur].offsetLeft - 60; }
   }
   addEventListener("scroll", onScroll, { passive: true }); onScroll();
   top.addEventListener("click", function () { scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); });
 
-  /* révélation au scroll */
+  /* ----- apparitions : .reveal (individuelles), [data-stagger] (en cascade), alternance gauche/droite ----- */
+  document.querySelectorAll(".sim, .grid.g2").forEach(function (g) {
+    [].forEach.call(g.children, function (c, k) { if (c.classList.contains("reveal")) c.classList.add(k % 2 ? "from-right" : "from-left"); });
+  });
+  document.querySelectorAll("[data-stagger]").forEach(function (g) { [].forEach.call(g.children, function (c, k) { c.style.setProperty("--i", k); }); });
+  var targets = [].slice.call(document.querySelectorAll(".reveal, [data-stagger]"));
   if ("IntersectionObserver" in window && !reduce) {
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: .08, rootMargin: "0px 0px -40px 0px" });
-    document.querySelectorAll(".reveal").forEach(function (n) { io.observe(n); });
-  } else document.querySelectorAll(".reveal").forEach(function (n) { n.classList.add("in"); });
+    targets.forEach(function (n) { io.observe(n); });
+  } else targets.forEach(function (n) { n.classList.add("in"); });
 
-  /* compteurs */
+  /* ----- compteurs (au moment où ils apparaissent) ----- */
   document.querySelectorAll("[data-count]").forEach(function (n) {
-    var to = +n.getAttribute("data-count"), t0 = performance.now();
+    var to = +n.getAttribute("data-count");
     if (reduce) { n.textContent = to; return; }
-    (function f(t) { var k = Math.min(1, (t - t0) / 1100); n.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+    NEMO.onVisible(n, function () {
+      var t0 = performance.now();
+      (function f(t) { var k = Math.min(1, (t - t0) / 1200); n.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+    }, .5);
   });
 
-  /* copier (blocs statiques) */
+  /* ----- copier (blocs statiques) ----- */
   document.querySelectorAll("#mcp pre .copy").forEach(function (cp) {
     cp.addEventListener("click", function () {
       var txt = cp.parentNode.textContent.replace(cp.textContent, "").trim();
-      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { cp.textContent = "Copié ✓"; }, function () { cp.textContent = "Ctrl+C"; });
+      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { cp.textContent = "Copié"; }, function () { cp.textContent = "Ctrl+C"; });
       setTimeout(function () { cp.textContent = "Copier"; }, 1600);
     });
   });
 
-  /* palette de recherche (Ctrl+K ou /) */
+  /* ----- palette de recherche (pages, sections, outils, formats) ----- */
   var pal = $("pal"), inp = $("palIn"), list = $("palList"), items = [], shown = [], sel = 0;
-  links.forEach(function (a) { items.push({ t: a.textContent, k: "Section", go: function () { location.hash = a.getAttribute("href"); } }); });
-  [["Architecture : serveur, apps, assistant", "#vue", "schéma briques cloudflare"], ["Cycle d'une session (diagramme de séquence)", "#cycle", "créneau claim lien résultat"],
-   ["Planificateur : créneaux de révision", "#planning", "emploi du temps indisponible préavis"], ["Formats d'exercice", "#exercices", "qcm cloze flashcard"],
-   ["Révision espacée : boîtes de Leitner", "#memoire", "leitner intervalles boîtes répétition"], ["Gamification : XP, série, niveaux", "#jeu", "combo bouclier coffre points"],
-   ["Serveur MCP et outils", "#mcp", "assistant claude chatgpt jeton"], ["Verrou, états et garde-fous", "#garde-fous", "blocage pause hors ligne"],
-   ["Installer et mettre à jour", "#install", "install.ps1 update-app apk ci"], ["Règles de travail et dépôts", "#regles", "skip ci branches pousser"]].forEach(function (s) {
-    items.push({ t: s[0], k: "Section", extra: s[2], go: function () { location.hash = s[1]; } });
+  NEMO.pages.forEach(function (p) { items.push({ t: p.t, k: "Page", extra: p.d, href: p.href }); });
+  [["Architecture : serveur, apps, assistant", "architecture.html", "schéma briques cloudflare ci"], ["Cycle d'une session (diagramme de séquence)", "session.html#cycle", "créneau claim lien résultat"],
+   ["Planificateur : créneaux de révision", "session.html#planning", "emploi du temps indisponible préavis"], ["Formats d'exercice", "exercices.html", "qcm cloze flashcard"],
+   ["Révision espacée : boîtes de Leitner", "progression.html#memoire", "leitner intervalles boîtes répétition"], ["Gamification : XP, série, niveaux", "progression.html#jeu", "combo bouclier coffre points"],
+   ["Brancher Claude Code ou ChatGPT", "mcp.html", "assistant jeton connecteur"], ["États du verrou et garde-fous", "verrou.html", "blocage pause hors ligne"],
+   ["Installer et mettre à jour", "installer.html#install", "install.ps1 update-app apk ci"], ["Règles de travail et dépôts", "installer.html#regles", "skip ci branches pousser"]].forEach(function (s) {
+    items.push({ t: s[0], k: "Section", extra: s[2], href: s[1] });
   });
-  items.push({ t: "Brancher Claude Code", k: "Section", go: function () { location.hash = "#mcp"; } });
-  items.push({ t: "Machine à états du verrou", k: "Section", go: function () { location.hash = "#garde-fous"; } });
-  NEMO.tools.forEach(function (t) { items.push({ t: t[0], k: "Outil MCP", extra: t[2], go: function () { var q = $("toolQ"); q.value = t[0]; q.dispatchEvent(new Event("input")); location.hash = "#mcp"; } }); });
-  NEMO.formats.forEach(function (f, i) { items.push({ t: f.n + " (" + f.id + ")", k: "Format", extra: f.d, go: function () { location.hash = "#exercices"; document.querySelectorAll(".fcard")[i].click(); } }); });
+  NEMO.tools.forEach(function (t) { items.push({ t: t[0], k: "Outil MCP", extra: t[2], href: "mcp.html?q=" + encodeURIComponent(t[0]) }); });
+  NEMO.formats.forEach(function (f) { items.push({ t: f.n + " (" + f.id + ")", k: "Format", extra: f.d, href: "exercices.html?f=" + f.id }); });
   function norm(s) { return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
   function render() {
     var q = norm(inp.value.trim()); list.innerHTML = "";
@@ -80,7 +99,7 @@
     });
   }
   function mark() { [].forEach.call(list.children, function (li, i) { li.classList.toggle("sel", i === sel); }); }
-  function choose(i) { var it = shown[i]; if (!it) return; close(); setTimeout(it.go, 30); }
+  function choose(i) { var it = shown[i]; if (!it) return; close(); location.href = it.href; }
   function open() { pal.classList.add("open"); inp.value = ""; sel = 0; render(); inp.focus(); }
   function close() { pal.classList.remove("open"); }
   $("open-pal").addEventListener("click", open);
@@ -96,5 +115,4 @@
     else if (e.key === "Escape") close();
     else if (e.key === "/" && !(e.target.matches && e.target.matches("input, textarea"))) { e.preventDefault(); open(); }
   });
-
 })();

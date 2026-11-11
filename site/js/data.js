@@ -118,13 +118,13 @@ NEMO.lock = [
 /* ---------- formats d'exercice ---------- */
 NEMO.fcats = ["Tous", "Choix", "Rappel actif", "Ordre & association", "Visuel", "Réflexion"];
 NEMO.formats = [
-  { id: "qcm", n: "QCM", c: "Choix", e: "🔘", d: "Question à choix multiples, correction immédiate (vert/rose + explication). Mode chrono optionnel, jamais par défaut." },
+  { id: "qcm", n: "QCM", c: "Choix", e: "🔘", demo: true, d: "Question à choix multiples, correction immédiate (vert/rose + explication). Mode chrono optionnel, jamais par défaut." },
   { id: "blind-qcm", n: "QCM aveugle", c: "Choix", e: "🂠", demo: true, d: "Les choix sont cachés derrière une carte à retourner : il faut chercher la réponse avant de découvrir les options." },
   { id: "true-false", n: "Vrai / Faux", c: "Choix", e: "⚖️", demo: true, d: "Correction immédiate avec une justification affichée après coup (jamais un texte que l'élève écrit)." },
   { id: "odd-one-out", n: "Intrus", c: "Choix", e: "🕵️", d: "Plusieurs manches, un élément qui ne va pas avec les autres à repérer dans chacune." },
-  { id: "flashcard", n: "Flashcard", c: "Rappel actif", e: "🃏", d: "Recto/verso, « Je savais » ou « À revoir ». Les cartes ratées reviennent plus souvent." },
+  { id: "flashcard", n: "Flashcard", c: "Rappel actif", e: "🃏", demo: true, d: "Recto/verso, « Je savais » ou « À revoir ». Les cartes ratées reviennent plus souvent." },
   { id: "cloze", n: "Texte à trous", c: "Rappel actif", e: "✍️", demo: true, d: "Les trous sont dans le texte. Mode « type » (on écrit) ou « bank » (banque de mots avec intrus). Indifférent à la casse, aux accents et à œ/æ." },
-  { id: "numeric", n: "Calcul éclair", c: "Rappel actif", e: "🔢", d: "Taper un nombre, avec tolérance absolue ou relative." },
+  { id: "numeric", n: "Calcul éclair", c: "Rappel actif", e: "🔢", demo: true, d: "Taper un nombre, avec tolérance absolue ou relative." },
   { id: "mystery", n: "Mot mystère", c: "Rappel actif", e: "🔤", d: "Des indices qui se dévoilent un par un." },
   { id: "open-question", n: "Question ouverte", c: "Rappel actif", e: "💬", d: "Réponse écrite, corrigée par l'IA en arrière-plan : on passe à la suite, le verdict arrive en notification." },
   { id: "matching", n: "Association", c: "Ordre & association", e: "🔗", d: "Terme/définition, formule/nom, pays/capitale… paires génériques." },

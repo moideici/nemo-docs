@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serveur MCP — Nemo</title>
+<meta name="description" content="Outils MCP de Nemo pour Claude et ChatGPT.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+<script>
+  try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body data-page="mcp">
+<div id="progress" aria-hidden="true"></div>
+<header class="nav" id="nav"></header>
+<main id="top">
+<div class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Accueil</a> / Serveur MCP</div>
+    <h1><span>Les</span><span>outils</span><span>de</span><span>l'assistant</span></h1>
+    <p class="lead">Claude ou ChatGPT se branchent sur <code>/mcp</code> du serveur. Les briefs en un appel remplacent une dizaine d'appels : l'IA reçoit le squelette de la session et n'a plus qu'à écrire le contenu.</p>
+  </div>
+</div>
+<div class="wrap">
+<section id="mcp" class="page-sec">
+  <div class="tools-bar reveal">
+    <input class="field" id="toolQ" type="search" placeholder="Filtrer : brief, cours, publier, exercice…" aria-label="Filtrer les outils">
+    <div class="layers" id="toolCats" style="margin:0"></div>
+  </div>
+  <div class="table-wrap reveal"><table><thead><tr><th>Outil</th><th>Catégorie</th><th>Rôle</th></tr></thead><tbody id="toolRows" data-stagger></tbody></table></div>
+  <p class="cap reveal" id="toolCount" style="margin-top:10px"></p>
+  <div class="grid g2" style="margin-top:26px">
+    <div class="reveal">
+      <h3 style="margin-bottom:12px">Brancher Claude Code</h3>
+<pre><button class="copy">Copier</button>claude mcp add --transport http nemo "https://nemo.moideici.tech/mcp" \
+  --header "Authorization: Bearer &lt;NEMO_TOKEN&gt;"</pre>
+      <p>Claude Desktop ou mobile : Réglages › Connecteurs › connecteur personnalisé, avec <code>https://nemo.moideici.tech/mcp?key=&lt;NEMO_TOKEN&gt;</code>.</p>
+    </div>
+    <div class="reveal">
+      <h3 style="margin-bottom:12px">Brancher ChatGPT</h3>
+      <p>Même un compte gratuit : chatgpt.com/plugins › serveur MCP personnalisé, authentification « Aucune ». Nemo PC et l'app Android remplissent le formulaire <b>tout seuls</b> (« Ajouter Nemo à ChatGPT »).</p>
+    </div>
+  </div>
+  <div class="note warn reveal"><b>Le jeton est un mot de passe.</b> Ne le collez jamais dans un dépôt, un message de commit ou une capture. Pour relier un appareil sans le copier, utilisez le <b>code de liaison</b> (5 min, usage unique).</div>
+</section>
+<nav class="pager" id="pager"></nav>
+</div>
+</main>
+<footer id="footer"></footer>
+<button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
+<div id="pal" role="dialog" aria-modal="true" aria-label="Recherche">
+  <div class="box"><input id="palIn" type="text" placeholder="Rechercher une page, un outil, un format…" autocomplete="off"><ul id="palList"></ul></div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/diagrams.js"></script>
+<script src="js/sims.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session et planning — Nemo</title>
+<meta name="description" content="Cycle d'une session Nemo, du planning au déverrouillage, et planificateur de créneaux.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+<script>
+  try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body data-page="session">
+<div id="progress" aria-hidden="true"></div>
+<header class="nav" id="nav"></header>
+<main id="top">
+<div class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Accueil</a> / Session et planning</div>
+    <h1><span>Du</span><span>planning</span><span>au</span><span>déverrouillage</span></h1>
+    <p class="lead">Une session suit toujours le même chemin : <b>planning, préavis, verrou, construction, jeu, libération</b>. Un seul appareil prépare la session d'un créneau ; les autres reprennent son lien.</p>
+  </div>
+</div>
+<div class="wrap">
+<section id="cycle" class="page-sec">
+  <div class="sec-head reveal">
+    <div class="cap">Cycle d'une session</div>
+    <h2>De l'emploi du temps au <mark>déverrouillage</mark>.</h2>
+    <p>Un seul appareil prépare la session d'un créneau, les autres reprennent son lien. L'animation démarre toute seule quand le schéma apparaît ; vous pouvez la mettre en pause ou avancer étape par étape (boutons ou flèches ← →).</p>
+  </div>
+  <div class="diagram reveal"><svg id="seq" viewBox="0 0 960 560" role="img" aria-label="Diagramme de séquence d'une session"></svg></div>
+  <div class="seq-ctrl reveal">
+    <button class="btn small" id="seqPrev">← Précédent</button>
+    <button class="btn small primary" id="seqNext">Suivant →</button>
+    <button class="btn small reward" id="seqPlay">▶ Lecture</button>
+    <button class="btn small" id="seqReset">↺ Recommencer</button>
+    <span class="live" id="seqLive">lecture automatique</span>
+    <span class="count" id="seqCount"></span>
+  </div>
+  <div class="info reveal" id="seqInfo" aria-live="polite"></div>
+  <div class="note ok reveal"><b>Sans serveur ?</b> Chaque appareil retombe sur sa génération locale. Au bout de 6 minutes d'attente d'un autre appareil, le téléphone génère lui-même sa session.</div>
+</section>
+<section id="planning" class="page-sec">
+  <div class="sec-head reveal">
+    <div class="cap">Planificateur</div>
+    <h2>Emploi du temps <mark>moins</mark> plages indisponibles.</h2>
+    <p>Le serveur lit l'emploi du temps EcoleDirecte, retire les plages déclarées indisponibles, et ce qui reste devient des créneaux de révision. Sélectionnez n'importe quel bloc de la journée pour en voir le détail.</p>
+  </div>
+  <div class="card reveal zoom">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div class="cap">Mercredi · journée type</div><div class="cap" id="daySum"></div></div>
+    <div class="ticks" id="ticks" aria-hidden="true"></div>
+    <div class="tl" id="tl" role="group" aria-label="Blocs de la journée"></div>
+    <div class="legend">
+      <span><i style="background:repeating-linear-gradient(135deg, var(--card) 0 3px, var(--line) 3px 4px)"></i>cours (EcoleDirecte)</span>
+      <span><i style="background:var(--pink)"></i>indisponible</span>
+      <span><i style="background:var(--accent-soft);border-color:var(--accent)"></i>créneau de révision</span>
+    </div>
+  </div>
+  <div class="info reveal" id="dayInfo" aria-live="polite"></div>
+  <h3 style="margin:38px 0 14px" class="reveal">Règles du planificateur</h3>
+  <div class="grid g3" data-stagger id="rules">
+    <button class="card rule" data-k="warn" style="text-align:left;cursor:pointer;font:inherit;color:inherit"><span class="pill b">Préavis</span><h3 style="margin:10px 0 6px">5 min avant</h3><p style="margin:0">Notification, puis verrou. Réglable par <code>warnLeadMinutes</code>.</p></button>
+    <button class="card rule" data-k="late" style="text-align:left;cursor:pointer;font:inherit;color:inherit"><span class="pill g">Rattrapage</span><h3 style="margin:10px 0 6px">PC allumé en retard</h3><p style="margin:0">Il se verrouille aussitôt, sauf s'il reste moins de 5 min.</p></button>
+    <button class="card rule" data-k="quiet" style="text-align:left;cursor:pointer;font:inherit;color:inherit"><span class="pill y">Heures calmes</span><h3 style="margin:10px 0 6px">Jamais le verrou</h3><p style="margin:0">Ni annonce ni préavis, réglées une fois sur le site.</p></button>
+  </div>
+</section>
+<nav class="pager" id="pager"></nav>
+</div>
+</main>
+<footer id="footer"></footer>
+<button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
+<div id="pal" role="dialog" aria-modal="true" aria-label="Recherche">
+  <div class="box"><input id="palIn" type="text" placeholder="Rechercher une page, un outil, un format…" autocomplete="off"><ul id="palList"></ul></div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/diagrams.js"></script>
+<script src="js/sims.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Progression — Nemo</title>
+<meta name="description" content="Révision espacée de Leitner et gamification dans Nemo.">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/pages.css">
+<script>
+  try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body data-page="progression">
+<div id="progress" aria-hidden="true"></div>
+<header class="nav" id="nav"></header>
+<main id="top">
+<div class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Accueil</a> / Progression</div>
+    <h1><span>Réviser</span><span>au</span><span>bon</span><span>rythme</span></h1>
+    <p class="lead">Nemo ne répète pas tout, tout le temps : chaque notion avance de <b>boîte en boîte</b> à chaque bonne réponse, et le jeu récompense l'apprentissage, jamais le volume. Les deux simulateurs tournent seuls ; cliquez pour reprendre la main.</p>
+  </div>
+</div>
+<div class="wrap">
+<section id="memoire" class="page-sec">
+  <div class="sec-head reveal">
+    <div class="cap">Révision espacée</div>
+    <h2>Une boîte de plus à chaque <mark>bonne réponse</mark>.</h2>
+    <p>Méthode de Leitner : 6 boîtes (0 à 5), intervalles <code>1 · 2 · 4 · 7 · 14 · 30</code> jours. Juste, on monte d'une boîte ; faux, retour à la boîte 0. Simulez le parcours d'une notion.</p>
+  </div>
+  <div class="sim">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div class="cap">Notion : « formule du discriminant »</div><span class="live" id="lLive">démo automatique</span></div>
+      <div class="boxes" id="boxes"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn primary" id="lRight">Je savais</button>
+        <button class="btn" id="lWrong">Raté</button>
+        <button class="btn small" id="lReset">↺</button>
+      </div>
+      <p style="margin:16px 0 0" id="lOut"></p>
+    </div>
+    <div class="card">
+      <div class="cap">Journal</div>
+      <div class="log" id="lLog"></div>
+      <p class="cap" style="margin:14px 0 0">Code : <code>nemo-https/src/spacedRepetition.js</code> (fonction pure <code>nextSchedule</code>) · API : <code>GET /api/review/today</code>, <code>PUT /api/progression/:id</code></p>
+    </div>
+  </div>
+</section>
+<section id="jeu" class="page-sec">
+  <div class="sec-head reveal">
+    <div class="cap">Gamification</div>
+    <h2>On récompense l'<mark>apprentissage</mark>, pas le volume.</h2>
+    <p>Aucun classement, aucune comparaison, aucun bonus de vitesse. Chaque notion ne rapporte <b>qu'une fois par jour</b>. La série de bonnes réponses multiplie les points. Testez le barème.</p>
+  </div>
+  <div class="sim">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div><div class="cap">Niveau</div><div class="big-num" id="gLevel">1</div></div>
+        <div style="flex:1;min-width:160px"><div class="cap" id="gXp">0 XP</div><div class="track"><i id="gBar"></i></div></div>
+        <div><div class="cap">Série</div><div class="big-num" id="gCombo">0</div></div>
+      </div>
+      <div class="mult" id="gMult"></div>
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span class="live" id="gLive">démo automatique</span></div>
+      <div class="cap" style="margin-top:8px">Boucliers <span id="gShields"></span> · boost <b id="gBoost">0</b></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        <button class="btn primary" id="gRight">Bonne réponse (+1)</button>
+        <button class="btn reward" id="gRecall">Rappel actif (+2)</button>
+        <button class="btn" id="gWrong">Erreur</button>
+        <button class="btn small" id="gReset">↺</button>
+      </div>
+      <p class="cap" style="margin:14px 0 0">Chaque clic = une nouvelle notion. Une même notion déjà comptée aujourd'hui rapporte 0.</p>
+    </div>
+    <div class="card">
+      <div class="cap">Barème (source : <code>public/static/game/rules.js</code>)</div>
+      <div class="table-wrap" style="box-shadow:none;margin-top:10px"><table>
+        <tr><th>Réponse</th><th>Points</th></tr>
+        <tr><td>Bonne réponse à choix (QCM, vrai/faux, tri…)</td><td>+1</td></tr>
+        <tr><td>Rappel actif (texte à trous, pas-à-pas, memory du 1<sup>er</sup> coup)</td><td>+2</td></tr>
+        <tr><td>Notion maîtrisée (session hybride)</td><td>+2, +3 si « due »</td></tr>
+        <tr><td>Bonne réponse avec indice ouvert</td><td>−25 % (min. −1)</td></tr>
+        <tr><td>Réponse fausse</td><td>0, mais mémorisée</td></tr>
+      </table></div>
+      <div class="log" id="gLog" style="margin-top:14px;height:120px"></div>
+    </div>
+  </div>
+  <p class="reveal" style="margin-top:20px"><b>Trois intensités</b> de retour visuel : <span class="pill">Éteint</span> <span class="pill s">Discret</span> <span class="pill y">Complet</span> (défaut). Récompense à chaque dizaine de série : bouclier, boost (×2 sur 3 réponses) ou couleur de logo.</p>
+</section>
+<nav class="pager" id="pager"></nav>
+</div>
+</main>
+<footer id="footer"></footer>
+<button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
+<div id="pal" role="dialog" aria-modal="true" aria-label="Recherche">
+  <div class="box"><input id="palIn" type="text" placeholder="Rechercher une page, un outil, un format…" autocomplete="off"><ul id="palList"></ul></div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/diagrams.js"></script>
+<script src="js/sims.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
