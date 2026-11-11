@@ -13,10 +13,10 @@
 
   /* ----- navigation / pied de page / thème ----- */
   $("nav").innerHTML = '<div class="wrap"><a class="logo" href="./" aria-label="Documentation, accueil"><i></i>Docs</a>' +
-    '<nav class="links" aria-label="Sections"><a href="#synthese">Synthèse</a><a href="#projets">Projets</a><a href="#documents">Documents</a><a href="#statuts">Statuts</a><a href="#parcours">Parcours</a></nav>' +
+    '<nav class="links" aria-label="Sections"><a href="#synthese">Synthèse</a><a href="#projets">Projets</a><a href="#autres">Autres projets</a><a href="#documents">Documents</a><a href="#statuts">Statuts</a><a href="#parcours">Parcours</a></nav>' +
     '<div class="tools"><a class="btn small" href="nemo/">Documentation Nemo</a><button class="ico" id="theme" aria-label="Changer de thème">◐</button></div></div>';
   $("footer").innerHTML = '<div class="wrap"><div><a class="logo" href="./"><i></i>Docs</a><p class="cap" style="margin:10px 0 0">Racine de la documentation · site mis à jour le ' + H.siteUpdated + ' · statuts des index du ' + H.updated + '</p></div>' +
-    '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="nemo/">Nemo</a>' + H.repos.map(function (r) { return '<a href="' + r.url + '">' + r.n + "</a>"; }).join("") + "</div></div>";
+    '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="nemo/">Nemo</a>' + PROJ.list.map(function (q) { return '<a href="' + q.id + '/">' + q.n + "</a>"; }).join("") + H.repos.map(function (r) { return '<a href="' + r.url + '">' + r.n + "</a>"; }).join("") + "</div></div>";
   function isDark() { var t = document.documentElement.dataset.theme; return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; }
   function paintMeta() { var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = isDark() ? "#0A0C10" : "#FFFFFF"; }
   $("theme").addEventListener("click", function () { var t = isDark() ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("nemo-theme", t); } catch (e) {} paintMeta(); });
@@ -80,6 +80,13 @@
   /* ----- projet Nemo + dépôts ----- */
   var plinks = $("plinks");
   NEMO.pages.filter(function (p) { return p.nav; }).forEach(function (p) { plinks.appendChild(h("a", "", esc(p.t) + "<small>nemo/" + p.href.replace(".html", "") + "</small>")).href = "nemo/" + p.href; });
+
+  /* ----- autres projets (js/proj-data.js) ----- */
+  var pg = $("pjgrid");
+  if (pg && window.PROJ) PROJ.list.forEach(function (q, k) {
+    var st = PROJ.statuses[q.status], a = h("a", "pj-tile reveal", '<div class="top"><span class="pill ' + st.cls + '">' + st.t + '</span><span class="cap" style="margin:0">' + esc(q.repo ? q.repo.name : "plusieurs dépôts") + "</span></div><h3>" + esc(q.n) + "</h3><p>" + esc(q.role) + "</p><small>" + esc(q.tech.slice(0, 3).join(" · ")) + " · " + esc(q.last) + "</small>");
+    a.href = q.id + "/"; a.style.transitionDelay = Math.min(k, 8) * 45 + "ms"; pg.appendChild(a);
+  });
   var repos = $("repos");
   H.repos.forEach(function (r) {
     var mine = H.docs.filter(function (d) { return d.r === r.id; }), bars = "";

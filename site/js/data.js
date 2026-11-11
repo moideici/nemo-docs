@@ -6,16 +6,16 @@ window.NEMO = window.NEMO || {};
 NEMO.bricks = [
   { color: "var(--blue)", name: "nemo-https", role: "Serveur + site", where: "Cloudflare Worker · nemo.moideici.tech",
     pts: ["Planning, cours, exercices, résultats", "Serveur MCP pour les assistants IA", "Stockage : R2 + Durable Objects (SQLite)", "Pages d'exercice jouables hors ligne"],
-    tags: ["Node 22", "Workers", "R2", "MCP"], repo: "moidefr/nemo-https" },
+    tags: ["Node 22", "Workers", "R2", "MCP"], repo: "moideici/nemo-https" },
   { color: "var(--coral)", name: "nemo-pc", role: "App Windows", where: "%LOCALAPPDATA%\\Programs\\NemoPc",
     pts: ["Verrou plein écran sur tous les écrans", "Construit la session avec l'assistant choisi", "Phiby : l'assistant intégré", "Démarre avec Windows"],
-    tags: ["C#", ".NET 9", "WPF", "WebView2"], repo: "moidefr/nemo-pc" },
+    tags: ["C#", ".NET 9", "WPF", "WebView2"], repo: "moideici/nemo-pc" },
   { color: "var(--green)", name: "nemo-app", role: "App Android", where: "Téléphone de l'élève · Android 9+",
     pts: ["Accueil, planning, « Ma session »", "Blocage du téléphone pendant les sessions", "Lecteur d'exercices via App Links", "Widget « Nemo aujourd'hui »"],
-    tags: ["Kotlin", "minSdk 28", "App Links"], repo: "moidefr/nemo-app" },
+    tags: ["Kotlin", "minSdk 28", "App Links"], repo: "moideici/nemo-app" },
   { color: "var(--yellow)", name: "nemo-docs", role: "Charte + architecture", where: "GitHub · et ce site",
     pts: ["Charte graphique V1 (PDF, PNG, résumé)", "ARCHITECTURE.md : vue d'ensemble", "Liste des branches supprimées", "Aucun code applicatif"],
-    tags: ["Markdown", "HTML"], repo: "moidefr/nemo-docs" }
+    tags: ["Markdown", "HTML"], repo: "moideici/nemo-docs" }
 ];
 
 /* ---------- schéma d'architecture ---------- */

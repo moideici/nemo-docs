@@ -1,0 +1,70 @@
+/* Pages de projets (agent-hub, Prisme, multi, Garry, WikiCards, py2x, cppt, petits outils). Chargé après style.css et pages.css.
+   Le contenu vient de js/proj-data.js, la page est construite par js/proj.js. */
+.pj-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.pj-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); font: 500 12px var(--f-mono); color: var(--mute); }
+.pj-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+
+/* chiffres clés */
+.pj-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+.pj-fact { padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); box-shadow: var(--sh); }
+.pj-fact b { display: block; font: 700 26px/1.1 var(--f-title); letter-spacing: -.03em; }
+.pj-fact span { display: block; margin-top: 6px; font-size: 13.5px; color: var(--mute); }
+
+/* schéma d'architecture : couches empilées, blocs cliquables */
+.pj-arch { display: grid; gap: 0; padding: 22px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: var(--sh); }
+.pj-layer { display: grid; gap: 10px; }
+.pj-layer > .cap { margin: 0; }
+.pj-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.pj-box { flex: 1 1 160px; min-width: 140px; text-align: left; padding: 12px 14px; border: 1px solid var(--line2); border-radius: 12px; background: var(--bg2); color: var(--ink); font: 600 14px var(--f-text); cursor: pointer; transition: transform .15s, border-color .15s, box-shadow .15s, background .15s; }
+.pj-box small { display: block; margin-top: 3px; font: 400 12.5px var(--f-text); color: var(--mute); }
+.pj-box:hover, .pj-box:focus-visible, .pj-box.on { transform: translateY(-2px); border-color: var(--accent); box-shadow: var(--sh-lg); background: var(--accent-soft); outline: none; }
+.pj-link { display: grid; place-items: center; height: 34px; color: var(--edge); font: 500 12px var(--f-mono); }
+.pj-link::before { content: "↓"; font-size: 18px; color: var(--accent); }
+.pj-link span { margin-left: 8px; }
+.pj-link { grid-auto-flow: column; justify-content: center; }
+.pj-info { margin-top: 16px; padding: 14px 18px; border: 1px dashed var(--line2); border-radius: 12px; font-size: 14.5px; color: var(--mute); min-height: 3.2em; }
+.pj-info b { color: var(--ink); }
+
+/* commandes */
+.pj-cmds { display: grid; gap: 14px; }
+.pj-cmd { border: 1px solid var(--line); border-radius: 14px; background: var(--card); overflow: hidden; box-shadow: var(--sh); }
+.pj-cmd header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--bg2); font-weight: 600; font-size: 14px; }
+.pj-cmd pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 400 13px/1.6 var(--f-mono); color: var(--ink); white-space: pre; }
+.pj-cmd button { font: 500 12px var(--f-mono); padding: 4px 10px; border: 1px solid var(--line2); border-radius: 8px; background: var(--card); color: var(--mute); cursor: pointer; }
+.pj-cmd button:hover { color: var(--accent); border-color: var(--accent); }
+
+/* cartes de contenu */
+.pj-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.pj-card { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); box-shadow: var(--sh); transition: transform .2s, box-shadow .2s, border-color .2s; }
+.pj-card:hover { transform: translateY(-3px); box-shadow: var(--sh-lg); border-color: var(--line2); }
+.pj-card h3 { font-size: 16.5px; margin: 0 0 8px; letter-spacing: -.015em; }
+.pj-card p { margin: 0; font-size: 14.5px; color: var(--mute); }
+.pj-card .pill { margin-bottom: 10px; }
+
+/* état : réalisé / en cours / limites */
+.pj-state { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.pj-col { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); box-shadow: var(--sh); }
+.pj-col h3 { display: flex; align-items: center; gap: 10px; font-size: 16px; margin: 0 0 12px; }
+.pj-col h3 i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.pj-col.g h3 i { background: var(--d-green); } .pj-col.y h3 i { background: var(--d-yellow); } .pj-col.p h3 i { background: var(--d-pink); }
+.pj-col ul { margin: 0; padding-left: 18px; display: grid; gap: 7px; font-size: 14.5px; color: var(--mute); }
+.pj-col li::marker { color: var(--edge); }
+
+/* documents du dépôt */
+.pj-docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.pj-doc { display: block; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); text-decoration: none; transition: transform .15s, border-color .15s; }
+.pj-doc:hover { transform: translateX(4px); border-color: var(--accent); }
+.pj-doc b { display: block; font-size: 14.5px; }
+.pj-doc span { display: block; margin-top: 4px; font-size: 13px; color: var(--mute); }
+.pj-doc code { font: 500 11.5px var(--f-mono); color: var(--accent); }
+
+/* grille de la racine : projets */
+.pj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.pj-tile { display: flex; flex-direction: column; gap: 8px; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); box-shadow: var(--sh); color: var(--ink); text-decoration: none; transition: transform .2s, box-shadow .2s, border-color .2s; }
+.pj-tile:hover { transform: translateY(-3px); box-shadow: var(--sh-lg); border-color: var(--accent); }
+.pj-tile .top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pj-tile h3 { margin: 4px 0 0; font-size: 18px; letter-spacing: -.02em; }
+.pj-tile p { margin: 0; font-size: 14px; color: var(--mute); }
+.pj-tile small { margin-top: auto; padding-top: 8px; font: 500 11.5px var(--f-mono); color: var(--mute); }
+.pj-note { margin-top: 18px; font-size: 13.5px; color: var(--mute); }
+@media (max-width: 560px) { .pj-arch { padding: 14px; } .pj-box { flex-basis: 100%; } }

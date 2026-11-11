@@ -2,12 +2,13 @@
 
 Dernière mise à jour : 11/11/2026
 
-Le dossier `site/` est un site **100 % statique** (HTML, CSS, JavaScript sans dépendance ni étape de build) qui contient deux choses :
+Le dossier `site/` est un site **100 % statique** (HTML, CSS, JavaScript sans dépendance ni étape de build) qui contient trois choses :
 
 | Chemin | Contenu |
 |---|---|
 | `/` (`index.html`) | la **racine de la documentation** : synthèse de tous les documents (anneau des statuts, 24 documents filtrables par dépôt, statut et mot-clé, parcours de lecture) et porte d'entrée vers chaque projet |
 | `/nemo/` | la **documentation interactive de Nemo**, en 8 pages (voir plus bas) |
+| `/agent-hub/`, `/prisme/`, `/multi/`, `/garry/`, `/wikicards/`, `/py2x/`, `/cppt/`, `/outils/` | la **documentation des autres projets**, une page par projet (voir « Pages de projets ») |
 
 Le style est volontairement **neutre et moderne** (surfaces claires, filets fins, un seul accent bleu, ombres douces, police Inter),
 avec un **arrière-plan animé** (aurore + réseau de points, `js/bg.js`) qui suit le thème clair/sombre, réagit à la souris et au
@@ -48,6 +49,24 @@ réalisés, en cours) sont **calculés** : aucun nombre n'est écrit à la main.
 **Détails au survol** : sur les schémas (architecture, séquence, verrou) et sur les blocs du planificateur, une info-bulle
 s'affiche près du pointeur au passage de la souris et le panneau de détail se met à jour ; un clic épingle l'élément (indispensable
 au tactile). Code : `NEMO.tip` dans `js/data2.js`.
+
+## Pages de projets (hors Nemo)
+
+Une page par projet : **agent-hub** (délégation à Codex), **Prisme** (éditeur d'images, dépôt `photo-editor`), **multi** (mini-jeux multijoueurs),
+**Garry** (IA de jeux logiques et Input, dépôt `logic-lab`), **WikiCards**, **py2x** (dossier `ia`, sans dépôt GitHub) et **cppt** (dépôt `C-suit`, branche `cppt`),
+plus une page **Petits outils** (mindmap-portable, agent-ia, ecole2recte). Chaque page donne un résumé, des chiffres clés, un schéma d'architecture cliquable,
+les commandes utiles (avec bouton Copier), le contenu fonctionnel, l'état (réalisé, en cours, limites et risques) et les documents du dépôt.
+
+| Fichier | Rôle |
+|---|---|
+| `<projet>/index.html` | squelette de la page (`<body data-project="…">`) ; identique d'un projet à l'autre |
+| `js/proj-data.js` | **les données** de tous les projets (`PROJ.list`) : à éditer pour corriger un texte ou ajouter un projet |
+| `js/proj.js` | construit la page à partir des données (navigation, schéma, commandes, cartes, état, documents, pager) |
+| `css/proj.css` | styles propres à ces pages et à la grille « Autres projets » de la racine |
+
+Pour ajouter un projet : ajouter une entrée à `PROJ.list`, copier le dossier d'une autre page en changeant `data-project` et le `<title>`. La racine affiche
+automatiquement une tuile. Sources : README et plans de chaque dépôt, bilan des projets du 01/11/2026, `git log`. Les statuts sont **à vérifier dans les dépôts** ;
+mettre à jour `PROJ.updated` avec le contenu.
 
 ## Fichiers partagés
 

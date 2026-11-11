@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/pages.css">
 <link rel="stylesheet" href="css/hub.css">
+<link rel="stylesheet" href="css/proj.css">
 <script>
   try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
@@ -80,6 +81,16 @@
     <div class="repos" id="repos"></div>
   </section>
 
+  <section id="autres" class="page-sec">
+    <div class="sec-head reveal">
+      <div class="cap">Autres projets</div>
+      <h2>Au-delà de Nemo : <mark>huit pages</mark> de projets.</h2>
+      <p>Outil de délégation, éditeur d'images, jeux multijoueurs, IA de jeux logiques, cartes Wikipédia, convertisseur Python, rendu PowerPoint et petits outils. Chaque page donne l'architecture, les commandes, l'état et les limites connues.</p>
+    </div>
+    <div class="pj-grid" id="pjgrid" data-stagger></div>
+    <p class="pj-note reveal">Pages construites à partir des README, des plans et du bilan des projets du 01/11/2026 ; les statuts sont à vérifier dans les dépôts.</p>
+  </section>
+
   <section id="documents" class="page-sec">
     <div class="sec-head reveal">
       <div class="cap">Documents</div>
@@ -119,6 +130,7 @@
 <button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
 <script src="js/data2.js"></script>
 <script src="js/hub-data.js"></script>
+<script src="js/proj-data.js"></script>
 <script src="js/hub.js"></script>
 <script src="js/bg.js"></script>
 </body>

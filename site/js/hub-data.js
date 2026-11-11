@@ -16,10 +16,10 @@ HUB.statuses = [
 ];
 
 HUB.repos = [
-  { id: "nemo-https", n: "nemo-https", role: "Serveur + site (Cloudflare)", branch: "master", url: "https://github.com/moidefr/nemo-https", tech: "Node 22 · Workers · R2" },
-  { id: "nemo-pc", n: "nemo-pc", role: "App Windows : verrou, sessions, Phiby", branch: "main", url: "https://github.com/moidefr/nemo-pc", tech: "C# · .NET 9 · WPF" },
-  { id: "nemo-app", n: "nemo-app", role: "App Android : blocage, lecteur, Ma session", branch: "main", url: "https://github.com/moidefr/nemo-app", tech: "Kotlin · Android 9+" },
-  { id: "nemo-docs", n: "nemo-docs", role: "Charte, architecture et ce site", branch: "main", url: "https://github.com/moidefr/nemo-docs", tech: "Markdown · HTML/CSS/JS" }
+  { id: "nemo-https", n: "nemo-https", role: "Serveur + site (Cloudflare)", branch: "master", url: "https://github.com/moideici/nemo-https", tech: "Node 22 · Workers · R2" },
+  { id: "nemo-pc", n: "nemo-pc", role: "App Windows : verrou, sessions, Phiby", branch: "main", url: "https://github.com/moideici/nemo-pc", tech: "C# · .NET 9 · WPF" },
+  { id: "nemo-app", n: "nemo-app", role: "App Android : blocage, lecteur, Ma session", branch: "main", url: "https://github.com/moideici/nemo-app", tech: "Kotlin · Android 9+" },
+  { id: "nemo-docs", n: "nemo-docs", role: "Charte, architecture et ce site", branch: "main", url: "https://github.com/moideici/nemo-docs", tech: "Markdown · HTML/CSS/JS" }
 ];
 
 /* documents : [repo, titre, résumé, statut, fichier (relatif au dépôt), code concerné, lien interne éventuel] */
@@ -66,5 +66,5 @@ HUB.brief = [
 HUB.paths = [
   { t: "Découvrir Nemo", s: "En 15 minutes, comprendre ce que fait chaque brique.", steps: [["Architecture", "nemo/architecture.html"], ["Une session pas à pas", "nemo/session.html"], ["Les formats d'exercice", "nemo/exercices.html"]] },
   { t: "Installer et exploiter", s: "Mettre en route et garder à jour.", steps: [["Installer et mettre à jour", "nemo/installer.html"], ["Le serveur MCP", "nemo/mcp.html"], ["Le verrou et ses garde-fous", "nemo/verrou.html"]] },
-  { t: "Comprendre les choix", s: "Pourquoi les choses sont comme elles sont.", steps: [["Progression : Leitner et jeu", "nemo/progression.html"], ["Architecture (ARCHITECTURE.md)", "https://github.com/moidefr/nemo-docs/blob/main/ARCHITECTURE.md"], ["Plans par dépôt", "#documents"]] }
+  { t: "Comprendre les choix", s: "Pourquoi les choses sont comme elles sont.", steps: [["Progression : Leitner et jeu", "nemo/progression.html"], ["Architecture (ARCHITECTURE.md)", "https://github.com/moideici/nemo-docs/blob/main/ARCHITECTURE.md"], ["Plans par dépôt", "#documents"]] }
 ];

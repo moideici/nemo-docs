@@ -31,7 +31,7 @@ Dernière mise à jour : 11/11/2026. Les détails de chaque brique sont dans le 
 | nemo-https | Node 22, Cloudflare Workers, R2 (`nemo-courses`, `nemo-class-courses`), Durable Objects | `nemo.moideici.tech` |
 | nemo-pc | C# / .NET 9, WPF, WebView2 | `%LOCALAPPDATA%\Programs\NemoPc`, démarrage avec Windows |
 | nemo-app | Kotlin, Android 9+ | téléphone de l'élève |
-| charte + site de documentation (ce dépôt, `nemo-docs`) | Markdown, PDF, HTML/CSS/JS statiques (`site/`) | GitHub `moidefr/nemo-docs` ; site à publier avec Cloudflare (voir `site/README.md`) |
+| charte + site de documentation (ce dépôt, `nemo-docs`) | Markdown, PDF, HTML/CSS/JS statiques (`site/`) | GitHub `moideici/nemo-docs` ; site à publier avec Cloudflare (voir `site/README.md`) |
 | nemo (historique) | Node, serveur MCP local en stdio | plus utilisé: remplacé par nemo-https |
 
 ## Mises à jour : qui construit, qui installe
@@ -68,4 +68,4 @@ Les branches de travail d'outils (`claude/…`, `codex/…`) suivent la même r�
 
 ## Outils de travail
 
-- **agent-hub** (`ah`, dépôt `moidefr/agent-hub`) : Claude Code délègue des tâches à Codex dans des worktrees git isolés, puis relit le diff avant de fusionner. Utilisé pour les mises à jour de documentation.
+- **agent-hub** (`ah`, dépôt `moideici/agent-hub`) : Claude Code délègue des tâches à Codex dans des worktrees git isolés, puis relit le diff avant de fusionner. Utilisé pour les mises à jour de documentation.
