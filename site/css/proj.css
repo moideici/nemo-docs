@@ -29,7 +29,7 @@
 .pj-cmds { display: grid; gap: 14px; }
 .pj-cmd { border: 1px solid var(--line); border-radius: 14px; background: var(--card); overflow: hidden; box-shadow: var(--sh); }
 .pj-cmd header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--bg2); font-weight: 600; font-size: 14px; }
-.pj-cmd pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 400 13px/1.6 var(--f-mono); color: var(--ink); white-space: pre; }
+.pj-cmd pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 400 13px/1.6 var(--f-mono); white-space: pre; background: #0B1020; color: #E2E8F0; border: 0; border-radius: 0; box-shadow: none; } /* fond sombre fixe : le texte clair vient de pre dans style.css, jamais var(--ink) (noir sur noir en thème clair) */
 .pj-cmd button { font: 500 12px var(--f-mono); padding: 4px 10px; border: 1px solid var(--line2); border-radius: 8px; background: var(--card); color: var(--mute); cursor: pointer; }
 .pj-cmd button:hover { color: var(--accent); border-color: var(--accent); }
 
