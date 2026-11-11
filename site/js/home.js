@@ -34,7 +34,7 @@
   var orbit = $("orbit");
   if (orbit) {
     var ORDER = ["nemo", "agent-hub", "prisme", "cppt", "wikicards", "py2x", "outils", "multi", "garry"];
-    var LINKS = [["nemo", "agent-hub", "agent-hub délègue à Codex le code de Nemo et des autres projets"], ["garry", "multi", "Garry doit fournir les bots de jeux de plateau à multi"], ["py2x", "outils", "py2x contient la démonstration mindmap_portable"]];
+    var LINKS = [["nemo", "agent-hub", "agent-hub délègue à Codex le code de Nemo et des autres projets"], ["garry", "multi", "Garry doit fournir les bots de jeux de plateau à multi"], ["py2x", "outils", "la démo MindMap utilise py2x (elle reste dans le dossier ia)"]];
     var byId = {}; ALL.forEach(function (a) { byId[a.id] = a; });
     var N = ORDER.length, R = 168, C = 230, pos = {};
     ORDER.forEach(function (id, k) { var ang = -Math.PI / 2 + k * 2 * Math.PI / N; pos[id] = { x: C + R * Math.cos(ang), y: C + R * Math.sin(ang) }; });

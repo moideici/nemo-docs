@@ -55,7 +55,7 @@ au tactile). Code : `NEMO.tip` dans `js/data2.js`.
 | Élément | Où | Détail |
 |---|---|---|
 | Mot qui tourne, compteurs | en-tête | « Documentation de … » change toutes les 2,2 s ; les quatre chiffres comptent à l'apparition |
-| Carte orbitale | en-tête (`js/home.js`) | un nœud par projet, couleur = état ; survol ou focus clavier = description ; un trait animé relie deux projets qui s'utilisent (agent-hub ↔ Nemo, Garry ↔ multi, py2x ↔ mindmap_portable) |
+| Carte orbitale | en-tête (`js/home.js`) | un nœud par projet, couleur = état ; survol ou focus clavier = description ; un trait animé relie deux projets qui s'utilisent (agent-hub ↔ Nemo, Garry ↔ multi, py2x ↔ MindMap) |
 | Grille des projets | `#projets` | filtre par état, recherche, halo qui suit la souris, légère inclinaison, apparition en cascade ; le titre d'une tuile devient le titre de la page (transition de vue, navigateurs compatibles) |
 | Activité récente | `#activite` | barres qui se remplissent à l'apparition, plus longues pour une activité plus récente |
 | Recherche globale | `js/palette.js` | `Ctrl K` ou `/` : projets, pages de Nemo, cartes, commandes, risques et documents ; ↑ ↓ Entrée Échap |
@@ -67,7 +67,7 @@ Fichiers : `js/home.js` (racine), `js/palette.js` (toutes les pages de projets e
 ## Pages de projets (hors Nemo)
 
 Une page par projet : **agent-hub** (délégation à Codex), **Prisme** (éditeur d'images, dépôt `photo-editor`), **multi** (mini-jeux multijoueurs),
-**Garry** (IA de jeux logiques et Input, dépôt `logic-lab`), **WikiCards**, **py2x** (dossier `ia`, sans dépôt GitHub) et **cppt** (dépôt `C-suit`, branche `cppt`),
+**Garry** (IA de jeux, modèle unique Optimus, maths et Input, dépôt `logic-lab`), **WikiCards**, **py2x** (dépôt `py2x`, extrait du dossier `ia`) et **cppt** (dépôt `C-suit`, branche `cppt`),
 plus une page **Petits outils** (mindmap-portable, agent-ia, ecole2recte). Chaque page donne un résumé, des chiffres clés, un schéma d'architecture cliquable,
 les commandes utiles (avec bouton Copier), le contenu fonctionnel, l'état (réalisé, en cours, limites et risques) et les documents du dépôt.
 

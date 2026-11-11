@@ -206,31 +206,33 @@ PROJ.list = [
 /* ======================================================================== Garry / Logic Lab */
 {
   id: "garry", n: "Garry · Logic Lab", title: "Garry et Logic Lab", status: "actif",
-  role: "Un seul modèle pour quatorze jeux, et un modèle de dialogue en français",
-  lead: "<b>Garry</b> : un réseau unique qui joue à quatorze jeux, Go compris. <b>Input</b> : Qwen3-0.6B adapté pour comprendre le français et répondre en JSON. Deux projets, des mesures séparées.",
-  repo: { name: "logic-lab", branch: "master", priv: true }, tech: ["Python", "PyTorch / CUDA", "JavaScript", "C++", "LoRA"], last: "31/10/2026",
+  role: "Un seul modèle pour tous les jeux, des maths pas à pas, un dialogue en français",
+  lead: "<b>Garry</b> joue à quatorze jeux avec un seul réseau ; son successeur <b>Optimus 0.1</b> vise un modèle unique plus gros. À côté : un réseau qui calcule pas à pas, et <b>Input</b>, un modèle de dialogue en français.",
+  repo: { name: "logic-lab", branch: "main", priv: true }, tech: ["Python", "PyTorch / CUDA", "JavaScript", "C++", "LoRA"], last: "11/11/2026",
   facts: [
-    { v: "0.6.0", k: "version de Garry" }, { v: "444 979", k: "paramètres (4 872 → 48 → 48 → 4 259)" },
-    { v: "14", k: "jeux, niveaux 0 à 10" }, { v: "≈ 21 Go", k: "de données hors dépôt" }
+    { v: "0.6.0", k: "Garry en service (444 979 paramètres)" }, { v: "P1", k: "pilote d'Optimus 0.1 terminé" },
+    { v: "812 416", k: "paramètres du réseau de maths" }, { v: "≈ 21 Go", k: "de données hors dépôt" }
   ],
   arch: {
-    intro: "Deux serveurs Python locaux, sans partage de poids ni de mémoire.",
+    intro: "Deux serveurs Python locaux, sans partage de poids. Le modèle unique Optimus s'appuie sur des professeurs et des juges indépendants.",
     layers: [
       { name: "Dossier de travail", items: [
-        { n: "projets/garry", d: "Port 8765 : jeux, arène, entraînement, harnais de sites réels." },
+        { n: "projets/garry", d: "Port 8765 : jeux, arène, entraînement, maths, harnais de sites réels." },
         { n: "projets/input", d: "Port 8766 : conversation et bilan d'apprentissage." },
-        { n: "recherche/hrm · trm", d: "Essais de raisonnement, hors modèles actifs." }
+        { n: "recherche/hrm · trm", d: "Essais de raisonnement, hors modèles actifs." },
+        { n: "outputs/", d: "Rapports et preuves : un rapport par étape." }
       ] },
       { link: "décision" },
-      { name: "Garry : qui joue le coup", items: [
+      { name: "Garry 0.6.0 : qui joue le coup", items: [
         { n: "Réseau neuronal", d: "Un modèle, zones propres à chaque jeu, module central commun." },
         { n: "Recherche et solveurs", d: "Issues prouvées distinguées des estimations." },
-        { n: "Professeur borné", d: "Source d'exemples ; son accord n'est pas un taux de victoire." }
+        { n: "Professeurs « à la main »", d: "Moteurs sans entraînement (Gomoku, Hex, Puissance 4 exact) : futurs professeurs d'Optimus." }
       ] },
-      { link: "candidat → validation → promotion" },
-      { name: "Entraînement", items: [
-        { n: "Sessions locales", d: "Données séparées en apprentissage, validation et test." },
-        { n: "Jeux réels", d: "Playwright joue sur 2048 et COSUMI ; chaque transition est vérifiée." }
+      { link: "distillation" },
+      { name: "Optimus 0.1 (modèle unique)", items: [
+        { n: "Tronc partagé", d: "Convolutif résiduel (essai 6 × 64, cible 10 × 192 ≈ 7 M) sur plateau commun." },
+        { n: "Bords par jeu", d: "Encodeur d'entrée et têtes de politique et de valeur propres à chaque jeu." },
+        { n: "Juges indépendants", d: "Solveur exact, moteurs à la main, bot de multi : jamais le seul professeur." }
       ] },
       { link: "Input" },
       { name: "Input 0.2.0", items: [
@@ -245,31 +247,42 @@ PROJ.list = [
     { t: "Harnais de jeux réels", code: "npm ci --prefix tools/real-games\nnpx --prefix tools/real-games playwright install chromium" }
   ],
   sections: [
-    { cap: "Garry 0.6.0", title: "Quatorze jeux, un modèle", cards: [
-      { t: "Les jeux", p: "Morpion, Puissance 4, 2048, sudoku, démineur, taquin, Reversi, Nim, Lights Out, dames, Percée, Hex, Gomoku, Go 9/13/19." },
-      { t: "Modes", p: "Niveaux 0 à 10, duels IA contre IA, transitions visibles, sudoku à trois vies." },
-      { t: "Dernière session", p: "17/10 : 102 762 coups, 540 cycles, dix promotions, autres jeux préservés." },
-      { t: "Résultats prudents", p: "Accord avec le professeur : Go 15 → 17 %, Hex 41 → 43 %, Gomoku 17 → 22 %. Pas des taux de victoire." },
-      { t: "Vérifications", p: "114 tests Python et 65 JavaScript archivés, sans nouvelle recette complète." }
+    { cap: "Modèle unique", title: "Garry Optimus 0.1", intro: "Hypothèse « multi-jeux donc meilleur » à prouver, pas un acquis. Matériel : RTX 4060 8 Go.", cards: [
+      { t: "P0 (9/11)", p: "Encodage commun, professeurs, juges et mesures de référence figés pour cinq jeux. Aucun réseau entraîné." },
+      { t: "P1 (9/11)", p: "Un réseau pour cinq jeux égale des réseaux séparés avec la moitié des paramètres (1,7 M contre 3,5 M). Aucun gain démontré." },
+      { t: "Puissance 4", p: "Réseau seul : 1,5 à 2,3 % de coups fautifs, contre 2,4 % pour Garry 0.6.0." },
+      { t: "Hex, Gomoku, dames", p: "Hex 0,58 à 0,70 contre le moteur ; Gomoku 0,10 à 0,17 ; dames 0,4 contre le bot normal." },
+      { t: "Suite proposée", p: "Test de transfert, plus de données Hex et Gomoku, puis P2 (≈ 7 M) si un signal apparaît." }
     ] },
-    { cap: "Input 0.2.0 et recherche", title: "Dialogue et raisonnement", cards: [
-      { t: "Objectif", p: "Comprendre une demande, décider, justifier : contraintes, plans, comparaison de scénarios." },
-      { t: "Mesures", p: "Valeurs exactes 7/28 → 25/28 après adaptation ; 36/36 JSON complets ; calculs 5/12." },
-      { t: "HRM et TRM", p: "HRM : poids officiels de sudoku, un des deux contrôles publics réussit." }
+    { cap: "Jeu à la main", title: "Moteurs sans entraînement", cards: [
+      { t: "Gomoku", p: "0,938 contre l'ancien planificateur, 0 défaite sur 96 parties." },
+      { t: "Hex", p: "≈ 0,75 sur 384 parties. Moteurs intégrés au navigateur." },
+      { t: "Reste à faire", p: "Port Python, Swap2, Go, dames et Reversi." }
+    ] },
+    { cap: "Maths", title: "Un réseau qui calcule pas à pas", cards: [
+      { t: "Vague 1 atteinte", p: "Transformer de 812 416 paramètres, entraîné de zéro : six niveaux, un calcul à la fois, problème résolu à 1,000." },
+      { t: "Limites", p: "Nombres à 4 chiffres : ~0 %. Tests N2 et N3 très petits ; banc neuf nécessaire." },
+      { t: "Suite", p: "Vague 2 : exposants, fractions, racines. Puis extrapolation et carte « Maths en direct »." }
+    ] },
+    { cap: "Garry 0.6.0 et Input", title: "En service", cards: [
+      { t: "Quatorze jeux", p: "Morpion, Puissance 4, 2048, sudoku, démineur, taquin, Reversi, Nim, Lights Out, dames, Percée, Hex, Gomoku, Go." },
+      { t: "Résultats prudents", p: "Accord avec le professeur : Go 15 → 17 %, Hex 41 → 43 %, Gomoku 17 → 22 %. Pas des taux de victoire." },
+      { t: "Input", p: "Valeurs exactes 7/28 → 25/28 après adaptation ; 36/36 JSON complets ; calculs 5/12. En veille." }
     ] }
   ],
   state: {
-    done: ["Garry 0.6.0 : 14 jeux, entraînement continu, jeux réels", "Puissance 4 exact, nim et morpion parfaits, dames par distillation", "Input : interface prête, banc gelé, contrat v2 prêt non activé"],
-    wip: ["Actif : Core entraînable, Graine, Loop, Lab en direct", "Input en veille : reste le lot 4 (données ciblées)", "Bots pour multi", "Reprise reproductible, banc de maths neuf, documents à aligner"],
-    risks: ["projets/ et recherche/ (dizaines de Go) hors dépôt, sans sauvegarde confirmée", "Go faible, invincibilité non démontrée", "Input hallucine, calculs fragiles, 6 à 16 tokens/s", "Poids du navigateur parfois anciens : identité à rendre explicite"]
+    done: ["Garry 0.6.0 : 14 jeux, entraînement continu, jeux réels", "Optimus 0.1 : P0 et P1 terminés", "Gomoku et Hex à la main intégrés au navigateur", "Maths : vague 1 atteinte sur six niveaux", "Puissance 4 exact, nim et morpion parfaits"],
+    wip: ["Optimus : test de transfert, données Hex et Gomoku, P2", "Maths : vague 2, puis extrapolation", "Boucle Core, Graine, Loop, Lab en direct", "Bots pour multi", "Input en veille : reste le lot 4"],
+    risks: ["projets/ et recherche/ (dizaines de Go) hors dépôt, sans sauvegarde confirmée", "P1 : aucun écart significatif, petits échantillons, une seule taille de réseau", "Maths : banc neuf nécessaire, hors distribution ~0 %", "Go faible ; Input hallucine, calculs fragiles"]
   },
   docs: [
     { t: "README", f: "README.md", d: "Ordre de lecture." },
-    { t: "PLAN-GLOBAL", f: "PLAN-GLOBAL.md", d: "Bilan et périmètre actif ; fait autorité." },
-    { t: "Guide", f: "docs/GUIDE.md", d: "Lancement, sauvegardes, reprise." },
-    { t: "Architecture", f: "docs/ARCHITECTURE.md", d: "Composants et flux." },
-    { t: "Décisions", f: "docs/DECISIONS.md", d: "Décisions et sujets ouverts." },
-    { t: "Garry", f: "projets/garry/README.md", d: "Jeux, entraînement, versions." }
+    { t: "PLAN-GLOBAL", f: "PLAN-GLOBAL.md", d: "Plan principal, mis à jour le 11/11 ; fait autorité." },
+    { t: "Optimus : cadrage", f: "outputs/rapports/garry/GARRY-MODELE-UNIQUE-CADRAGE.md", d: "Architecture visée et protocole." },
+    { t: "Optimus : P0 et P1", f: "outputs/rapports/garry/GARRY-MODELE-UNIQUE-P1.md", d: "Infrastructure, pilote et verdict." },
+    { t: "Gomoku et Hex à la main", f: "outputs/rapports/garry/GARRY-A-LA-MAIN-GOMOKU-HEX.md", d: "Moteurs sans entraînement." },
+    { t: "Maths", f: "outputs/verifications/maths-protocole.md", d: "Protocole et résultats des vagues 1 et 2." },
+    { t: "Guide et architecture", f: "docs/GUIDE.md", d: "Lancement, sauvegardes, composants." }
   ]
 },
 
@@ -331,37 +344,34 @@ PROJ.list = [
 
 /* ======================================================================== py2x */
 {
-  id: "py2x", n: "py2x (ia)", title: "py2x : Python typé vers C++ et Kotlin", status: "veille",
-  role: "Convertisseur source-à-source, socle C++ et applications de démonstration",
-  lead: "Le dossier <code>ia</code> contient <b>py2x</b> : un programme Python converti en C++ ou Kotlin doit produire exactement la même sortie. S'y ajoutent un socle C++ de gestion mémoire et des démonstrations.",
-  repo: { name: "ia (dossier local, sans dépôt GitHub)", branch: "master", priv: true, nourl: true }, tech: ["Python 3", "C++20", "Kotlin/JVM", "CMake"], last: "04/10/2026",
+  id: "py2x", n: "py2x", title: "py2x : Python typé vers C++ et Kotlin", status: "actif",
+  role: "Convertisseur source-à-source, sortie identique à Python",
+  lead: "Un programme Python typé est converti en <b>C++20</b> ou en <b>Kotlin</b> et produit exactement la même sortie que Python. Ce qui n'est pas supporté est refusé avec un numéro de ligne. Extrait le 11/11/2026 du dossier <code>ia</code>.",
+  repo: { name: "py2x", branch: "main", priv: true }, tech: ["Python ≥ 3.11", "C++20", "Kotlin/JVM", "GitHub Actions"], last: "11/11/2026",
   facts: [
     { v: "≈ 60", k: "programmes de corpus, sortie identique" }, { v: "8", k: "fuzzers différentiels" },
-    { v: "58", k: "méthodes de test" }, { v: "1", k: "commit au total" }
+    { v: "0", k: "dépendance (Python seul)" }, { v: "1", k: "workflow de tests (CI)" }
   ],
   arch: {
     intro: "Un frontend commun produit une représentation typée ; chaque langage cible a son émetteur.",
     layers: [
-      { name: "Frontend", items: [{ n: "ast Python → IR typée", d: "Ce qui n'est pas supporté lève une erreur avec le numéro de ligne." }] },
+      { name: "Frontend", items: [{ n: "ast Python → IR typée", d: "Fonctions annotées obligatoires ; variables locales inférées." }] },
       { link: "IR neutre" },
       { name: "Émetteurs", items: [
-        { n: "emit_cpp.py", d: "C++20, appuyé sur cpp_base." },
-        { n: "emit_kotlin.py", d: "Kotlin/JVM." }
+        { n: "emit_cpp.py", d: "C++20." },
+        { n: "emit_kotlin.py", d: "Kotlin/JVM, avec ou sans runtime." }
       ] },
       { link: "--verify" },
       { name: "Vérification", items: [
         { n: "Corpus", d: "Chaque programme est converti, compilé, exécuté et comparé à Python." },
-        { n: "Fuzzers", d: "Des milliers de programmes aléatoires comparés ligne à ligne." }
-      ] },
-      { name: "Autour", items: [
-        { n: "cpp_base", d: "Arena, Pool, SmallVector. 1 M d'objets : new/delete ≈ 45 ms, arène ≈ 0,5 ms." },
-        { n: "android/ · projects/", d: "Générateurs d'applications et démos (TaskDesk, mindmap_portable)." }
+        { n: "Fuzzers", d: "Des milliers de programmes aléatoires comparés ligne à ligne." },
+        { n: "CI", d: "<code>tests.yml</code> exécute les tests à chaque poussée." }
       ] }
     ]
   },
   commands: [
-    { t: "Convertir et vérifier", code: "python -m py2x programme.py --to cpp\npython -m py2x programme.py --to kotlin -o Prog.kt\npython -m py2x programme.py --verify    # compile, exécute, compare avec Python" },
-    { t: "Socle C++", code: "cmake -S cpp_base -B build -G \"MinGW Makefiles\"\ncmake --build build\nctest --test-dir build" }
+    { t: "Démarrer", code: "git clone https://github.com/moideici/py2x.git\ncd py2x\npython -m py2x examples/fib.py --to cpp\npython -m py2x examples/fib.py --to kotlin -o Fib.kt" },
+    { t: "Vérifier", code: "python -m py2x examples/fib.py --verify    # compile, exécute, compare avec Python\npython -m py2x examples/fib.py --to cpp --strict" }
   ],
   sections: [
     { cap: "Sémantique", title: "Ce qui est reproduit", cards: [
@@ -370,17 +380,29 @@ PROJ.list = [
       { t: "Exceptions", p: "Mêmes types et mêmes messages que Python." },
       { t: "Aléatoire", p: "Mersenne Twister de CPython : <code>random.seed(42)</code> donne les mêmes tirages." },
       { t: "Classes", p: "Héritage simple, dataclasses, classes abstraites, NamedTuple." }
+    ] },
+    { cap: "Limites volontaires", title: "Ce qui est refusé", cards: [
+      { t: "Types", p: "<code>int</code> sur 64 bits (dépassement = <code>OverflowError</code>), <code>str</code> en ASCII, annotations obligatoires." },
+      { t: "Langage", p: "Pas de <code>with</code>, <code>async</code>, décorateurs utilisateur ni héritage multiple." },
+      { t: "Bibliothèque", p: "Pas de <code>re</code>, <code>json</code>, <code>datetime</code> ni de fichiers." }
+    ] },
+    { cap: "Resté dans ia", title: "Hors du dépôt", cards: [
+      { t: "cpp_base", p: "Socle C++20 : Arena, Pool, SmallVector. 1 M d'objets : new/delete ≈ 45 ms, arène ≈ 0,5 ms." },
+      { t: "Démonstrations", p: "TaskDesk et MindMap utilisent py2x ; elles restent dans le dossier local <code>ia</code>, sans dépôt." }
     ] }
   ],
   state: {
-    done: ["Transpileur C++ et Kotlin, garanti par corpus et fuzzers", "Socle mémoire C++ avec bancs", "Démonstrations TaskDesk et MindMap"],
-    wip: ["Ajouter un README à la racine", "Trier les fichiers non suivis (nemo-review/, MindMap.exe)"],
-    risks: ["Un seul commit, aucun dépôt distant", "Référence cassée à bench/bench.cpp", "« 88 fichiers de test » non confirmé : 58 méthodes"]
+    done: ["Dépôt GitHub créé le 11/11/2026, extrait de ia/transpiler", "Corpus et huit fuzzers contre Python", "Documentation : usage, sous-ensemble, architecture, tests, contribution", "CI de tests"],
+    wip: ["Dossier ia : README racine à ajouter, fichiers non suivis à trier (nemo-review/, MindMap.exe)", "cpp_base et les démos n'ont pas encore de dépôt"],
+    risks: ["Annotations obligatoires et sous-ensemble limité", "Le dossier ia n'a qu'un commit et aucun dépôt distant"]
   },
   docs: [
-    { t: "README du transpileur", f: "transpiler/README.md", d: "Principe, garantie, sous-ensemble." },
-    { t: "README du socle C++", f: "cpp_base/README.md", d: "Briques et mesures." },
-    { t: "Tests", f: "transpiler/tests/", d: "Tests et fuzzers." }
+    { t: "README", f: "README.md", d: "Principe, démarrage, garantie, limites." },
+    { t: "Usage", f: "docs/USAGE.md", d: "Ligne de commande, API Python, Kotlin." },
+    { t: "Sous-ensemble supporté", f: "docs/SUPPORTED.md", d: "Langage, bibliothèque, limites." },
+    { t: "Architecture", f: "docs/ARCHITECTURE.md", d: "Frontend, IR, émetteurs, ajout d'un langage." },
+    { t: "Tests", f: "docs/TESTING.md", d: "Unitaires, corpus, fuzzers, CI." },
+    { t: "Contribuer", f: "docs/CONTRIBUTING.md", d: "Ajouter une fonction sans casser la garantie." }
   ]
 },
 
