@@ -3,3 +3,6 @@
 # Retours bruts de test (extraits de cours de l'élève) : restent en local
 retour/
 .thumbnail
+
+# cache local de wrangler (contient le compte Cloudflare)
+.wrangler/
