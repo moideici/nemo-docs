@@ -73,12 +73,12 @@
   /* ----- état ----- */
   var st = p.state;
   function col(cls, title, items) { return items && items.length ? '<div class="pj-col ' + cls + ' reveal"><h3><i></i>' + title + "</h3><ul>" + items.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul></div>" : ""; }
-  html.push('<section id="etat" class="page-sec"><div class="sec-head reveal"><div class="cap">État</div><h2>Où en est <mark>le projet</mark>.</h2><p>Constats tirés des README, des plans et du bilan des projets du 01/11/2026 ; à vérifier dans le dépôt avant de s\'y fier.</p></div><div class="pj-state">' +
+  html.push('<section id="etat" class="page-sec"><div class="sec-head reveal"><div class="cap">État</div><h2>Où en est <mark>le projet</mark>.</h2><p>Selon les README et le bilan du 01/11/2026 ; à vérifier dans le dépôt.</p></div><div class="pj-state">' +
     col("g", "Réalisé", st.done) + col("y", "En cours ou à faire", st.wip) + col("p", "Limites et risques", st.risks) + "</div></section>");
 
   /* ----- documents ----- */
   if (p.docs && p.docs.length) {
-    html.push('<section id="docs" class="page-sec"><div class="sec-head reveal"><div class="cap">Documents</div><h2>Pour aller <mark>plus loin</mark>.</h2><p>Chaque lien ouvre le fichier sur GitHub (dépôt privé : connexion requise).</p></div><div class="pj-docs" data-stagger>' +
+    html.push('<section id="docs" class="page-sec"><div class="sec-head reveal"><div class="cap">Documents</div><h2>Pour aller <mark>plus loin</mark>.</h2><p>Liens GitHub (dépôt privé : connexion requise).</p></div><div class="pj-docs" data-stagger>' +
       p.docs.map(function (d) {
         var u = p.repo && !p.repo.nourl ? fileUrl(d.f) : null;
         return (u ? '<a class="pj-doc reveal" href="' + u + '" target="_blank" rel="noopener">' : '<div class="pj-doc reveal">') + "<b>" + esc(d.t) + "</b><span>" + esc(d.d) + "</span><span><code>" + esc(d.f) + "</code></span>" + (u ? "</a>" : "</div>");

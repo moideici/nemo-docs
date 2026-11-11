@@ -56,10 +56,10 @@ HUB.docs = [
 
 /* synthèse en bref : constats tirés des index (27/10/2026) et des README */
 HUB.brief = [
-  { k: "Le projet", t: "Nemo, révision espacée pour un élève", p: "Planning, sessions construites par une IA, blocage du PC et du téléphone pendant les créneaux. Un serveur au centre, deux apps clientes, une charte graphique commune." },
-  { k: "Les briques", t: "Quatre dépôts, une CI", p: "nemo-https se déploie à chaque fusion ; les builds Windows et Android viennent uniquement de la CI, avec une clé de signature unique ; nemo-docs réunit charte et architecture." },
-  { k: "L'avancement", t: "{done} réalisés, {wip} en cours", p: "Sur les documents suivis par un statut, {done} sont réalisés, {wip} en cours et {old} obsolètes. Les statuts viennent du code présent et de git, pas des cases cochées." },
-  { k: "À trancher", t: "Points ouverts connus", p: "Branches d'app non fusionnées, essai réel de la liaison Classroom, protocole de synchronisation par événements non livré. À vérifier dans les dépôts avant de s'y fier." }
+  { k: "Le projet", t: "Nemo, révision espacée pour un élève", p: "Planning, sessions construites par une IA, blocage du PC et du téléphone. Un serveur, deux apps." },
+  { k: "Les briques", t: "Quatre dépôts, une CI", p: "Le serveur se déploie à chaque fusion ; les apps se construisent uniquement en CI." },
+  { k: "L'avancement", t: "{done} réalisés, {wip} en cours", p: "{done} réalisés, {wip} en cours, {old} obsolètes, d'après le code et git." },
+  { k: "À trancher", t: "Points ouverts connus", p: "Branches d'app non fusionnées, essai réel de Classroom, synchronisation par événements non livrée." }
 ];
 
 /* parcours de lecture */

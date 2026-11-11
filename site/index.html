@@ -29,7 +29,7 @@
     <div>
       <span class="eyebrow"><i></i>Racine de la documentation</span>
       <h1><span>Tous</span><span>les</span><span>projets,</span><span class="acc">une</span><span class="acc">seule</span><span>doc.</span></h1>
-      <p class="lead">Architecture, commandes utiles, état et limites connues de chaque projet : <b>Nemo</b>, <b>agent-hub</b>, <b>Prisme</b>, <b>multi</b>, <b>Garry</b> et les autres. Chercher avec <kbd class="kbd">Ctrl</kbd> <kbd class="kbd">K</kbd>.</p>
+      <p class="lead">Architecture, commandes, état et limites de chaque projet. Chercher avec <kbd class="kbd">Ctrl</kbd> <kbd class="kbd">K</kbd>.</p>
       <p class="rotor" aria-live="off">Documentation de <b id="rotor">Nemo</b></p>
       <div class="cta">
         <a class="btn reward" href="#projets">Voir les projets</a>
@@ -42,7 +42,7 @@
         <div class="stat"><b data-count="docs">0</b><span>documents</span></div>
       </div>
     </div>
-    <div class="orbit-card floatx"><div class="orbit" id="orbit" role="group" aria-label="Carte des projets"></div><p class="orbit-cap" id="orbitCap" aria-live="polite">Survoler un projet pour voir ce qu'il fait ; un trait relie deux projets qui s'utilisent.</p></div>
+    <div class="orbit-card floatx"><div class="orbit" id="orbit" role="group" aria-label="Carte des projets"></div><p class="orbit-cap" id="orbitCap" aria-live="polite">Survoler un projet ; un trait relie deux projets qui s'utilisent.</p></div>
   </div>
 </div>
 
@@ -51,7 +51,7 @@
     <div class="sec-head reveal">
       <div class="cap">Projets</div>
       <h2>Neuf projets, <mark>une page chacun</mark>.</h2>
-      <p>Filtrer par état ou chercher un mot : technologie, fonction, nom de dépôt.</p>
+      <p>Filtrer par état ou chercher un mot.</p>
     </div>
     <div class="dtools reveal">
       <input class="field" id="pq" type="search" placeholder="Rechercher : Rust, Cloudflare, jeux, PowerPoint…" aria-label="Rechercher un projet">
@@ -65,7 +65,7 @@
     <div class="sec-head reveal">
       <div class="cap">Activité</div>
       <h2>Ce qui a bougé <mark>récemment</mark>.</h2>
-      <p>Date du dernier commit ou de la dernière mise à jour connue de chaque projet ; la barre est plus longue quand l'activité est plus récente.</p>
+      <p>Dernière activité connue ; barre longue = récent.</p>
     </div>
     <div class="act card reveal" id="act"></div>
   </section>
@@ -74,13 +74,13 @@
     <div class="sec-head reveal">
       <div class="cap">Nemo en détail</div>
       <h2>Le projet <mark>le plus documenté</mark>.</h2>
-      <p>Révision espacée pour un élève : un serveur Cloudflare, une app Windows et une app Android qui verrouillent l'appareil pendant les créneaux, et des sessions construites par une IA.</p>
+      <p>Révision espacée : serveur Cloudflare, apps Windows et Android, sessions construites par une IA.</p>
     </div>
     <div class="card project reveal zoom">
       <div class="left">
         <span class="pill b">Projet</span>
         <h3 style="margin-top:12px">Nemo</h3>
-        <p>Architecture, cycle d'une session, planificateur, 22 formats d'exercice, révision espacée, outils MCP, verrou et installation : huit pages avec schémas et démos jouables.</p>
+        <p>Huit pages avec schémas et démos jouables.</p>
         <a class="btn primary" href="nemo/">Ouvrir la documentation interactive</a>
       </div>
       <div class="right">
@@ -110,7 +110,7 @@
     <div class="dgrid" id="dgrid"></div>
 
     <div class="hub-sub reveal" id="statuts"><div class="cap">Comment lire les statuts</div></div>
-    <p class="hub-note reveal" style="margin:0 0 14px">Les statuts viennent des index des dépôts : ils sont déduits du code présent et de l'historique git, pas des cases cochées dans les plans. Ils ne prouvent ni un déploiement, ni la configuration des secrets.</p>
+    <p class="hub-note reveal" style="margin:0 0 14px">Statuts déduits du code et de git, pas des cases cochées. Ils ne prouvent ni un déploiement, ni la configuration des secrets.</p>
     <div class="slegend" id="slegendbig" data-stagger></div>
   </section>
 
@@ -118,10 +118,10 @@
     <div class="sec-head reveal">
       <div class="cap">Parcours</div>
       <h2>Par où <mark>commencer</mark> ?</h2>
-      <p>Quatre parcours de lecture selon ce que vous cherchez.</p>
+      <p>Cinq parcours de lecture.</p>
     </div>
     <div class="paths" id="paths" data-stagger></div>
-    <p class="hub-note reveal">Index des dépôts de Nemo du 27/10/2026 ; pages de projets du 11/11/2026, construites à partir des README, des plans et du bilan du 01/11/2026. À vérifier dans les dépôts avant de s'appuyer sur un statut.</p>
+    <p class="hub-note reveal">Index de Nemo du 27/10/2026 ; pages de projets du 11/11/2026. Statuts à vérifier dans les dépôts.</p>
   </section>
 </div>
 </main>
