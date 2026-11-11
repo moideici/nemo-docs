@@ -13,10 +13,10 @@
 
   /* ----- navigation / pied de page / thème ----- */
   $("nav").innerHTML = '<div class="wrap"><a class="logo" href="./" aria-label="Documentation, accueil"><i></i>Docs</a>' +
-    '<nav class="links" aria-label="Sections"><a href="#synthese">Synthèse</a><a href="#projets">Projets</a><a href="#autres">Autres projets</a><a href="#documents">Documents</a><a href="#statuts">Statuts</a><a href="#parcours">Parcours</a></nav>' +
-    '<div class="tools"><a class="btn small" href="nemo/">Documentation Nemo</a><button class="ico" id="theme" aria-label="Changer de thème">◐</button></div></div>';
-  $("footer").innerHTML = '<div class="wrap"><div><a class="logo" href="./"><i></i>Docs</a><p class="cap" style="margin:10px 0 0">Racine de la documentation · site mis à jour le ' + H.siteUpdated + ' · statuts des index du ' + H.updated + '</p></div>' +
-    '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="nemo/">Nemo</a>' + PROJ.list.map(function (q) { return '<a href="' + q.id + '/">' + q.n + "</a>"; }).join("") + H.repos.map(function (r) { return '<a href="' + r.url + '">' + r.n + "</a>"; }).join("") + "</div></div>";
+    '<nav class="links" aria-label="Sections"><a href="#projets">Projets</a><a href="#activite">Activité</a><a href="#nemo">Nemo</a><a href="#parcours">Parcours</a></nav>' +
+    '<div class="tools"><button class="ico search" data-pal type="button" aria-label="Rechercher (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button><a class="btn small" href="nemo/">Documentation Nemo</a><button class="ico" id="theme" aria-label="Changer de thème">◐</button></div></div>';
+  $("footer").innerHTML = '<div class="wrap"><div><a class="logo" href="./"><i></i>Docs</a><p class="cap" style="margin:10px 0 0">Racine de la documentation · site mis à jour le ' + H.siteUpdated + ' · statuts de Nemo des index du ' + H.updated + '</p></div>' +
+    '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="nemo/">Nemo</a>' + PROJ.list.map(function (q) { return '<a href="' + q.id + '/">' + q.n + "</a>"; }).join("") + "</div></div>";
   function isDark() { var t = document.documentElement.dataset.theme; return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; }
   function paintMeta() { var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = isDark() ? "#0A0C10" : "#FFFFFF"; }
   $("theme").addEventListener("click", function () { var t = isDark() ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("nemo-theme", t); } catch (e) {} paintMeta(); });
@@ -81,12 +81,6 @@
   var plinks = $("plinks");
   NEMO.pages.filter(function (p) { return p.nav; }).forEach(function (p) { plinks.appendChild(h("a", "", esc(p.t) + "<small>nemo/" + p.href.replace(".html", "") + "</small>")).href = "nemo/" + p.href; });
 
-  /* ----- autres projets (js/proj-data.js) ----- */
-  var pg = $("pjgrid");
-  if (pg && window.PROJ) PROJ.list.forEach(function (q, k) {
-    var st = PROJ.statuses[q.status], a = h("a", "pj-tile reveal", '<div class="top"><span class="pill ' + st.cls + '">' + st.t + '</span><span class="cap" style="margin:0">' + esc(q.repo ? q.repo.name : "plusieurs dépôts") + "</span></div><h3>" + esc(q.n) + "</h3><p>" + esc(q.role) + "</p><small>" + esc(q.tech.slice(0, 3).join(" · ")) + " · " + esc(q.last) + "</small>");
-    a.href = q.id + "/"; a.style.transitionDelay = Math.min(k, 8) * 45 + "ms"; pg.appendChild(a);
-  });
   var repos = $("repos");
   H.repos.forEach(function (r) {
     var mine = H.docs.filter(function (d) { return d.r === r.id; }), bars = "";
@@ -143,8 +137,12 @@
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: .1, rootMargin: "0px 0px -40px 0px" });
     targets.forEach(function (n) { io.observe(n); });
   } else targets.forEach(function (n) { n.classList.add("in"); });
+  var pjDocs = PROJ.list.reduce(function (n, q) { return n + (q.docs ? q.docs.length : 0); }, 0), pjRepos = {};
+  PROJ.list.forEach(function (q) { (q.repo && !q.repo.nourl ? [q.repo.name] : []).concat((q.sections || []).filter(function (x) { return x.repoLink; }).map(function (x) { return x.repoLink.name; })).forEach(function (n) { pjRepos[n] = 1; }); });
+  var COUNTS = { projects: PROJ.list.length + 1, pages: NEMO.pages.length + PROJ.list.length, repos: H.repos.length + Object.keys(pjRepos).length, docs: total + pjDocs, wip: byStatus["En cours"], done: byStatus["Réalisé"] };
+  window.HOME_COUNTS = COUNTS;
   document.querySelectorAll("[data-count]").forEach(function (n) {
-    var key = n.getAttribute("data-count"), to = key === "docs" ? total : key === "repos" ? H.repos.length + 1 : key === "wip" ? byStatus["En cours"] : byStatus["Réalisé"];
+    var to = COUNTS[n.getAttribute("data-count")] || 0;
     if (reduce) { n.textContent = to; return; }
     NEMO.onVisible(n, function () { var t0 = performance.now(); (function f(t) { var k = Math.min(1, (t - t0) / 1200); n.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0); }, .5);
   });

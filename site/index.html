@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Documentation — synthèse de toutes les docs</title>
-<meta name="description" content="Racine de la documentation : synthèse de tous les documents (statuts, projets, dépôts) et accès à la documentation interactive de Nemo.">
+<title>Documentation — tous les projets</title>
+<meta name="description" content="Racine de la documentation : Nemo, agent-hub, Prisme, multi, Garry, WikiCards, py2x, cppt et petits outils. Architecture, commandes, état et limites de chaque projet.">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="css/pages.css">
 <link rel="stylesheet" href="css/hub.css">
 <link rel="stylesheet" href="css/proj.css">
+<link rel="stylesheet" href="css/ux.css">
 <script>
   try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
@@ -27,76 +28,79 @@
   <div class="wrap">
     <div>
       <span class="eyebrow"><i></i>Racine de la documentation</span>
-      <h1><span>Toute</span><span>la</span><span class="acc">documentation,</span><span>en</span><span>un</span><span>seul</span><span class="acc">endroit.</span></h1>
-      <p class="lead">Une synthèse de tous les documents des projets : ce qui est <b>réalisé</b>, ce qui est <b>en cours</b>, ce qui est obsolète, et où le lire. Point de départ vers la documentation interactive de Nemo.</p>
+      <h1><span>Tous</span><span>les</span><span>projets,</span><span class="acc">une</span><span class="acc">seule</span><span>doc.</span></h1>
+      <p class="lead">Architecture, commandes utiles, état et limites connues de chaque projet : <b>Nemo</b>, <b>agent-hub</b>, <b>Prisme</b>, <b>multi</b>, <b>Garry</b> et les autres. Chercher avec <kbd class="kbd">Ctrl</kbd> <kbd class="kbd">K</kbd>.</p>
+      <p class="rotor" aria-live="off">Documentation de <b id="rotor">Nemo</b></p>
       <div class="cta">
-        <a class="btn reward" href="nemo/">Ouvrir la documentation Nemo</a>
-        <a class="btn" href="#documents">Parcourir les documents</a>
+        <a class="btn reward" href="#projets">Voir les projets</a>
+        <button class="btn" data-pal type="button">Rechercher partout</button>
       </div>
       <div class="stats" style="margin-top:34px">
+        <div class="stat"><b data-count="projects">0</b><span>projets</span></div>
+        <div class="stat"><b data-count="pages">0</b><span>pages de doc</span></div>
+        <div class="stat"><b data-count="repos">0</b><span>dépôts</span></div>
         <div class="stat"><b data-count="docs">0</b><span>documents</span></div>
-        <div class="stat"><b data-count="repos">0</b><span>dépôts et sites</span></div>
-        <div class="stat"><b data-count="done">0</b><span>réalisés</span></div>
-        <div class="stat"><b data-count="wip">0</b><span>en cours</span></div>
       </div>
     </div>
-    <div class="card donut-card floatx">
-      <div class="donut" id="donut"></div>
-      <div>
-        <div class="cap" style="margin-bottom:10px">État des documents</div>
-        <div class="legend-l" id="slegend"></div>
-      </div>
-    </div>
+    <div class="orbit-card floatx"><div class="orbit" id="orbit" role="group" aria-label="Carte des projets"></div><p class="orbit-cap" id="orbitCap" aria-live="polite">Survoler un projet pour voir ce qu'il fait ; un trait relie deux projets qui s'utilisent.</p></div>
   </div>
 </div>
 
 <div class="wrap">
-  <section id="synthese" class="page-sec">
-    <div class="sec-head reveal">
-      <div class="cap">Synthèse</div>
-      <h2>L'essentiel, <mark>en quatre points</mark>.</h2>
-      <p>Ce que contiennent les documents, vu d'avion. Les chiffres sont calculés à partir de la liste ci-dessous.</p>
-    </div>
-    <div class="brief" id="brief" data-stagger></div>
-  </section>
-
   <section id="projets" class="page-sec">
     <div class="sec-head reveal">
       <div class="cap">Projets</div>
-      <h2>Nemo et ses <mark>quatre dépôts</mark>.</h2>
-      <p>La documentation interactive de Nemo explique le fonctionnement ; chaque dépôt garde ses README et ses plans.</p>
+      <h2>Neuf projets, <mark>une page chacun</mark>.</h2>
+      <p>Filtrer par état ou chercher un mot : technologie, fonction, nom de dépôt.</p>
+    </div>
+    <div class="dtools reveal">
+      <input class="field" id="pq" type="search" placeholder="Rechercher : Rust, Cloudflare, jeux, PowerPoint…" aria-label="Rechercher un projet">
+      <div class="layers" id="pstat" role="group" aria-label="Filtrer par état"></div>
+    </div>
+    <div class="dcount" id="pcount"></div>
+    <div class="pj-grid" id="pjgrid"></div>
+  </section>
+
+  <section id="activite" class="page-sec">
+    <div class="sec-head reveal">
+      <div class="cap">Activité</div>
+      <h2>Ce qui a bougé <mark>récemment</mark>.</h2>
+      <p>Date du dernier commit ou de la dernière mise à jour connue de chaque projet ; la barre est plus longue quand l'activité est plus récente.</p>
+    </div>
+    <div class="act card reveal" id="act"></div>
+  </section>
+
+  <section id="nemo" class="page-sec">
+    <div class="sec-head reveal">
+      <div class="cap">Nemo en détail</div>
+      <h2>Le projet <mark>le plus documenté</mark>.</h2>
+      <p>Révision espacée pour un élève : un serveur Cloudflare, une app Windows et une app Android qui verrouillent l'appareil pendant les créneaux, et des sessions construites par une IA.</p>
     </div>
     <div class="card project reveal zoom">
       <div class="left">
         <span class="pill b">Projet</span>
         <h3 style="margin-top:12px">Nemo</h3>
-        <p>Révision espacée pour un élève : un serveur Cloudflare, une app Windows et une app Android qui verrouillent l'appareil pendant les créneaux, et des sessions construites par une IA à partir des cours.</p>
+        <p>Architecture, cycle d'une session, planificateur, 22 formats d'exercice, révision espacée, outils MCP, verrou et installation : huit pages avec schémas et démos jouables.</p>
         <a class="btn primary" href="nemo/">Ouvrir la documentation interactive</a>
       </div>
       <div class="right">
-        <div class="cap" style="margin-bottom:10px">Les 7 pages</div>
+        <div class="cap" style="margin-bottom:10px">Les pages</div>
         <div class="plinks" id="plinks"></div>
       </div>
     </div>
     <div class="repos" id="repos"></div>
-  </section>
 
-  <section id="autres" class="page-sec">
-    <div class="sec-head reveal">
-      <div class="cap">Autres projets</div>
-      <h2>Au-delà de Nemo : <mark>huit pages</mark> de projets.</h2>
-      <p>Outil de délégation, éditeur d'images, jeux multijoueurs, IA de jeux logiques, cartes Wikipédia, convertisseur Python, rendu PowerPoint et petits outils. Chaque page donne l'architecture, les commandes, l'état et les limites connues.</p>
+    <div class="hub-sub reveal"><div class="cap">État des documents de Nemo</div></div>
+    <div class="card donut-card floatx reveal">
+      <div class="donut" id="donut"></div>
+      <div>
+        <div class="cap" style="margin-bottom:10px">Statuts des documents</div>
+        <div class="legend-l" id="slegend"></div>
+      </div>
     </div>
-    <div class="pj-grid" id="pjgrid" data-stagger></div>
-    <p class="pj-note reveal">Pages construites à partir des README, des plans et du bilan des projets du 01/11/2026 ; les statuts sont à vérifier dans les dépôts.</p>
-  </section>
+    <div class="brief" id="brief" data-stagger style="margin-top:18px"></div>
 
-  <section id="documents" class="page-sec">
-    <div class="sec-head reveal">
-      <div class="cap">Documents</div>
-      <h2>Tous les documents, <mark>filtrables</mark>.</h2>
-      <p>Recherchez par mot-clé, par dépôt ou par statut. Chaque carte renvoie vers le document sur GitHub.</p>
-    </div>
+    <div class="hub-sub reveal" id="documents"><div class="cap">Tous les documents de Nemo</div></div>
     <div class="dtools reveal">
       <input class="field" id="dq" type="search" placeholder="Rechercher : classroom, blocage, cache, charte…" aria-label="Rechercher un document">
       <div class="layers" id="repoF" role="group" aria-label="Filtrer par dépôt"></div>
@@ -104,14 +108,9 @@
     </div>
     <div class="dcount" id="dcount"></div>
     <div class="dgrid" id="dgrid"></div>
-  </section>
 
-  <section id="statuts" class="page-sec">
-    <div class="sec-head reveal">
-      <div class="cap">Statuts</div>
-      <h2>Comment lire les <mark>statuts</mark>.</h2>
-      <p>Les statuts viennent des index des dépôts : ils sont déduits du code présent et de l'historique git, pas des cases cochées dans les plans. Ils ne prouvent ni un déploiement, ni la configuration des secrets.</p>
-    </div>
+    <div class="hub-sub reveal" id="statuts"><div class="cap">Comment lire les statuts</div></div>
+    <p class="hub-note reveal" style="margin:0 0 14px">Les statuts viennent des index des dépôts : ils sont déduits du code présent et de l'historique git, pas des cases cochées dans les plans. Ils ne prouvent ni un déploiement, ni la configuration des secrets.</p>
     <div class="slegend" id="slegendbig" data-stagger></div>
   </section>
 
@@ -119,10 +118,10 @@
     <div class="sec-head reveal">
       <div class="cap">Parcours</div>
       <h2>Par où <mark>commencer</mark> ?</h2>
-      <p>Trois parcours de lecture selon ce que vous cherchez.</p>
+      <p>Quatre parcours de lecture selon ce que vous cherchez.</p>
     </div>
     <div class="paths" id="paths" data-stagger></div>
-    <p class="hub-note reveal">Index des dépôts du 27/10/2026 ; documentation interactive de Nemo du 11/11/2026. À vérifier dans les dépôts avant de s'appuyer sur un statut.</p>
+    <p class="hub-note reveal">Index des dépôts de Nemo du 27/10/2026 ; pages de projets du 11/11/2026, construites à partir des README, des plans et du bilan du 01/11/2026. À vérifier dans les dépôts avant de s'appuyer sur un statut.</p>
   </section>
 </div>
 </main>
@@ -132,6 +131,8 @@
 <script src="js/hub-data.js"></script>
 <script src="js/proj-data.js"></script>
 <script src="js/hub.js"></script>
+<script src="js/home.js"></script>
+<script src="js/palette.js"></script>
 <script src="js/bg.js"></script>
 </body>
 </html>

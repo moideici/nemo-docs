@@ -17,7 +17,7 @@
   $("nav").innerHTML = '<div class="wrap"><a class="logo" href="../" aria-label="Documentation, accueil"><i></i>Docs</a>' +
     '<nav class="links" aria-label="Projets"><a href="../nemo/">Nemo</a>' + list.map(function (q) {
       return '<a href="../' + q.id + '/"' + (q.id === id ? ' aria-current="page"' : "") + ">" + esc(q.n) + "</a>";
-    }).join("") + '</nav><div class="tools"><button class="ico" id="theme" aria-label="Changer de thème">◐</button></div></div>';
+    }).join("") + '</nav><div class="tools"><button class="ico search" data-pal type="button" aria-label="Rechercher (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button><button class="ico" id="theme" aria-label="Changer de thème">◐</button></div></div>';
   $("footer").innerHTML = '<div class="wrap"><div><a class="logo" href="../"><i></i>Docs</a><p class="cap" style="margin:10px 0 0">Documentation des projets · mise à jour le ' + P.updated + '</p></div>' +
     '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px"><a href="../">Racine</a><a href="../nemo/">Nemo</a><a href="https://github.com/moideici/nemo-docs">GitHub · nemo-docs</a></div></div>';
   function isDark() { var t = document.documentElement.dataset.theme; return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; }
@@ -113,4 +113,16 @@
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: .06, rootMargin: "0px 0px -30px 0px" });
     targets.forEach(function (t) { io.observe(t); });
   } else targets.forEach(function (t) { t.classList.add("in"); });
+  /* ----- chiffres clés qui comptent, progression de lecture, bouton haut ----- */
+  [].forEach.call(app.querySelectorAll(".pj-fact b"), function (b) {
+    var raw = b.textContent; if (!/^\d+([   ]\d{3})*$/.test(raw) || reduce) return;
+    var to = +raw.replace(/\D/g, ""), fmt = /\D/.test(raw);
+    function run() { b.setAttribute("data-run", "1"); var t0 = performance.now(); (function f(t) { var k = Math.min(1, (t - t0) / 1100), v = Math.round(to * (1 - Math.pow(1 - k, 3))); b.textContent = fmt ? v.toLocaleString("fr-FR") : v; if (k < 1) requestAnimationFrame(f); else b.textContent = raw; })(t0); }
+    b.textContent = "0"; setTimeout(function () { if (b.textContent !== raw && !b.getAttribute("data-run")) b.textContent = raw; }, 6000);
+    if ("IntersectionObserver" in window) { var o = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { run(); o.disconnect(); } }, { threshold: .5 }); o.observe(b); } else b.textContent = raw;
+  });
+  var bar = $("progress"), topb = $("toTop");
+  function onScroll() { var d = document.documentElement; bar.style.width = (d.scrollTop / Math.max(1, d.scrollHeight - d.clientHeight) * 100) + "%"; topb.classList.toggle("on", d.scrollTop > 900); }
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  topb.addEventListener("click", function () { scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); });
 })();

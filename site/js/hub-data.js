@@ -65,6 +65,8 @@ HUB.brief = [
 /* parcours de lecture */
 HUB.paths = [
   { t: "Découvrir Nemo", s: "En 15 minutes, comprendre ce que fait chaque brique.", steps: [["Architecture", "nemo/architecture.html"], ["Une session pas à pas", "nemo/session.html"], ["Les formats d'exercice", "nemo/exercices.html"]] },
-  { t: "Installer et exploiter", s: "Mettre en route et garder à jour.", steps: [["Installer et mettre à jour", "nemo/installer.html"], ["Le serveur MCP", "nemo/mcp.html"], ["Le verrou et ses garde-fous", "nemo/verrou.html"]] },
-  { t: "Comprendre les choix", s: "Pourquoi les choses sont comme elles sont.", steps: [["Progression : Leitner et jeu", "nemo/progression.html"], ["Architecture (ARCHITECTURE.md)", "https://github.com/moideici/nemo-docs/blob/main/ARCHITECTURE.md"], ["Plans par dépôt", "#documents"]] }
+  { t: "Installer et exploiter Nemo", s: "Mettre en route et garder à jour.", steps: [["Installer et mettre à jour", "nemo/installer.html"], ["Le serveur MCP", "nemo/mcp.html"], ["Le verrou et ses garde-fous", "nemo/verrou.html"]] },
+  { t: "Travailler avec des agents", s: "Déléguer du code et garder la main.", steps: [["agent-hub : déléguer à Codex", "agent-hub/"], ["Architecture de Nemo (outils de travail)", "https://github.com/moideici/nemo-docs/blob/main/ARCHITECTURE.md"], ["agent-ia : le plan d'un agent personnel", "outils/"]] },
+  { t: "Jeux et IA", s: "Des jeux multijoueurs aux modèles qui y jouent.", steps: [["multi : 33 mini-jeux", "multi/"], ["Garry et Logic Lab : l'IA des jeux", "garry/"], ["WikiCards : cartes à collectionner", "wikicards/"]] },
+  { t: "Outils de création", s: "Images, présentations, code converti.", steps: [["Prisme : éditeur d'images", "prisme/"], ["cppt : rendu fidèle de PowerPoint", "cppt/"], ["py2x : Python vers C++ et Kotlin", "py2x/"]] }
 ];

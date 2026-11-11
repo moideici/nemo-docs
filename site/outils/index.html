@@ -13,16 +13,21 @@
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="../css/pages.css">
 <link rel="stylesheet" href="../css/proj.css">
+<link rel="stylesheet" href="../css/ux.css">
 <script>
   try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
 </head>
 <body data-project="outils">
+<div id="progress" aria-hidden="true"></div>
 <header class="nav" id="nav"></header>
 <main id="app"><noscript><div class="wrap"><p>Cette page est construite par JavaScript à partir de js/proj-data.js.</p></div></noscript></main>
 <footer id="footer"></footer>
+<button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
+<script src="../js/hub-data.js"></script>
 <script src="../js/proj-data.js"></script>
 <script src="../js/proj.js"></script>
+<script src="../js/palette.js"></script>
 <script src="../js/bg.js"></script>
 </body>
 </html>

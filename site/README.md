@@ -6,7 +6,7 @@ Le dossier `site/` est un site **100 % statique** (HTML, CSS, JavaScript sans d�
 
 | Chemin | Contenu |
 |---|---|
-| `/` (`index.html`) | la **racine de la documentation** : synthèse de tous les documents (anneau des statuts, 24 documents filtrables par dépôt, statut et mot-clé, parcours de lecture) et porte d'entrée vers chaque projet |
+| `/` (`index.html`) | la **racine de la documentation** : carte orbitale des projets, grille filtrable des neuf projets (Nemo compris), activité récente, détail de Nemo (statuts et 24 documents filtrables) et parcours de lecture ; recherche globale `Ctrl K` |
 | `/nemo/` | la **documentation interactive de Nemo**, en 8 pages (voir plus bas) |
 | `/agent-hub/`, `/prisme/`, `/multi/`, `/garry/`, `/wikicards/`, `/py2x/`, `/cppt/`, `/outils/` | la **documentation des autres projets**, une page par projet (voir « Pages de projets ») |
 
@@ -50,6 +50,20 @@ réalisés, en cours) sont **calculés** : aucun nombre n'est écrit à la main.
 s'affiche près du pointeur au passage de la souris et le panneau de détail se met à jour ; un clic épingle l'élément (indispensable
 au tactile). Code : `NEMO.tip` dans `js/data2.js`.
 
+## Racine : animations et recherche
+
+| Élément | Où | Détail |
+|---|---|---|
+| Mot qui tourne, compteurs | en-tête | « Documentation de … » change toutes les 2,2 s ; les quatre chiffres comptent à l'apparition |
+| Carte orbitale | en-tête (`js/home.js`) | un nœud par projet, couleur = état ; survol ou focus clavier = description ; un trait animé relie deux projets qui s'utilisent (agent-hub ↔ Nemo, Garry ↔ multi, py2x ↔ mindmap_portable) |
+| Grille des projets | `#projets` | filtre par état, recherche, halo qui suit la souris, légère inclinaison, apparition en cascade ; le titre d'une tuile devient le titre de la page (transition de vue, navigateurs compatibles) |
+| Activité récente | `#activite` | barres qui se remplissent à l'apparition, plus longues pour une activité plus récente |
+| Recherche globale | `js/palette.js` | `Ctrl K` ou `/` : projets, pages de Nemo, cartes, commandes, risques et documents ; ↑ ↓ Entrée Échap |
+| Pages de projets | `js/proj.js` | barre de progression, bouton « Haut », chiffres clés qui comptent, blocs d'architecture cliquables |
+
+Fichiers : `js/home.js` (racine), `js/palette.js` (toutes les pages de projets et la racine), `css/ux.css` (tout le mouvement, coupé par
+`prefers-reduced-motion`). Les relations de la carte orbitale sont dans `LINKS` en tête de `js/home.js` : à tenir à jour avec les projets.
+
 ## Pages de projets (hors Nemo)
 
 Une page par projet : **agent-hub** (délégation à Codex), **Prisme** (éditeur d'images, dépôt `photo-editor`), **multi** (mini-jeux multijoueurs),
@@ -62,10 +76,10 @@ les commandes utiles (avec bouton Copier), le contenu fonctionnel, l'état (réa
 | `<projet>/index.html` | squelette de la page (`<body data-project="…">`) ; identique d'un projet à l'autre |
 | `js/proj-data.js` | **les données** de tous les projets (`PROJ.list`) : à éditer pour corriger un texte ou ajouter un projet |
 | `js/proj.js` | construit la page à partir des données (navigation, schéma, commandes, cartes, état, documents, pager) |
-| `css/proj.css` | styles propres à ces pages et à la grille « Autres projets » de la racine |
+| `css/proj.css` | styles propres à ces pages et aux tuiles de projet |
 
 Pour ajouter un projet : ajouter une entrée à `PROJ.list`, copier le dossier d'une autre page en changeant `data-project` et le `<title>`. La racine affiche
-automatiquement une tuile. Sources : README et plans de chaque dépôt, bilan des projets du 01/11/2026, `git log`. Les statuts sont **à vérifier dans les dépôts** ;
+automatiquement une tuile, un nœud ne s'ajoute à la carte orbitale que si son id figure dans `ORDER` de `js/home.js`. Sources : README et plans de chaque dépôt, bilan des projets du 01/11/2026, `git log`. Les statuts sont **à vérifier dans les dépôts** ;
 mettre à jour `PROJ.updated` avec le contenu.
 
 ## Fichiers partagés
