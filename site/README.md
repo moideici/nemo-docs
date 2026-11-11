@@ -104,6 +104,8 @@ La **racine** du site est la synthèse ; Nemo vit sous `/nemo/`. `nemo.moideici.
 Un sous-domaine de second niveau (`docs.nemo.moideici.tech`) n'est pas couvert par le certificat gratuit
 de Cloudflare (`*.moideici.tech` seulement) : utiliser `docs.moideici.tech`.
 
+**Publié le 11/11/2026** : option A, `https://docs.moideici.tech/` (synthèse) et `https://docs.moideici.tech/nemo/` (Nemo), Worker `nemo-docs`. Pour mettre à jour : `npx wrangler deploy`. Cloudflare redirige `/page.html` vers `/page` (307), sans conséquence pour les liens relatifs.
+
 Première publication (option A) :
 
 ```bash
