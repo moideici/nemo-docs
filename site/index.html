@@ -3,76 +3,123 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nemo — Documentation</title>
-<meta name="description" content="Documentation interactive de Nemo : révision espacée, planning, blocage pendant les créneaux, serveur MCP, app PC et app Android.">
+<title>Documentation — synthèse de toutes les docs</title>
+<meta name="description" content="Racine de la documentation : synthèse de tous les documents (statuts, projets, dépôts) et accès à la documentation interactive de Nemo.">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/hub.css">
 <script>
   try { var t = localStorage.getItem("nemo-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
 </head>
-<body data-page="index">
+<body data-page="hub">
 <div id="progress" aria-hidden="true"></div>
 <header class="nav" id="nav"></header>
 <main id="top">
-<div class="hero">
+
+<div class="hub-hero">
   <div class="wrap">
     <div>
-      <span class="eyebrow"><i></i>Documentation · révision scolaire assistée</span>
-      <h1>Réviser <mark>au bon moment</mark>, sur <span class="swap" id="swap">les maths</span>.</h1>
-      <p class="lead">Nemo lit l'emploi du temps de l'élève, repère les créneaux libres, <b>verrouille le PC et le téléphone</b> à l'heure de la séance, fait construire une session sur mesure par une IA, puis libère l'élève une fois la session terminée.</p>
+      <span class="eyebrow"><i></i>Racine de la documentation</span>
+      <h1><span>Toute</span><span>la</span><span class="acc">documentation,</span><span>en</span><span>un</span><span>seul</span><span class="acc">endroit.</span></h1>
+      <p class="lead">Une synthèse de tous les documents des projets : ce qui est <b>réalisé</b>, ce qui est <b>en cours</b>, ce qui est obsolète, et où le lire. Point de départ vers la documentation interactive de Nemo.</p>
       <div class="cta">
-        <a class="btn reward" href="architecture.html">Voir l'architecture</a>
-        <a class="btn" href="session.html">Suivre une session pas à pas</a>
+        <a class="btn reward" href="nemo/">Ouvrir la documentation Nemo</a>
+        <a class="btn" href="#documents">Parcourir les documents</a>
       </div>
-      <div class="stats">
-        <div class="stat"><b data-count="4">0</b><span>briques</span></div>
-        <div class="stat"><b data-count="22">0</b><span>formats d'exercice</span></div>
-        <div class="stat"><b data-count="6">0</b><span>boîtes Leitner</span></div>
-        <div class="stat"><b data-count="30">0</b><span>jours max entre 2 révisions</span></div>
+      <div class="stats" style="margin-top:34px">
+        <div class="stat"><b data-count="docs">0</b><span>documents</span></div>
+        <div class="stat"><b data-count="repos">0</b><span>dépôts et sites</span></div>
+        <div class="stat"><b data-count="done">0</b><span>réalisés</span></div>
+        <div class="stat"><b data-count="wip">0</b><span>en cours</span></div>
       </div>
     </div>
-    <div class="floatx">
-      <div class="nm nm-hero" id="heroCard"><span class="demo-tag">aperçu en direct</span></div>
-      <p class="nm-frame-cap">Rendu fidèle d'une page d'exercice Nemo. Cliquez une réponse pour reprendre la main.</p>
+    <div class="card donut-card floatx">
+      <div class="donut" id="donut"></div>
+      <div>
+        <div class="cap" style="margin-bottom:10px">État des documents</div>
+        <div class="legend-l" id="slegend"></div>
+      </div>
     </div>
   </div>
 </div>
+
 <div class="wrap">
-  <section class="page-sec" id="comment">
+  <section id="synthese" class="page-sec">
     <div class="sec-head reveal">
-      <div class="cap">En bref</div>
-      <h2>Cinq temps, <mark>un seul</mark> parcours.</h2>
-      <p>Chaque créneau de révision déroule la même séquence, de la lecture du planning à la libération de l'élève.</p>
+      <div class="cap">Synthèse</div>
+      <h2>L'essentiel, <mark>en quatre points</mark>.</h2>
+      <p>Ce que contiennent les documents, vu d'avion. Les chiffres sont calculés à partir de la liste ci-dessous.</p>
     </div>
-    <div class="card reveal zoom"><div class="pipe" id="pipe"></div></div>
+    <div class="brief" id="brief" data-stagger></div>
   </section>
-  <section class="page-sec" id="plan">
+
+  <section id="projets" class="page-sec">
     <div class="sec-head reveal">
-      <div class="cap">Documentation</div>
-      <h2>Parcourir <mark>par thème</mark>.</h2>
-      <p>La documentation est répartie en pages courtes. Chaque page contient un schéma ou un simulateur interactif.</p>
+      <div class="cap">Projets</div>
+      <h2>Nemo et ses <mark>quatre dépôts</mark>.</h2>
+      <p>La documentation interactive de Nemo explique le fonctionnement ; chaque dépôt garde ses README et ses plans.</p>
     </div>
-    <div class="tiles" id="tiles" data-stagger></div>
+    <div class="card project reveal zoom">
+      <div class="left">
+        <span class="pill b">Projet</span>
+        <h3 style="margin-top:12px">Nemo</h3>
+        <p>Révision espacée pour un élève : un serveur Cloudflare, une app Windows et une app Android qui verrouillent l'appareil pendant les créneaux, et des sessions construites par une IA à partir des cours.</p>
+        <a class="btn primary" href="nemo/">Ouvrir la documentation interactive</a>
+      </div>
+      <div class="right">
+        <div class="cap" style="margin-bottom:10px">Les 7 pages</div>
+        <div class="plinks" id="plinks"></div>
+      </div>
+    </div>
+    <div class="repos" id="repos"></div>
+  </section>
+
+  <section id="documents" class="page-sec">
+    <div class="sec-head reveal">
+      <div class="cap">Documents</div>
+      <h2>Tous les documents, <mark>filtrables</mark>.</h2>
+      <p>Recherchez par mot-clé, par dépôt ou par statut. Chaque carte renvoie vers le document sur GitHub.</p>
+    </div>
+    <div class="dtools reveal">
+      <input class="field" id="dq" type="search" placeholder="Rechercher : classroom, blocage, cache, charte…" aria-label="Rechercher un document">
+      <div class="layers" id="repoF" role="group" aria-label="Filtrer par dépôt"></div>
+      <div class="layers" id="statF" role="group" aria-label="Filtrer par statut"></div>
+    </div>
+    <div class="dcount" id="dcount"></div>
+    <div class="dgrid" id="dgrid"></div>
+  </section>
+
+  <section id="statuts" class="page-sec">
+    <div class="sec-head reveal">
+      <div class="cap">Statuts</div>
+      <h2>Comment lire les <mark>statuts</mark>.</h2>
+      <p>Les statuts viennent des index des dépôts : ils sont déduits du code présent et de l'historique git, pas des cases cochées dans les plans. Ils ne prouvent ni un déploiement, ni la configuration des secrets.</p>
+    </div>
+    <div class="slegend" id="slegendbig" data-stagger></div>
+  </section>
+
+  <section id="parcours" class="page-sec">
+    <div class="sec-head reveal">
+      <div class="cap">Parcours</div>
+      <h2>Par où <mark>commencer</mark> ?</h2>
+      <p>Trois parcours de lecture selon ce que vous cherchez.</p>
+    </div>
+    <div class="paths" id="paths" data-stagger></div>
+    <p class="hub-note reveal">Index des dépôts du 27/10/2026 ; documentation interactive de Nemo du 11/11/2026. À vérifier dans les dépôts avant de s'appuyer sur un statut.</p>
   </section>
 </div>
-
 </main>
 <footer id="footer"></footer>
-
 <button class="btn small top" id="toTop" aria-label="Haut de page">↑ Haut</button>
-<div id="pal" role="dialog" aria-modal="true" aria-label="Recherche">
-  <div class="box"><input id="palIn" type="text" placeholder="Rechercher une page, un outil, un format…" autocomplete="off"><ul id="palList"></ul></div>
-</div>
-<script src="js/data.js"></script>
 <script src="js/data2.js"></script>
-<script src="js/diagrams.js"></script>
-<script src="js/sims.js"></script>
-<script src="js/ui.js"></script>
+<script src="js/hub-data.js"></script>
+<script src="js/hub.js"></script>
+<script src="js/bg.js"></script>
 </body>
 </html>

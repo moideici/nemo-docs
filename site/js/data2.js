@@ -57,3 +57,31 @@ NEMO.whileVisible = function (el, show, hide, threshold) {
   var io = new IntersectionObserver(function (es) { es.forEach(function (e) { e.isIntersecting ? show() : hide(); }); }, { threshold: threshold || .3 });
   io.observe(el);
 };
+
+/* info-bulle flottante au survol (souris) : NEMO.tip.show(données, événement) / hide() */
+NEMO.tip = (function () {
+  var box = null;
+  function ensure() {
+    if (box) return box;
+    box = document.createElement("div"); box.className = "tip"; box.setAttribute("role", "tooltip");
+    document.body.appendChild(box); return box;
+  }
+  function place(e) {
+    var b = ensure(), w = b.offsetWidth, h = b.offsetHeight, x = e.clientX + 16, y = e.clientY + 18;
+    if (x + w > innerWidth - 10) x = e.clientX - w - 16;
+    if (y + h > innerHeight - 10) y = e.clientY - h - 16;
+    b.style.left = Math.max(8, x) + "px"; b.style.top = Math.max(8, y) + "px";
+  }
+  return {
+    show: function (d, e) {
+      if (!window.matchMedia || !matchMedia("(hover: hover)").matches) return;
+      var b = ensure(); b.innerHTML = "";
+      var h = document.createElement("h4"); h.textContent = d.title; b.appendChild(h);
+      var p = document.createElement("p"); p.textContent = d.text; b.appendChild(p);
+      if (d.meta && d.meta.length) { var m = document.createElement("div"); m.className = "meta"; d.meta.forEach(function (x) { var s = document.createElement("span"); s.className = "pill"; s.textContent = x; m.appendChild(s); }); b.appendChild(m); }
+      place(e); b.classList.add("on");
+    },
+    move: function (e) { if (box && box.classList.contains("on")) place(e); },
+    hide: function () { if (box) box.classList.remove("on"); }
+  };
+})();

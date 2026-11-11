@@ -157,6 +157,10 @@
         c.style.setProperty("--w", b.to - b.from); c.style.setProperty("--k", i);
         c.setAttribute("aria-label", title + ", " + b.from + "h à " + b.to + "h");
         c.addEventListener("click", function () { selKey = b.key + b.from; render(false); detail(b); });
+        var tipD = { title: title + " · " + b.from + "h–" + b.to + "h", text: b.type === "class" ? D.classes[b.ci].note : b.type === "busy" ? "Plage déclarée indisponible : ni créneau, ni verrou." : "Créneau de révision proposé par le serveur. Cliquez pour voir le déroulé et ajuster les heures.", meta: [dur(b)] };
+        c.addEventListener("mouseenter", function (ev) { NEMO.tip.show(tipD, ev); });
+        c.addEventListener("mousemove", NEMO.tip.move);
+        c.addEventListener("mouseleave", NEMO.tip.hide);
         if (!animate) { c.style.animation = "none"; c.style.opacity = 1; c.style.transform = "none"; }
         tl.appendChild(c);
         if (b.type === "slot") { slots++; hrs += b.to - b.from; }

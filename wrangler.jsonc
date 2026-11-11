@@ -1,5 +1,6 @@
 {
-  // Site de documentation de Nemo : 100 % statique (dossier site/), servi par Cloudflare.
+  // Site de documentation : 100 % statique (dossier site/), servi par Cloudflare.
+  // Racine (/) = synthèse de toutes les docs ; /nemo/ = documentation interactive de Nemo.
   // Aucun code de Worker : seulement des assets statiques.
   "$schema": "https://json.schemastore.org/wrangler.json",
   "name": "nemo-docs",

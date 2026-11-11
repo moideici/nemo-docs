@@ -1,90 +1,108 @@
-# Site de documentation de Nemo
+# Site de documentation (racine `docs.moideici.tech` + documentation de Nemo)
 
 Dernière mise à jour : 11/11/2026
 
-Documentation interactive de Nemo, destinée à un public extérieur, répartie en **8 pages courtes** : schémas cliquables,
-session jouée automatiquement, planificateur dont chaque bloc est détaillé au clic, aperçus d'exercices fidèles au vrai
-rendu, simulateurs, outils MCP filtrables, recherche (`Ctrl K`), thème clair/sombre automatique.
+Le dossier `site/` est un site **100 % statique** (HTML, CSS, JavaScript sans dépendance ni étape de build) qui contient deux choses :
 
-Le style du site est volontairement **neutre et moderne** (surfaces claires, filets fins, un seul accent bleu, ombres
-douces, police Inter) et diffère de la charte « encre et fluo » des apps. Une exception voulue : les **aperçus de pages
-d'exercice** (en-tête de l'accueil et démos de la page Exercices) reprennent la charte V1 à l'identique, dans un cadre
-isolé (`.nm` dans `css/pages.css`) : fond papier, trait 2 px, ombre pleine, pastille lettre, juste = vert + coche,
-faux = rose + croix barrée, explication en cadre pointillé, barre de parcours. Elles suivent donc aussi le mode sombre
-(« Nuit »). La charte de référence est [charte-nemo.md](../charte-nemo.md) ; les styles réels viennent de
+| Chemin | Contenu |
+|---|---|
+| `/` (`index.html`) | la **racine de la documentation** : synthèse de tous les documents (anneau des statuts, 24 documents filtrables par dépôt, statut et mot-clé, parcours de lecture) et porte d'entrée vers chaque projet |
+| `/nemo/` | la **documentation interactive de Nemo**, en 8 pages (voir plus bas) |
+
+Le style est volontairement **neutre et moderne** (surfaces claires, filets fins, un seul accent bleu, ombres douces, police Inter),
+avec un **arrière-plan animé** (aurore + réseau de points, `js/bg.js`) qui suit le thème clair/sombre, réagit à la souris et au
+défilement, se met en pause hors écran et reste figé si le système demande moins d'animations.
+Une exception voulue : les **aperçus de pages d'exercice** de Nemo reprennent la charte V1 à l'identique dans un cadre isolé
+(`.nm` dans `css/pages.css`). La charte de référence est [charte-nemo.md](../charte-nemo.md) ; les styles réels viennent de
 `nemo-https/src/templates/charte.js`.
 
-Le site est **100 % statique** (HTML, CSS, JavaScript sans dépendance ni étape de build). Seules les polices viennent de
-Google Fonts (Inter, JetBrains Mono pour le site ; Bricolage Grotesque, Atkinson Hyperlegible, DM Mono pour les aperçus
-d'exercice). Les textes sont impersonnels (pas de tutoiement).
+Seules les polices viennent de Google Fonts (Inter, JetBrains Mono ; Bricolage Grotesque, Atkinson Hyperlegible et DM Mono pour les
+aperçus d'exercice). Les textes sont impersonnels (pas de tutoiement).
 
-## Pages
-
-| Page | Contenu |
-|---|---|
-| `index.html` | accueil : aperçu d'exercice qui se joue seul, pipeline animé, tuiles vers les autres pages |
-| `architecture.html` | schéma interactif (serveur, apps, assistant, CI) + les 4 briques |
-| `session.html` | cycle d'une session (diagramme de séquence **lu automatiquement** à l'arrivée) + planificateur cliquable |
-| `exercices.html` | 22 formats ; 8 démos jouables (`?f=cloze` ouvre directement un format) |
-| `progression.html` | révision espacée (Leitner) + gamification, deux simulateurs qui tournent seuls |
-| `mcp.html` | outils MCP filtrables (`?q=publish` pré-remplit le filtre), brancher Claude / ChatGPT |
-| `verrou.html` | états du verrou (parcours automatique) et garde-fous |
-| `installer.html` | installation et mises à jour par brique, règles de travail, dépôts |
-
-## Structure
+## La racine : synthèse de toutes les docs
 
 | Fichier | Rôle |
 |---|---|
-| `*.html` | le contenu de chaque page. La navigation, le pied de page, le bouton « page suivante » et la palette `Ctrl K` sont construits par `js/ui.js` à partir de la liste `NEMO.pages` : pour ajouter une page, créer le HTML (copier une page existante) et l'ajouter à `NEMO.pages` dans `js/data2.js` |
-| `css/style.css` | thème (variables clair/sombre), composants, mise en page. Les variables `--sky`, `--green`… sont des teintes douces, `--d-sky`… les teintes franches des points de couleur. |
-| `css/pages.css` | en-têtes de sous-pages, animations, tuiles, planificateur, aperçus d'exercice fidèles (`.nm`) |
-| `js/data.js` | **contenu des schémas et simulateurs** : briques, nœuds et liens de l'architecture, étapes de la session, états du verrou, formats, outils MCP, onglets d'installation. C'est le fichier à éditer pour corriger un texte. |
-| `js/data2.js` | liste des pages, journée type du planificateur, questions de l'aperçu d'accueil, utilitaires d'animation (`onVisible`, `whileVisible`) |
-| `js/diagrams.js` | les 3 schémas SVG (architecture, séquence, verrou) : apparition au scroll, lecture automatique |
-| `js/sims.js` | aperçu d'exercice (`nmQuiz`), planificateur, démos de formats, Leitner, jeu, outils, installation |
-| `js/ui.js` | navigation, pied de page, thème, progression de lecture, apparitions en cascade, compteurs, palette |
-| `_headers` | en-têtes de sécurité et cache pour Cloudflare |
-| `favicon.svg` | l'icône du site |
+| `index.html` | la page : en-tête, synthèse en 4 points, projets et dépôts, documents filtrables, statuts, parcours |
+| `js/hub-data.js` | **les données** : statuts, dépôts, liste des documents (titre, résumé, statut, fichier, code concerné), synthèse, parcours. Pour ajouter un document ou un projet, compléter ce fichier, rien d'autre. |
+| `js/hub.js` | construit la page à partir des données (anneau, cartes, filtres, compteurs) |
+| `css/hub.css` | styles propres à la racine |
 
-Tous les liens sont **relatifs** : le site marche à la racine d'un domaine comme dans un sous-dossier.
+Les statuts et résumés viennent des index `docs/README.md` de `nemo-https` et `nemo-app` (27/10/2026) et des README de chaque dépôt.
+Quand un index de dépôt change, mettre à jour `HUB.docs` et `HUB.updated` dans le même commit. Les chiffres (nombre de documents,
+réalisés, en cours) sont **calculés** : aucun nombre n'est écrit à la main.
+
+## `/nemo/` : documentation interactive de Nemo (8 pages)
+
+| Page | Contenu |
+|---|---|
+| `nemo/index.html` | accueil : aperçu d'exercice qui se joue seul, pipeline animé, tuiles vers les autres pages |
+| `nemo/architecture.html` | schéma interactif (serveur, apps, assistant, CI) + les 4 briques |
+| `nemo/session.html` | cycle d'une session (diagramme **lu automatiquement** à l'arrivée) + planificateur cliquable |
+| `nemo/exercices.html` | 22 formats ; 8 démos jouables (`?f=cloze` ouvre directement un format) |
+| `nemo/progression.html` | révision espacée (Leitner) + gamification, deux simulateurs qui tournent seuls |
+| `nemo/mcp.html` | outils MCP filtrables (`?q=publish` pré-remplit le filtre), brancher Claude / ChatGPT |
+| `nemo/verrou.html` | états du verrou (parcours automatique) et garde-fous |
+| `nemo/installer.html` | installation et mises à jour par brique, règles de travail, dépôts |
+
+**Détails au survol** : sur les schémas (architecture, séquence, verrou) et sur les blocs du planificateur, une info-bulle
+s'affiche près du pointeur au passage de la souris et le panneau de détail se met à jour ; un clic épingle l'élément (indispensable
+au tactile). Code : `NEMO.tip` dans `js/data2.js`.
+
+## Fichiers partagés
+
+| Fichier | Rôle |
+|---|---|
+| `css/style.css` | thème (variables clair/sombre), composants, mise en page. Les variables `--sky`, `--green`… sont des teintes douces, `--d-sky`… les teintes franches des points de couleur. |
+| `css/pages.css` | en-têtes de sous-pages, animations, tuiles, planificateur, info-bulle, arrière-plan, aperçus d'exercice fidèles (`.nm`) |
+| `js/data.js` | **contenu des schémas et simulateurs de Nemo** : briques, nœuds et liens, étapes de la session, états du verrou, formats, outils MCP, installation. C'est le fichier à éditer pour corriger un texte. |
+| `js/data2.js` | liste des pages de Nemo, journée type du planificateur, questions de l'aperçu d'accueil, utilitaires (`onVisible`, `whileVisible`, `tip`) |
+| `js/diagrams.js` | les 3 schémas SVG : apparition au scroll, lecture automatique, survol |
+| `js/sims.js` | aperçu d'exercice (`nmQuiz`), planificateur, démos de formats, Leitner, jeu, outils, installation |
+| `js/ui.js` | navigation, pied de page, thème, progression, apparitions, compteurs, palette `Ctrl K` (pages de `/nemo/`) |
+| `js/bg.js` | arrière-plan animé (canvas), chargé par toutes les pages |
+| `_headers` | en-têtes de sécurité et cache pour Cloudflare |
+
+Pour ajouter une page à Nemo : copier une page de `nemo/`, l'ajouter à `NEMO.pages` dans `js/data2.js`. Tous les liens sont
+**relatifs** : le site marche à la racine d'un domaine comme dans un sous-dossier.
 
 ## Animations
 
 - **À l'apparition** : en-têtes de page, cascades de cartes et de lignes de tableau (`data-stagger`), schémas qui se construisent.
-- **Qui se jouent seules** (uniquement quand elles sont visibles, et arrêtées dès que le visiteur interagit) : la session
-  (séquence), l'aperçu d'exercice de l'accueil, le pipeline, Leitner, le jeu, les états du verrou.
-- `prefers-reduced-motion` est respecté : tout s'affiche sans animation et sans lecture automatique.
+- **Qui se jouent seules** (uniquement visibles, arrêtées dès que le visiteur interagit) : la session (séquence), l'aperçu d'exercice,
+  le pipeline, Leitner, le jeu, les états du verrou, l'anneau des statuts.
+- `prefers-reduced-motion` est respecté : tout s'affiche sans animation, sans lecture automatique et avec un fond figé.
 - Transitions de page fluides (`@view-transition`) dans les navigateurs qui les gèrent.
 
 ## Aperçu local
 
 ```bash
-node scripts/serve.js        # depuis la racine de nemo-docs → http://localhost:4322
+node scripts/serve.js        # depuis la racine de nemo-docs → http://localhost:4322 (racine) et /nemo/
 ```
 
 ## Garder le contenu exact
 
 Les chiffres et règles affichés viennent des dépôts, pas de l'imagination : barème et niveaux
 (`nemo-https/public/static/game/rules.js`), intervalles de Leitner (`nemo-https/src/spacedRepetition.js`),
-cycle de session et garde-fous (README de `nemo-pc`, `nemo-app`), pipeline (`ARCHITECTURE.md`).
+cycle de session et garde-fous (README de `nemo-pc`, `nemo-app`), pipeline (`ARCHITECTURE.md`), statuts (index `docs/README.md`).
 La journée du planificateur (cours, plages) est un **exemple** ; ses règles (préavis 5 min, rattrapage, heures calmes)
 sont celles du README de `nemo-pc`.
-Quand l'un d'eux change, mettre à jour `js/data.js` (ou la page concernée) **dans le même commit** que le dépôt concerné,
-puis la date en haut de ce fichier et dans le pied de page (`js/ui.js`).
+Quand l'un d'eux change, mettre à jour `js/data.js` / `js/hub-data.js` **dans le même commit** que le dépôt concerné,
+puis les dates (`HUB.siteUpdated` dans `js/hub-data.js`, pied de page de `js/ui.js`, date de ce fichier).
 
-## Publier avec Cloudflare
+## Publier avec Cloudflare : la racine de `docs.moideici.tech`
 
-`nemo.moideici.tech` est **déjà le Custom Domain du Worker `nemo-https`** (le serveur de Nemo : site, API, MCP).
-Y publier cette documentation à la place casserait les apps. Trois façons de faire, de la plus simple à la plus couplée :
+La **racine** du site est la synthèse ; Nemo vit sous `/nemo/`. `nemo.moideici.tech` est **déjà le Custom Domain du Worker
+`nemo-https`** (le serveur de Nemo) : ne pas y publier ce site à la place, cela casserait les apps.
 
 | Option | Adresse | Mise en place | Remarque |
 |---|---|---|---|
-| **A. Sous-domaine dédié** (recommandé) | `docs.moideici.tech` | Décommenter la ligne `routes` de `wrangler.jsonc`, puis `npx wrangler deploy` | Indépendant du serveur : une erreur ici ne touche jamais l'API. |
-| **B. Chemin du serveur** | `nemo.moideici.tech/docs/` | Copier `site/` vers `nemo-https/public/docs/` | Même domaine, mais chaque mise à jour de la doc déclenche le test + déploiement du serveur. |
-| **C. Cloudflare Pages** | `nemo-docs.pages.dev`, puis un domaine perso | Relier le dépôt, dossier de sortie `site`, pas de commande de build | Déploiement à chaque push, sans CI à écrire. |
+| **A. Sous-domaine dédié** (recommandé) | `docs.moideici.tech` (racine) et `docs.moideici.tech/nemo/` | Décommenter la ligne `routes` de `wrangler.jsonc`, puis `npx wrangler deploy` | Indépendant du serveur : une erreur ici ne touche jamais l'API. |
+| **B. Chemin du serveur** | `nemo.moideici.tech/docs/` et `/docs/nemo/` | Copier `site/` vers `nemo-https/public/docs/` | Même domaine, mais chaque mise à jour de la doc déclenche le test + déploiement du serveur. |
+| **C. Cloudflare Pages** | `nemo-docs.pages.dev`, puis `docs.moideici.tech` | Relier le dépôt, dossier de sortie `site`, pas de commande de build | Déploiement à chaque push, sans CI à écrire. |
 
 Un sous-domaine de second niveau (`docs.nemo.moideici.tech`) n'est pas couvert par le certificat gratuit
-de Cloudflare (`*.moideici.tech` seulement) : préférer `docs.moideici.tech`, ou `nemo-docs.moideici.tech`.
+de Cloudflare (`*.moideici.tech` seulement) : utiliser `docs.moideici.tech`.
 
 Première publication (option A) :
 

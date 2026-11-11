@@ -63,7 +63,7 @@
         text(g, mx, my + 3.5, e.label, "svg-m", 10.5, "middle");
       }
       function pick() { select(e, g); }
-      g.addEventListener("click", pick); keyActivate(g, pick);
+      g.addEventListener("click", pick); keyActivate(g, pick); hover(g, e);
       edgeEls[e.id] = g;
       if (!reduce) {
         [0, 1].forEach(function (k) {
@@ -99,15 +99,24 @@
         text(f, n.x + 20, n.y + n.h - 17, n.s, "svg-t", 12).setAttribute("fill", "var(--mute)");
       }
       function pick() { select(n, g); }
-      g.addEventListener("click", pick); keyActivate(g, pick);
+      g.addEventListener("click", pick); keyActivate(g, pick); hover(g, n);
       nodeEls[n.id] = g;
     });
 
+    var pinned = null;
     function select(d, g) {
       if (selected) selected.classList.remove("sel");
-      selected = g; g.classList.add("sel");
+      selected = g; g.classList.add("sel"); pinned = d;
       showInfo(info, d);
     }
+    // survol (souris) : info-bulle près du pointeur + aperçu dans le panneau ; le clic épingle l'élément
+    function hover(g, d) {
+      g.addEventListener("mouseenter", function (ev) { NEMO.tip.show(d, ev); showInfo(info, d); });
+      g.addEventListener("mousemove", NEMO.tip.move);
+      g.addEventListener("mouseleave", function () { NEMO.tip.hide(); if (pinned) showInfo(info, pinned); else showInfo(info, intro); });
+      g.addEventListener("focus", function () { showInfo(info, d); });
+    }
+    var intro = { title: "Survolez un bloc ou un lien", text: "Les détails s'affichent au survol de la souris ; un clic épingle l'élément dans ce panneau. Les points qui circulent indiquent le sens des échanges ; les traits en pointillés sont les livraisons par la CI." };
     function setLayer(id) {
       NEMO.edges.forEach(function (e) { edgeEls[e.id].classList.toggle("off", !(id === "all" || e.layer === id)); });
       svg.querySelectorAll(".pkt").forEach(function (c) { c.style.display = (id === "all" || c.getAttribute("data-layer") === id) ? "" : "none"; });
@@ -125,7 +134,7 @@
       });
       bar.appendChild(b);
     });
-    showInfo(info, { title: "Sélectionnez un bloc ou un lien", text: "Chaque élément du schéma est décrit ici. Les points qui circulent indiquent le sens des échanges ; les traits en pointillés sont les livraisons par la CI." });
+    showInfo(info, intro);
     enter(svg, NEMO.nodes.length + NEMO.edges.length);
   }
 
@@ -160,6 +169,10 @@
       }
       el("circle", { cx: 26, cy: y - 5, r: 11, class: "nbub" }, g);
       text(g, 26, y - 1.5, i + 1, "svg-m nnum", 10.5, "middle");
+      // survol : détail de l'étape (seulement si elle est déjà apparue)
+      g.addEventListener("mouseenter", function (ev) { if (g.classList.contains("shown")) NEMO.tip.show(s, ev); });
+      g.addEventListener("mousemove", NEMO.tip.move);
+      g.addEventListener("mouseleave", NEMO.tip.hide);
       return g;
     });
     var cur = -1, timer = null, started = false, btnPlay = document.getElementById("seqPlay");
@@ -228,6 +241,10 @@
       text(f, x + 20, Y + H - 16, "état " + (i + 1), "svg-m", 10.5);
       function pick() { manual = true; stop(); choose(i, false); }
       g.addEventListener("click", pick); keyActivate(g, pick);
+      // survol : détail de l'état près du pointeur ; le parcours automatique se met en pause le temps du survol
+      g.addEventListener("mouseenter", function (ev) { NEMO.tip.show(s, ev); if (!manual) { stop(); choose(i, true); } });
+      g.addEventListener("mousemove", NEMO.tip.move);
+      g.addEventListener("mouseleave", function () { NEMO.tip.hide(); if (!manual) start(); });
       nodes.push(g);
     });
     var last = X0 + 4 * (W + GAP) + W / 2, first = X0 + W / 2;

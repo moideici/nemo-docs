@@ -184,3 +184,22 @@ svg.pre .pkt { opacity: 0; }
 .nm-frame-cap { font: 500 11.5px var(--f-mono); color: var(--mute); margin: 10px 4px 0; }
 .fdemo { margin-top: 18px; }
 .pipe .st:first-child::after { display: none; }
+
+/* ---------- arrière-plan animé ---------- */
+#bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+main, footer { position: relative; z-index: 1; }
+footer { background: color-mix(in srgb, var(--bg2) 82%, transparent); }
+.hero::after, .page-hero::after { opacity: .6; }
+
+/* ---------- info-bulle au survol (schémas, planning) ---------- */
+.tip { position: fixed; z-index: 150; max-width: 340px; pointer-events: none; background: var(--card); border: 1px solid var(--line2); border-radius: 12px; box-shadow: var(--sh-lg); padding: 12px 14px; opacity: 0; transform: translateY(6px) scale(.98); transition: opacity .14s, transform .14s; }
+.tip.on { opacity: 1; transform: none; }
+.tip h4 { font: 600 14.5px var(--f-title); letter-spacing: -.01em; margin: 0 0 4px; }
+.tip p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--mute); }
+.tip .meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.tip .pill { font-size: 10.5px; padding: 1px 7px; }
+.hint-hover { font: 500 11.5px var(--f-mono); color: var(--mute); margin: 10px 4px 0; }
+@media (hover: none) { .hint-hover { display: none; } }
+.docs-root { font: 500 13px var(--f-text); color: var(--mute); text-decoration: none; padding: 6px 10px; border-radius: 8px; white-space: nowrap; transition: color .15s, background .15s; }
+.docs-root:hover { color: var(--ink); background: var(--bg2); }
+@media (max-width: 1180px) { .docs-root { display: none; } }

@@ -10,7 +10,7 @@
   $("nav").innerHTML = '<div class="wrap"><a class="logo" href="index.html" aria-label="Nemo, accueil"><i></i>Nemo</a>' +
     '<nav class="links" aria-label="Pages">' + NEMO.pages.filter(function (p) { return p.nav; }).map(function (p) {
       return '<a href="' + p.href + '"' + (p.id === page ? ' aria-current="page"' : "") + ">" + esc(p.t) + "</a>";
-    }).join("") + '</nav><div class="tools"><button class="ico search" id="open-pal" aria-label="Rechercher (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button><button class="ico" id="theme" aria-label="Changer de thème">◐</button></div></div>';
+    }).join("") + '</nav><a class="docs-root" href="../">‹ Toutes les docs</a><div class="tools"><button class="ico search" id="open-pal" aria-label="Rechercher (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button><button class="ico" id="theme" aria-label="Changer de thème">◐</button></div></div>';
   $("footer").innerHTML = '<div class="wrap"><div><a class="logo" href="index.html"><i></i>Nemo</a><p class="cap" style="margin:10px 0 0">Documentation · mise à jour le 11/11/2026</p></div>' +
     '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:14px">' + NEMO.pages.filter(function (p) { return p.nav; }).map(function (p) { return '<a href="' + p.href + '">' + esc(p.t) + "</a>"; }).join("") + "</div>" +
     '<a class="btn small" href="https://github.com/moidefr/nemo-docs">GitHub · nemo-docs</a></div>';
