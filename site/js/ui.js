@@ -43,14 +43,6 @@
     (function f(t) { var k = Math.min(1, (t - t0) / 1100); n.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
   });
 
-  /* curseur-bulle */
-  var bub = $("bubble"), bx = -100, by = -100, tx = -100, ty = -100;
-  if (bub && matchMedia("(hover: hover)").matches && !reduce) {
-    addEventListener("mousemove", function (e) { tx = e.clientX - 11; ty = e.clientY - 11; });
-    (function loop() { bx += (tx - bx) * .18; by += (ty - by) * .18; bub.style.transform = "translate(" + bx + "px," + by + "px)"; requestAnimationFrame(loop); })();
-    document.addEventListener("mouseover", function (e) { bub.classList.toggle("big", !!e.target.closest("button, a, .node, .edge-g, summary, input")); });
-  }
-
   /* copier (blocs statiques) */
   document.querySelectorAll("#mcp pre .copy").forEach(function (cp) {
     cp.addEventListener("click", function () {
@@ -105,19 +97,4 @@
     else if (e.key === "/" && !(e.target.matches && e.target.matches("input, textarea"))) { e.preventDefault(); open(); }
   });
 
-  /* easter egg : confettis-bulles (↑↑↓↓←→←→ B A) */
-  var seq = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"], pos = 0;
-  function party() {
-    if (reduce) return;
-    var cols = ["var(--yellow)", "var(--coral)", "var(--green)", "var(--pink)", "var(--sky)"];
-    for (var i = 0; i < 60; i++) (function () {
-      var d = document.createElement("i"), s = 12 + Math.random() * 22;
-      d.style.cssText = "position:fixed;z-index:300;pointer-events:none;border-radius:50%;border:2px solid var(--ink);width:" + s + "px;height:" + s + "px;background:" + cols[i % 5] + ";left:" + Math.random() * 100 + "vw;top:-40px";
-      document.body.appendChild(d);
-      var dur = 1800 + Math.random() * 1800, x = (Math.random() - .5) * 200;
-      d.animate([{ transform: "translate(0,0)" }, { transform: "translate(" + x + "px," + (innerHeight + 80) + "px)" }], { duration: dur, easing: "cubic-bezier(.3,.1,.6,1)" }).onfinish = function () { d.remove(); };
-    })();
-  }
-  addEventListener("keydown", function (e) { if (e.target.matches && e.target.matches("input, textarea")) return; var k = e.key.length === 1 ? e.key.toLowerCase() : e.key; pos = k === seq[pos] ? pos + 1 : (k === seq[0] ? 1 : 0); if (pos === seq.length) { pos = 0; party(); } });
-  $("konami").addEventListener("click", party);
 })();

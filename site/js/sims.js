@@ -92,7 +92,8 @@
       fb.appendChild(b);
     });
     var cards = NEMO.formats.map(function (f) {
-      var c = h("button", "fcard", '<span class="em">' + f.e + '</span><b>' + f.n + (f.demo ? " ▶" : "") + '</b><small>' + f.c + "</small>");
+      var c = h("button", "fcard", '<b><span class="dot"></span>' + f.n + (f.demo ? '<span class="play">démo</span>' : "") + '</b><small>' + f.c + "</small>");
+      c.setAttribute("data-c", f.c);
       c.addEventListener("click", function () { choose(f.id); });
       grid.appendChild(c); return c;
     });
@@ -100,7 +101,7 @@
     function choose(id) {
       selId = id; NEMO.formats.forEach(function (f, i) { cards[i].classList.toggle("sel", f.id === id); });
       var f = NEMO.formats.filter(function (x) { return x.id === id; })[0];
-      demo.innerHTML = '<div class="cap">' + f.c + ' · <code>' + f.id + '</code></div><h3 style="margin:6px 0 8px">' + f.e + " " + f.n + "</h3><p>" + f.d + '</p><div class="stage"></div>';
+      demo.innerHTML = '<div class="cap">' + f.c + ' · <code>' + f.id + '</code></div><h3 style="margin:6px 0 8px">' + f.n + "</h3><p>" + f.d + '</p><div class="stage"></div>';
       var stage = demo.querySelector(".stage"); if (demos[id]) demos[id](stage);
       else stage.appendChild(h("p", "cap", "Pas de mini-démo pour ce format. Les formats marqués ▶ sont jouables ici."));
     }
@@ -179,9 +180,9 @@
     }
     function answer(ok) {
       var from = box; box = ok ? Math.min(5, box + 1) : 0; elapsed += INT[box];
-      log(lg, (ok ? "✓ juste" : "✕ raté") + " · boîte " + from + " → " + box + " · revoir dans " + INT[box] + " j (jour " + elapsed + ")", ok ? "g" : "r");
+      log(lg, (ok ? "juste" : "raté") + " · boîte " + from + " → " + box + " · revoir dans " + INT[box] + " j (jour " + elapsed + ")", ok ? "g" : "r");
       draw();
-      if (box === 5 && ok) log(lg, "★ boîte 5 : la notion ne reviendra plus que tous les 30 jours.", "g");
+      if (box === 5 && ok) log(lg, "boîte 5 : la notion ne reviendra plus que tous les 30 jours.", "g");
     }
     $("lRight").addEventListener("click", function () { answer(true); });
     $("lWrong").addEventListener("click", function () { answer(false); });
@@ -212,19 +213,19 @@
       S.q++; S.n++; S.best = Math.max(S.best, S.n);
       var mu = mult(S.n), boosted = S.boost > 0; if (boosted) S.boost--;
       var factor = mu * (boosted ? 2 : 1), pts = base * factor; S.xp += pts;
-      var msg = "✓ notion " + S.q + " : +" + base + " × " + factor + (boosted ? " (boost)" : "") + " = <b>+" + pts + " XP</b> · série " + S.n;
+      var msg = "notion " + S.q + " : +" + base + " × " + factor + (boosted ? " (boost)" : "") + " = <b>+" + pts + " XP</b> · série " + S.n;
       if (S.n % 10 === 0 && S.n < 100) {
         var pz = prizeCycle[(S.n / 10 - 1) % 3];
-        if (pz === "shield") { S.shields = Math.min(3, S.shields + 1); msg += " · 🎁 coffre : un bouclier"; }
-        else if (pz === "boost") { S.boost = 3; msg += " · 🎁 coffre : boost ×2 sur 3 réponses"; }
-        else msg += " · 🎁 coffre : une couleur de logo";
+        if (pz === "shield") { S.shields = Math.min(3, S.shields + 1); msg += " · coffre : un bouclier"; }
+        else if (pz === "boost") { S.boost = 3; msg += " · coffre : boost ×2 sur 3 réponses"; }
+        else msg += " · coffre : une couleur de logo";
       }
       log(lg, msg, "g"); draw();
     }
     function wrong() {
       S.q++;
-      if (S.shields > 0 && S.n > 0) { S.shields--; log(lg, "✕ notion " + S.q + " : le bouclier absorbe l'erreur, la série tient (" + S.n + ")."); }
-      else { var b = S.n; S.n = 0; S.boost = 0; log(lg, "✕ notion " + S.q + " : 0 point, mémorisée pour demain." + (b ? " Série " + b + " interrompue (record : " + S.best + ")." : ""), "r"); }
+      if (S.shields > 0 && S.n > 0) { S.shields--; log(lg, "notion " + S.q + " : le bouclier absorbe l'erreur, la série tient (" + S.n + ")."); }
+      else { var b = S.n; S.n = 0; S.boost = 0; log(lg, "notion " + S.q + " : 0 point, mémorisée pour demain." + (b ? " Série " + b + " interrompue (record : " + S.best + ")." : ""), "r"); }
       draw();
     }
     $("gRight").addEventListener("click", function () { right(1); });

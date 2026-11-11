@@ -2,25 +2,27 @@
 
 Dernière mise à jour : 11/11/2026
 
-Documentation interactive de Nemo : schémas cliquables, session pas à pas, simulateurs (planning, révision espacée,
-jeu), formats d'exercice jouables, outils MCP filtrables, recherche (`Ctrl K`), thème clair/sombre. Elle suit la
-[charte V1](../charte-nemo.md) : encre d'abord, un fluo un sens, coins 14 px, trait 2 px, ombre pleine, aucun flou ni dégradé.
+Documentation interactive de Nemo, destinée à un public extérieur : schémas cliquables, session pas à pas, simulateurs
+(planning, révision espacée, jeu), formats d'exercice jouables, outils MCP filtrables, recherche (`Ctrl K`), thème
+clair/sombre automatique. Le style est volontairement **neutre et moderne** (surfaces claires, filets fins, un seul
+accent bleu, ombres douces, police Inter), différent de la charte « encre et fluo » des apps : la charte
+([charte-nemo.md](../charte-nemo.md)) reste celle des apps et du site du serveur, pas de cette documentation.
 
 Le site est **100 % statique** (HTML, CSS, JavaScript sans dépendance ni étape de build). Seules les polices viennent de
-Google Fonts (Bricolage Grotesque, Atkinson Hyperlegible, DM Mono).
+Google Fonts (Inter, JetBrains Mono). Les textes sont rédigés de façon impersonnelle (pas de tutoiement).
 
 ## Structure
 
 | Fichier | Rôle |
 |---|---|
 | `index.html` | le contenu : sections, textes, conteneurs des schémas |
-| `css/style.css` | charte (variables clair/sombre), composants, mise en page, mobile |
+| `css/style.css` | thème (variables clair/sombre), composants, mise en page, mobile. Les variables `--sky`, `--green`… sont des teintes douces, `--d-sky`… les teintes franches des points de couleur. |
 | `js/data.js` | **le contenu des schémas et simulateurs** : briques, nœuds et liens de l'architecture, étapes de la session, états du verrou, formats, outils MCP, onglets d'installation. C'est le fichier à éditer pour corriger un texte. |
 | `js/diagrams.js` | dessine les 3 schémas SVG (architecture, séquence, verrou) à partir de `data.js` |
 | `js/sims.js` | simulateurs : hero, planning, formats (mini-démos), Leitner, jeu, outils, installation |
-| `js/ui.js` | thème, progression, apparitions, compteurs, curseur-bulle, palette `Ctrl K`, easter egg |
+| `js/ui.js` | thème, progression, apparitions, compteurs, palette `Ctrl K` |
 | `_headers` | en-têtes de sécurité et cache pour Cloudflare |
-| `favicon.svg` | la bulle du logo |
+| `favicon.svg` | l'icône du site |
 
 Tous les liens sont **relatifs** : le site marche à la racine d'un domaine comme dans un sous-dossier.
 

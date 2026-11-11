@@ -9,7 +9,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script>
   // Thème avant le premier rendu (évite le flash). try/catch : le stockage peut être bloqué.
@@ -18,11 +18,10 @@
 </head>
 <body>
 <div id="progress" aria-hidden="true"></div>
-<div id="bubble" aria-hidden="true"></div>
 
 <header class="nav">
   <div class="wrap">
-    <a class="logo" href="#top" aria-label="Nemo, haut de page">nem<i></i></a>
+    <a class="logo" href="#top" aria-label="Nemo, haut de page"><i></i>Nemo</a>
     <nav class="links" aria-label="Sections">
       <a href="#vue">Vue</a>
       <a href="#cycle">Session</a>
@@ -36,7 +35,7 @@
       <a href="#regles">Règles</a>
     </nav>
     <div class="tools">
-      <button class="ico search" id="open-pal" aria-label="Rechercher (Ctrl+K)">⌕ <span>Chercher</span> <kbd>Ctrl K</kbd></button>
+      <button class="ico search" id="open-pal" aria-label="Rechercher (Ctrl+K)">⌕ <span>Rechercher</span> <kbd>Ctrl K</kbd></button>
       <button class="ico" id="theme" aria-label="Changer de thème">◐</button>
     </div>
   </div>
@@ -45,14 +44,11 @@
 <main id="top">
 <!-- ============================ HERO ============================ -->
 <div class="hero">
-  <span class="floaty" style="width:54px;height:54px;background:var(--yellow);left:2%;top:40px;animation-delay:-1s"></span>
-  <span class="floaty" style="width:30px;height:30px;background:var(--pink);right:46%;top:8px;animation-delay:-3s"></span>
-  <span class="floaty" style="width:70px;height:70px;background:var(--sky);right:3%;bottom:30px;animation-delay:-2s"></span>
   <div class="wrap">
     <div>
-      <span class="pill c">Révision scolaire assistée</span>
+      <span class="eyebrow"><i></i>Documentation · révision scolaire assistée</span>
       <h1>Réviser <mark>au bon moment</mark>, sur <span class="swap" id="swap">les maths</span>.</h1>
-      <p class="lead">Nemo lit ton emploi du temps, trouve les créneaux libres, <b>verrouille le PC et le téléphone</b> à l'heure de la séance, fait construire une session sur mesure par une IA, puis te libère quand tu as fini. Cette page explique comment tout s'emboîte.</p>
+      <p class="lead">Nemo lit l'emploi du temps de l'élève, repère les créneaux libres, <b>verrouille le PC et le téléphone</b> à l'heure de la séance, fait construire une session sur mesure par une IA, puis libère l'élève une fois la session terminée. Cette page explique comment tout s'articule.</p>
       <div class="cta">
         <a class="btn reward" href="#vue">Voir l'architecture</a>
         <a class="btn" href="#cycle">Suivre une session pas à pas</a>
@@ -67,7 +63,7 @@
     <div>
       <div class="demo-card" id="heroCard">
         <span class="tag xp">+10 XP</span>
-        <span class="pill s">SVT · QCM</span> <span class="pill">Essaie-le</span>
+        <span class="pill s">SVT · QCM</span> <span class="pill">Essayez-le</span>
         <h4>Quel organite produit l'énergie de la cellule ?</h4>
         <div id="heroAns"></div>
         <div class="explain" id="heroExp" hidden></div>
@@ -83,7 +79,7 @@
   <div class="sec-head reveal">
     <div class="cap"><span class="num">01</span> Vue d'ensemble</div>
     <h2>Un serveur au centre, <mark>deux apps</mark> autour.</h2>
-    <p>Le serveur est la source de vérité. Les apps PC et Android sont des clientes. Clique sur un bloc ou un lien du schéma, ou filtre par « couche » pour suivre un type de flux.</p>
+    <p>Le serveur est la source de vérité. Les apps PC et Android sont des clientes. Cliquez sur un bloc ou un lien du schéma, ou filtrez par « couche » pour suivre un type de flux.</p>
   </div>
   <div class="layers reveal" id="layers" role="group" aria-label="Couches du schéma"></div>
   <div class="diagram reveal"><svg id="arch" viewBox="0 0 960 530" role="img" aria-label="Schéma de l'architecture de Nemo"></svg></div>
@@ -97,7 +93,7 @@
   <div class="sec-head reveal">
     <div class="cap"><span class="num">02</span> Cycle d'une session</div>
     <h2>De l'emploi du temps au <mark>déverrouillage</mark>.</h2>
-    <p>Un seul appareil prépare la session d'un créneau, les autres reprennent son lien. Avance étape par étape (boutons ou flèches ← →) ou lance la lecture automatique.</p>
+    <p>Un seul appareil prépare la session d'un créneau, les autres reprennent son lien. Avancez étape par étape (boutons ou flèches ← →) ou lancez la lecture automatique.</p>
   </div>
   <div class="diagram reveal"><svg id="seq" viewBox="0 0 960 560" role="img" aria-label="Diagramme de séquence d'une session"></svg></div>
   <div class="seq-ctrl reveal">
@@ -116,7 +112,7 @@
   <div class="sec-head reveal">
     <div class="cap"><span class="num">03</span> Planificateur</div>
     <h2>Emploi du temps <mark>moins</mark> plages indisponibles.</h2>
-    <p>Le serveur lit l'emploi du temps EcoleDirecte, retire les plages que tu déclares indisponibles, et ce qui reste devient des créneaux de révision. Essaie : clique des heures pour les déclarer occupées.</p>
+    <p>Le serveur lit l'emploi du temps EcoleDirecte, retire les plages déclarées indisponibles, et ce qui reste devient des créneaux de révision. Essayez : cliquez sur des heures pour les déclarer occupées.</p>
   </div>
   <div class="card reveal">
     <div class="cap">Mercredi · cliquer une heure libre = indisponible</div>
@@ -140,7 +136,7 @@
   <div class="sec-head reveal">
     <div class="cap"><span class="num">04</span> Formats d'exercice</div>
     <h2>Pas que des QCM : <mark>22 formats</mark>.</h2>
-    <p>Chaque format se joue dans une page web (hors ligne compris), alimente la liste d'erreurs et le jeu. Filtre, clique une carte : les formats marqués ▶ ont une mini-démo jouable.</p>
+    <p>Chaque format se joue dans une page web (hors ligne compris), alimente la liste d'erreurs et le jeu. Filtrez, cliquez sur une carte : les formats marqués ▶ ont une mini-démo jouable.</p>
   </div>
   <div class="filters reveal" id="ffilters"></div>
   <div class="fgrid reveal" id="fgrid"></div>
@@ -152,15 +148,15 @@
   <div class="sec-head reveal">
     <div class="cap"><span class="num">05</span> Révision espacée</div>
     <h2>Une boîte de plus à chaque <mark>bonne réponse</mark>.</h2>
-    <p>Méthode de Leitner : 6 boîtes (0 à 5), intervalles <code>1 · 2 · 4 · 7 · 14 · 30</code> jours. Juste, on monte d'une boîte ; faux, retour à la boîte 0. Simule le parcours d'une notion.</p>
+    <p>Méthode de Leitner : 6 boîtes (0 à 5), intervalles <code>1 · 2 · 4 · 7 · 14 · 30</code> jours. Juste, on monte d'une boîte ; faux, retour à la boîte 0. Simulez le parcours d'une notion.</p>
   </div>
   <div class="sim">
     <div class="card reveal">
       <div class="cap">Notion : « formule du discriminant »</div>
       <div class="boxes" id="boxes"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn primary" id="lRight">✓ Je savais</button>
-        <button class="btn" id="lWrong">✕ Raté</button>
+        <button class="btn primary" id="lRight">Je savais</button>
+        <button class="btn" id="lWrong">Raté</button>
         <button class="btn small" id="lReset">↺</button>
       </div>
       <p style="margin:16px 0 0" id="lOut"></p>
@@ -178,7 +174,7 @@
   <div class="sec-head reveal">
     <div class="cap"><span class="num">06</span> Gamification</div>
     <h2>On récompense l'<mark>apprentissage</mark>, pas le volume.</h2>
-    <p>Aucun classement, aucune comparaison, aucun bonus de vitesse. Chaque notion ne rapporte <b>qu'une fois par jour</b>. La série de bonnes réponses multiplie les points. Teste le barème.</p>
+    <p>Aucun classement, aucune comparaison, aucun bonus de vitesse. Chaque notion ne rapporte <b>qu'une fois par jour</b>. La série de bonnes réponses multiplie les points. Testez le barème.</p>
   </div>
   <div class="sim">
     <div class="card reveal">
@@ -190,9 +186,9 @@
       <div class="mult" id="gMult"></div>
       <div class="cap">Boucliers <span id="gShields"></span> · boost <b id="gBoost">0</b></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-        <button class="btn primary" id="gRight">✓ Bonne réponse (+1)</button>
-        <button class="btn reward" id="gRecall">★ Rappel actif (+2)</button>
-        <button class="btn" id="gWrong">✕ Erreur</button>
+        <button class="btn primary" id="gRight">Bonne réponse (+1)</button>
+        <button class="btn reward" id="gRecall">Rappel actif (+2)</button>
+        <button class="btn" id="gWrong">Erreur</button>
         <button class="btn small" id="gReset">↺</button>
       </div>
       <p class="cap" style="margin:14px 0 0">Chaque clic = une nouvelle notion. Une même notion déjà comptée aujourd'hui rapporte 0.</p>
@@ -218,7 +214,7 @@
   <div class="sec-head reveal">
     <div class="cap"><span class="num">07</span> Serveur MCP</div>
     <h2>Les outils que l'assistant <mark>appelle</mark>.</h2>
-    <p>Claude ou ChatGPT se branchent sur <code>/mcp</code> du serveur. Les briefs en un appel remplacent une dizaine d'appels : l'IA reçoit le squelette de la session et n'a plus qu'à écrire le contenu. Cherche un outil par nom, rôle ou catégorie.</p>
+    <p>Claude ou ChatGPT se branchent sur <code>/mcp</code> du serveur. Les briefs en un appel remplacent une dizaine d'appels : l'IA reçoit le squelette de la session et n'a plus qu'à écrire le contenu. Recherchez un outil par nom, rôle ou catégorie.</p>
   </div>
   <div class="tools-bar reveal">
     <input class="field" id="toolQ" type="search" placeholder="Filtrer : brief, cours, publier, exercice…" aria-label="Filtrer les outils">
@@ -238,15 +234,15 @@
       <p>Même un compte gratuit : chatgpt.com/plugins › serveur MCP personnalisé, authentification « Aucune ». Nemo PC et l'app Android remplissent le formulaire <b>tout seuls</b> (« Ajouter Nemo à ChatGPT »).</p>
     </div>
   </div>
-  <div class="note warn reveal"><b>Le jeton est un mot de passe.</b> Ne le colle jamais dans un dépôt, un message de commit ou une capture. Pour relier un appareil sans le copier, utilise le <b>code de liaison</b> (5 min, usage unique).</div>
+  <div class="note warn reveal"><b>Le jeton est un mot de passe.</b> Ne le collez jamais dans un dépôt, un message de commit ou une capture. Pour relier un appareil sans le copier, utilisez le <b>code de liaison</b> (5 min, usage unique).</div>
 </section>
 
 <!-- ============================ 08 GARDE-FOUS ============================ -->
 <section id="garde-fous">
   <div class="sec-head reveal">
     <div class="cap"><span class="num">08</span> Blocage & garde-fous</div>
-    <h2>Un verrou qui <mark>ne t'enferme jamais</mark>.</h2>
-    <p>Clique un état du PC pour voir ce qui se passe et comment en sortir. Le blocage est un contrôle parental volontaire : il doit toujours avoir une issue.</p>
+    <h2>Un verrou qui <mark>ne piège jamais l'élève</mark>.</h2>
+    <p>Sélectionnez un état du PC pour voir ce qui se passe et comment en sortir. Le blocage est un contrôle parental volontaire : il doit toujours avoir une issue.</p>
   </div>
   <div class="diagram reveal"><svg id="lock" viewBox="0 0 960 300" role="img" aria-label="Machine à états du verrou"></svg></div>
   <div class="info reveal" id="lockInfo" aria-live="polite"></div>
@@ -265,7 +261,7 @@
   <div class="sec-head reveal">
     <div class="cap"><span class="num">09</span> Installer & mettre à jour</div>
     <h2>Qui construit, <mark>qui installe</mark>.</h2>
-    <p>Aucun build ne se fait sur une machine : tout vient de la CI GitHub avec une clé de signature unique. Choisis une brique.</p>
+    <p>Aucun build ne se fait sur une machine : tout vient de la CI GitHub avec une clé de signature unique. Choisissez une brique.</p>
   </div>
   <div class="tabs reveal" id="itabs" role="tablist"></div>
   <div class="reveal" id="ipanes"></div>
@@ -305,10 +301,9 @@
 
 <footer>
   <div class="wrap">
-    <div><a class="logo" href="#top">nem<i></i></a><p class="cap" style="margin:8px 0 0">Documentation · mise à jour le 11/11/2026 · charte V1</p></div>
+    <div><a class="logo" href="#top"><i></i>Nemo</a><p class="cap" style="margin:8px 0 0">Documentation · mise à jour le 11/11/2026</p></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <a class="btn small" href="https://github.com/moidefr/nemo-docs">GitHub · nemo-docs</a>
-      <button class="btn small reward" id="konami">Essaie ↑↑↓↓←→←→ B A</button>
     </div>
   </div>
 </footer>

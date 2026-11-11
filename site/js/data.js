@@ -36,7 +36,7 @@ NEMO.nodes = [
   { id: "srv",  x: 330, y: 40,  w: 300, h: 240, fill: "var(--yellow)", t: "nemo-https", s: "Cloudflare Worker", big: true,
     title: "nemo-https : la source de vérité", text: "Planning, cours, exercices, résultats et état des créneaux partagés. Il expose les pages du site, une API pour les apps (jeton du profil) et le serveur MCP (/mcp) pour les assistants. Il se déploie tout seul à chaque fusion sur master.",
     meta: ["Worker", "R2 : nemo-courses · nemo-class-courses", "Durable Objects : NEMO_MCP · NEMO_STORE"] },
-  { id: "ai",   x: 760, y: 60,  w: 170, h: 80, fill: "var(--coral)",  t: "Assistant IA", s: "Claude · ChatGPT · Gemini",
+  { id: "ai",   x: 760, y: 60,  w: 170, h: 80, fill: "var(--coral)",  t: "Assistant IA", s: "Claude · ChatGPT",
     title: "L'assistant IA", text: "Il construit la session avec les outils MCP : un brief en un appel (cours, devoirs, notes, erreurs, contrôles), puis publish_session. Dans les apps, c'est le site de l'assistant dans une fenêtre intégrée, ou un fournisseur natif configuré ; le site reste le repli.",
     meta: ["MCP", "5 outils d'écriture à autoriser une fois"] },
   { id: "eleve", x: 760, y: 210, w: 170, h: 70, fill: "var(--pink)",  t: "L'élève", s: "navigateur · site",
@@ -203,7 +203,7 @@ NEMO.install = [
     ] },
   { id: "pc", t: "PC Windows", flow: ["Fusion sur main", "CI « Nemo PC »", "Build 0.1.n", "install.ps1"],
     body: [
-      "<ol class='steps'><li><div>Dans le dépôt <code>nemo-pc</code>, lancer le script d'installation : il télécharge le dernier build réussi.</div></li><li><div>La version installée se lit dans <code>%LOCALAPPDATA%\\Programs\\NemoPc\\version.txt</code>.</div></li><li><div>Relier à ton profil avec le <b>code de liaison</b> du site (Paramètres) : pas de jeton à copier.</div></li></ol><div class='note warn'>Réinstaller arrête l'app de blocage (elle tourne en administrateur) : à lancer par l'élève ou avec son accord explicite.</div>",
+      "<ol class='steps'><li><div>Dans le dépôt <code>nemo-pc</code>, lancer le script d'installation : il télécharge le dernier build réussi.</div></li><li><div>La version installée se lit dans <code>%LOCALAPPDATA%\\Programs\\NemoPc\\version.txt</code>.</div></li><li><div>Relier l'app au profil avec le <b>code de liaison</b> du site (Paramètres) : aucun jeton à copier.</div></li></ol><div class='note warn'>Réinstaller arrête l'app de blocage (elle tourne en administrateur) : à lancer par l'élève ou avec son accord explicite.</div>",
       ["powershell -File scripts/install.ps1"]
     ] },
   { id: "app", t: "Android", flow: ["Fusion sur main", "CI « Android APK »", "APK 0.17.n signé", "update-app.ps1"],
