@@ -3,7 +3,7 @@
 Point d'entrée de Nemo (révision espacée pour un élève : planning, sessions, blocage pendant les créneaux).
 Ce dépôt ne contient **pas de code** : il regroupe la charte graphique et l'architecture, et renvoie vers les dépôts qui font tourner Nemo.
 
-Dernière mise à jour : 27/10/2026
+Dernière mise à jour : 11/11/2026
 
 ## Les briques
 
@@ -25,6 +25,8 @@ Comment les briques s'articulent, comment chacune se met à jour et les règles 
 | [charte-nemo.md](charte-nemo.md) | résumé d'implémentation de la charte V1 (principes, couleurs, composants) |
 | `charte-nemo.pdf`, `charte-nemo.png` | la charte complète (source du résumé) |
 | [charte-commune/](charte-commune/) | « Charte graphique commune » (archive d'origine) et son extrait : `Charte Nemo.dc.html`, `Nemo Showcase.dc.html`, `support.js` |
+| [site/](site/README.md) | **site de documentation interactive** (schémas, simulateurs, recherche), statique, à publier avec Cloudflare ; aperçu : `node scripts/serve.js` |
+| `wrangler.jsonc` | configuration Cloudflare du site (assets statiques de `site/`) |
 | [docs/branches-supprimees-2026-10-27.md](docs/branches-supprimees-2026-10-27.md) | branches fusionnées supprimées le 27/10/2026, avec leur dernier commit pour les restaurer |
 
 ## Au quotidien

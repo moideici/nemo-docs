@@ -1,0 +1,17 @@
+{
+  // Site de documentation de Nemo : 100 % statique (dossier site/), servi par Cloudflare.
+  // Aucun code de Worker : seulement des assets statiques.
+  "$schema": "https://json.schemastore.org/wrangler.json",
+  "name": "nemo-docs",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./site",
+    "not_found_handling": "404-page"
+  }
+
+  // DOMAINE : à choisir avant le premier `wrangler deploy` (voir site/README.md).
+  // `nemo.moideici.tech` appartient DÉJÀ au Worker nemo-https (Custom Domain) : ne pas le réutiliser ici,
+  // sous peine de remplacer le serveur de Nemo par cette documentation.
+  // Exemple avec un sous-domaine dédié (zone moideici.tech déjà gérée par Cloudflare) :
+  // ,"routes": [{ "pattern": "docs.moideici.tech", "custom_domain": true }]
+}

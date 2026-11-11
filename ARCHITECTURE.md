@@ -1,6 +1,6 @@
 # Architecture de Nemo
 
-Dernière mise à jour : 27/10/2026. Les détails de chaque brique sont dans le README de son dépôt ; ce document donne la vue d'ensemble.
+Dernière mise à jour : 11/11/2026. Les détails de chaque brique sont dans le README de son dépôt ; ce document donne la vue d'ensemble.
 
 ## Vue d'ensemble
 
@@ -31,7 +31,7 @@ Dernière mise à jour : 27/10/2026. Les détails de chaque brique sont dans le 
 | nemo-https | Node 22, Cloudflare Workers, R2 (`nemo-courses`, `nemo-class-courses`), Durable Objects | `nemo.moideici.tech` |
 | nemo-pc | C# / .NET 9, WPF, WebView2 | `%LOCALAPPDATA%\Programs\NemoPc`, démarrage avec Windows |
 | nemo-app | Kotlin, Android 9+ | téléphone de l'élève |
-| charte (ce dépôt, `nemo-docs`) | Markdown, PDF, HTML | GitHub `moidefr/nemo-docs` |
+| charte + site de documentation (ce dépôt, `nemo-docs`) | Markdown, PDF, HTML/CSS/JS statiques (`site/`) | GitHub `moidefr/nemo-docs` ; site à publier avec Cloudflare (voir `site/README.md`) |
 | nemo (historique) | Node, serveur MCP local en stdio | plus utilisé: remplacé par nemo-https |
 
 ## Mises à jour : qui construit, qui installe
