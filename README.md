@@ -34,3 +34,7 @@ Comment les briques s'articulent, comment chacune se met à jour et les règles 
 - Où en sont les dépôts ? `git fetch` dans chacun, puis `git status -sb`.
 - Quelle version tourne ? Serveur : dernier run « Déploiement » vert de `nemo-https` (`gh run list -R moideici/nemo-https`). PC : `%LOCALAPPDATA%\Programs\NemoPc\version.txt`. Téléphone : Réglages de l'app.
 - Une doc est-elle à jour ? Chaque dépôt a un `docs/README.md` qui donne le statut de ses plans (Réalisé / En cours / Obsolète / Idée).
+
+## Licence
+
+Code publié sous [licence MIT](LICENSE). Historique des versions : [CHANGELOG.md](CHANGELOG.md).

@@ -55,7 +55,7 @@ Règles qui découlent de ce tableau :
 |---|---|---|
 | nemo-https | `master` | une branche par sujet (`feature/…`, `fix/…`), fusion par pull request, branche supprimée après fusion |
 | nemo-pc | `main` | idem |
-| nemo-app | `main` (renommée le 27/10/2026, ancien nom `moidefr-restore-android-implementation`) | idem |
+| nemo-app | `main` (renommée le 27/10/2026, ancien nom `moidefr-restore-android-implementation` (ancien pseudo GitHub)) | idem |
 
 Les branches de travail d'outils (`claude/…`, `codex/…`) suivent la même règle: fusion puis suppression. Une branche non fusionnée est soit à fusionner, soit à archiver par un tag avant suppression.
 
