@@ -3,7 +3,7 @@
 Point d'entrée de Nemo (révision espacée pour un élève : planning, sessions, blocage pendant les créneaux).
 Ce dépôt ne contient **pas de code** : il regroupe la charte graphique et l'architecture, et renvoie vers les dépôts qui font tourner Nemo.
 
-Dernière mise à jour : 11/11/2026
+Dernière mise à jour : 15/11/2026
 
 ## Les briques
 
@@ -16,7 +16,7 @@ Dernière mise à jour : 11/11/2026
 | Serveur local d'origine (historique) | [moideici/nemo](https://github.com/moideici/nemo) | ancien serveur MCP en local (stdio), remplacé par nemo-https depuis octobre 2026 | `main` | plus maintenu, candidat à l'archivage |
 | Délégation à Codex | [moideici/agent-hub](https://github.com/moideici/agent-hub) | outil `ah` : Claude Code délègue des tâches à Codex | `main` | `npm link` |
 
-Comment les briques s'articulent, comment chacune se met à jour et les règles de travail : voir [ARCHITECTURE.md](ARCHITECTURE.md).
+Comment les briques s'articulent (dont le double écran, le contrat de verrou et la procédure de test du verrou sur vrais écrans), comment chacune se met à jour et les règles de travail : voir [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Contenu de ce dépôt
 
@@ -28,6 +28,7 @@ Comment les briques s'articulent, comment chacune se met à jour et les règles 
 | [site/](site/README.md) | **site de documentation** : racine `docs.moideici.tech` (synthèse de toutes les docs : statuts, dépôts, parcours), `/nemo/` (documentation interactive de Nemo : schémas, simulateurs) et une page par autre projet (agent-hub, Prisme, multi, Garry, WikiCards, py2x, cppt, petits outils), statique, à publier avec Cloudflare ; aperçu : `node scripts/serve.js` |
 | `wrangler.jsonc` | configuration Cloudflare du site (assets statiques de `site/`) |
 | [docs/branches-supprimees-2026-10-27.md](docs/branches-supprimees-2026-10-27.md) | branches fusionnées supprimées le 27/10/2026, avec leur dernier commit pour les restaurer |
+| [docs/journal-2026-11-15.md](docs/journal-2026-11-15.md) | journal du 15/11/2026 : PR des trois dépôts (fusionnées ou ouvertes), double écran, verrou, et vérifications restantes sur vrai écran et téléphone |
 
 ## Au quotidien
 
