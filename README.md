@@ -3,7 +3,7 @@
 Point d'entrée de Nemo (révision espacée pour un élève : planning, sessions, blocage pendant les créneaux).
 Ce dépôt ne contient **pas de code** : il regroupe la charte graphique et l'architecture, et renvoie vers les dépôts qui font tourner Nemo.
 
-Dernière mise à jour : 15/11/2026
+Dernière mise à jour : 16/11/2026
 
 ## Les briques
 
