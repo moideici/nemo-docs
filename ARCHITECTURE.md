@@ -28,7 +28,7 @@ Dernière mise à jour : 16/11/2026. Les détails de chaque brique sont dans le 
 
 | Brique | Technologies | Où ça tourne |
 |---|---|---|
-| nemo-https | Node 22, Cloudflare Workers, R2 (`nemo-courses`, `nemo-class-courses`), Durable Objects | `nemo.moideici.tech` |
+| nemo-https | Node 22, Cloudflare Workers, R2 (`nemo-courses`, `nemo-class-courses`, `nemo-releases`), Durable Objects | `nemo.moideici.tech` |
 | nemo-pc | C# / .NET 9, WPF, WebView2 | `%LOCALAPPDATA%\Programs\NemoPc`, démarrage avec Windows |
 | nemo-app | Kotlin, Android 9+ | téléphone de l'élève |
 | charte + site de documentation (ce dépôt, `nemo-docs`) | Markdown, PDF, HTML/CSS/JS statiques (`site/`) | GitHub `moideici/nemo-docs` ; site à publier avec Cloudflare (voir `site/README.md`) |
@@ -190,8 +190,8 @@ Mots employés dans les trois dépôts et à l'écran. Quand deux mots désignen
 | Brique | Construit par | Installe | Publié quand |
 |---|---|---|---|
 | nemo-https | GitHub Actions (`Tests`, puis `Déploiement`) | la CI elle-même (`wrangler deploy`) | à chaque fusion sur `master`, tests verts |
-| nemo-pc | GitHub Actions (`Nemo PC`, version `0.1.<n° de build>`) | `scripts/install.ps1` : télécharge le dernier build réussi | à la demande de l'élève |
-| nemo-app | GitHub Actions (`Android APK`, version `0.17.<n° de build>`) | `scripts/update-app.ps1` : `adb install -r` du dernier build réussi | à la demande de l'élève |
+| nemo-pc | GitHub Actions (`Nemo PC`, version `0.1.<n° de build>`) ; chaque build vert de `main` est publié dans R2 `nemo-releases` | le bouton « Installer » de l'app (téléchargement vérifié depuis le serveur, sans gh) ; première installation : `scripts/install.ps1` | à la demande de l'élève |
+| nemo-app | GitHub Actions (`Android APK`, version `0.17.<n° de build>`) ; chaque build vert de `main` est publié dans R2 `nemo-releases` | la carte « Une mise à jour est prête : Installer » de l'app (APK vérifié : SHA-256 et certificat) ; première installation : `scripts/update-app.ps1` | à la demande de l'élève |
 
 Règles qui découlent de ce tableau :
 
@@ -199,6 +199,12 @@ Règles qui découlent de ce tableau :
 2. **Le serveur se déploie en fusionnant**, pas à la main (`npm run deploy` reste possible mais n'est plus le chemin normal).
 3. **Un changement de doc seule se pousse avec `[skip ci]`** dans le message de commit : sinon chaque push sur `master` relance les tests et un déploiement, et chaque push sur une app relance un build.
 4. **Réinstaller Nemo PC arrête l'app de blocage** (qui tourne en administrateur) : à lancer par l'élève ou avec son accord explicite.
+5. **Mise à jour en un clic (16/11/2026, revue du tour 2, C1)** : la CI des apps envoie le build (zip PC ou APK release) et son
+   `release.json` (`version`, `sha256`, `size`) dans le bucket R2 `nemo-releases`, puis `latest.json`. Les apps lisent
+   `GET /api/app/{pc|android}/latest` et téléchargent `GET /api/app/{pc|android}/download/:version` **avec leur jeton** ; elles vérifient
+   taille et SHA-256 (PC : puis chaque fichier contre `manifest.json` ; Android : même certificat que l'app installée) avant d'installer.
+   Il faut le secret `CLOUDFLARE_API_TOKEN` dans `nemo-pc` et `nemo-app` (jeton R2 limité au bucket). Détails :
+   `nemo-https/docs/mises-a-jour-apps.md`.
 
 ## Branches
 
