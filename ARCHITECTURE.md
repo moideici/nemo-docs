@@ -1,6 +1,6 @@
 # Architecture de Nemo
 
-Dernière mise à jour : 15/11/2026. Les détails de chaque brique sont dans le README de son dépôt ; ce document donne la vue d'ensemble.
+Dernière mise à jour : 16/11/2026. Les détails de chaque brique sont dans le README de son dépôt ; ce document donne la vue d'ensemble.
 
 ## Vue d'ensemble
 
@@ -66,7 +66,19 @@ Le **verrou de l'appareil** (empêcher de quitter pendant le créneau) reste la 
 
 Règles : la page ne décide jamais seule d'ouvrir ou de fermer l'appareil ; l'heure de fin vient toujours de l'app ; le pont `NemoAndroid` ne répond qu'à une page de l'origine du serveur configuré ; la fenêtre « documents » du double écran PC ne protège rien (une seule fenêtre porte le verrou). Le bail partagé entre appareils (`/api/lock/lease`, un seul créneau pour PC et téléphones) est un autre mécanisme, côté serveur : voir le README de nemo-https.
 
-Pause d'urgence et reprise : voir « Pause d'urgence et reprise au temps restant » plus bas. Ce schéma est le contrat cible ; l'état de chaque côté est donné dans le tableau « État au 15/11/2026 » en fin de section suivante.
+**État du contrat `NEMO_LOCK` (16/11/2026) : fusionné des deux côtés.** Android : `core/PageLock.kt` (nemo-app #31) ; PC : `PageLockContract` (nemo-pc #20) ; site : `public/static/interface/lock.js`, utilisé par `session.js` et `problem.js` (nemo-https #60). Le nom `window.NEMO_LOCK` et l'événement `nemo:lock` sont figés : les renommer casse en silence les deux apps (la page n'affiche plus de verrou).
+
+**Fin de séance confirmée par le serveur (en cours de fusion).** Règle décidée : une séance finie libère l'appareil tout de suite si elle se termine dans les 30 dernières minutes du créneau, sinon 5 minutes après, sinon à l'heure de fin ; et la fin doit être **confirmée par le serveur**, jamais déclarée par la page. Contrat commun : `docs/verrou-fin-confirmee.md` de nemo-https.
+
+| Pièce | Rôle | État |
+|---|---|---|
+| `GET /api/session/:id/status` (jeton de l'appareil) | `confirmed` seulement si toutes les étapes sont enregistrées par le serveur, avec de vraies réponses et un rythme plausible | nemo-https #76 (ouverte) |
+| `NEMO_LOCK.release` (2) et `releaseAt`, événement `exit` | l'app pousse l'heure de sortie ; la page affiche « Fini : sortie dans 4:32 » ou « confirmation du serveur en attente » | site #76 ; apps fusionnées |
+| Règle de libération côté app (`ReleaseRule`, horloge monotone, coupure réseau = verrou tenu) | l'app reste maître du verrou | nemo-pc #41 et nemo-app #43 (fusionnés) |
+
+Compatibilité : nouvelles apps avec l'ancien site : la route est absente, la fin n'est jamais « confirmée », le verrou dure jusqu'à l'heure de fin (jamais au-delà). Nouveau site avec d'anciennes apps : comportement d'avant (règle des 30 minutes). Tant que #76 n'est pas fusionnée, les apps sont donc dans le premier cas.
+
+Pause d'urgence et reprise : voir « Pause d'urgence et reprise au temps restant » plus bas.
 
 ## Double écran du lecteur de séance (PC)
 
@@ -90,6 +102,17 @@ Décisions de l'élève (15/11/2026, deux moniteurs) : la question est toujours 
 - **Un seul écran : adapter puis défiler** : le texte se réduit jusqu'à un minimum lisible, puis la carte défile ; aucune règle ne coupe le contenu. Choix de 48 px au moins ; les boutons d'action restent en bas (lecteur de problèmes ; « Teste-moi » et problèmes sur Android, en PR).
 - **Le double écran n'existe que pendant un verrou** (pas pour la révision libre) ; la fenêtre « documents » ne porte aucun verrou.
 
+**Contrat entre les deux fenêtres (résumé ; source : `docs/double-ecran.md` de nemo-https, test miroir `DualSyncContractTests` côté PC)** :
+
+| Élément | Valeur |
+|---|---|
+| Rôle de la page | `window.__nemoDualInit` puis `nemoDual.set(rôle)` ; rôles `all`, `work`, `aside`, `docs` ; `<body data-dual>` |
+| Messages entre fenêtres (relais PC) | `{ step, from }` et `{ doc, from }` seulement ; `from` vaut `work`, `aside` ou `docs` ; tout le reste est rejeté par `DualScreen.SanitizeSync` |
+| Fenêtre secondaire | `window.__NEMO_SECONDARY` posé par `dualGuard.js` : aucune écriture serveur, pas de synchro en direct, pas de remontée d'erreurs |
+| Jauge de sortie et série | relayées du lecteur vers l'app (la fin absolue ; le 2e écran décompte seul) |
+
+Changer un nom de rôle ou un champ des messages d'un seul côté dégrade le double écran sans erreur visible : modifier les trois dépôts ensemble.
+
 ## Pause d'urgence et reprise au temps restant (PC)
 
 - **Pause d'urgence** (nemo-pc #21) : pendant un verrou, « Pause 5 min » appelle `/api/emergency/use` (2 par jour, 5 min, repli local si le serveur ne répond pas), comme sur Android. Le créneau ne s'allonge jamais ; une pause dans les 5 dernières minutes s'arrête à l'heure de fin. La 2e fenêtre ne réapparaît pas pendant la pause et revient au bon rôle ensuite. La pastille native de compte à rebours s'efface quand le lecteur affiche son bandeau (événement `pageLock`).
@@ -97,23 +120,25 @@ Décisions de l'élève (15/11/2026, deux moniteurs) : la question est toujours 
 
 ## Remontée des erreurs des pages
 
-`public/static/page-errors.js` (nemo-https #59, en PR) capte `error` et `unhandledrejection` des pages du site (lecteur, problèmes, pages espace), les regroupe, les envoie en lot à `POST /api/page-errors` (borné : 3 envois/min, 10 par page, 8 Ko ; 6/min et 120/jour par profil côté serveur), puis une requête Durable Object (table `page_errors`, purge à 14 jours). Consultation : `/admin/erreurs-pages`. Jamais envoyé : texte saisi, contenu d'exercice, requête d'URL, pile complète. La 2e fenêtre du double écran n'envoie rien. Détail : `docs/erreurs-pages.md` de nemo-https (dans la PR).
+`public/static/page-errors.js` (nemo-https #59, fusionné dans #60) capte `error` et `unhandledrejection` des pages du site (lecteur, problèmes, pages espace), les regroupe, les envoie en lot à `POST /api/page-errors` (borné : 3 envois/min, 10 par page, 8 Ko ; 6/min et 120/jour par profil côté serveur), puis une requête Durable Object (table `page_errors`, purge à 14 jours). Consultation : `/admin/erreurs-pages`. Jamais envoyé : texte saisi, contenu d'exercice, requête d'URL, pile complète. La 2e fenêtre du double écran n'envoie rien. Détail : `docs/erreurs-pages.md` de nemo-https.
 
-## Chargement des pages et service worker (en PR)
+**Contrat vers les apps (rien à implémenter côté natif, mais à ne pas casser)** : le serveur déduit la plate-forme dans la page, pas côté serveur : « WebView2 PC » si `window.chrome.webview` existe, « WebView Android » si `window.NemoAndroid` existe ou si l'agent utilisateur contient `; wv)`, sinon « Chrome 131 · Android » (navigateur et système). Si une app change son agent utilisateur, retire le pont `NemoAndroid` ou la WebView2, ses erreurs sont rangées sous un autre navigateur sans que rien n'échoue. Le rôle de la page (`all`, `work`) vient de `body[data-dual]` ; la 2e fenêtre (`__NEMO_SECONDARY`) n'envoie rien.
 
-- **CSS et JS communs en fichiers mis en cache** (nemo-https #61) : `pageShell` ne recopie plus le CSS et le script communs dans chaque HTML ; il cite `/static/build/<nom>.<empreinte>.css|js` (`site.css`, `player.css`, `page.js`, `exercise.js`, `game.js`), calculés par le Worker à partir des gabarits (pas d'étape de build), `immutable` un an, ETag et 304 ; une empreinte périmée reçoit le contenu actuel en `no-store`. HTML : accueil 368 → 102 Ko, étape 197 → 64 Ko, problème 286 → 21 Ko. Restent en ligne : le garde de fenêtre secondaire (premier script), les réglages appliqués avant le premier affichage, `PLAYER_BASE_CSS` et les variables de la page.
-- **Service worker « réseau d'abord » pour le lecteur** (nemo-https #57) : jusqu'ici `/static/*` est servi cache d'abord, donc la première page ouverte après un déploiement affiche l'ancien lecteur (constaté le 15/11 : 2e écran sans le document). Avec #57, `/static/interface/*` est réseau d'abord (2,5 s au plus), copie en cache en repli, hors ligne inchangé.
+## Chargement des pages et service worker
 
-## `publish_session` en `dryRun` (en PR)
+- **CSS et JS communs en fichiers mis en cache** (nemo-https #61, fusionné dans #60) : `pageShell` ne recopie plus le CSS et le script communs dans chaque HTML ; il cite `/static/build/<nom>.<empreinte>.css|js` (`site.css`, `player.css`, `page.js`, `exercise.js`, `game.js`), calculés par le Worker à partir des gabarits (pas d'étape de build), `immutable` un an, ETag et 304 ; une empreinte périmée reçoit le contenu actuel en `no-store`. HTML : accueil 368 → 102 Ko, étape 197 → 64 Ko, problème 286 → 21 Ko. Restent en ligne : le garde de fenêtre secondaire (premier script), les réglages appliqués avant le premier affichage, `PLAYER_BASE_CSS` et les variables de la page.
+- **Service worker « réseau d'abord » pour le lecteur** (nemo-https #57, fusionné dans #60) : jusqu'ici `/static/*` est servi cache d'abord, donc la première page ouverte après un déploiement affiche l'ancien lecteur (constaté le 15/11 : 2e écran sans le document). Avec #57, `/static/interface/*` est réseau d'abord (2,5 s au plus), copie en cache en repli, hors ligne inchangé.
 
-Les assistants peuvent valider un parcours **sans rien publier** : `publish_session` accepte `dryRun` (nemo-https #55) ; le prompt PC s'en sert pour vérifier la durée avant l'unique publication (nemo-pc #31). Le même lot raccourcit les descriptions d'outils MCP (86 056 → 64 221 caractères), rend `explanation` obligatoire dans les formes et aligne durées et quotas sur `sessionBudget.js`. Règle côté PC : le créneau garde le **premier** lien publié (`publishSlot`) ; le prompt PC demande donc de compléter la séance avant l'unique `publish_session`, sans republier.
+## `publish_session` en `dryRun`
+
+Les assistants peuvent valider un parcours **sans rien publier** : `publish_session` accepte `dryRun` (nemo-https #55, fusionné dans #60) ; le prompt PC s'en sert pour vérifier la durée et la composition avant l'unique publication (nemo-pc #31 et #34, fusionnés). Le même lot raccourcit les descriptions d'outils MCP (86 056 → 64 221 caractères), rend `explanation` obligatoire dans les formes et aligne durées et quotas sur `sessionBudget.js`. Règle côté PC : le créneau garde le **premier** lien publié (`publishSlot`) ; le prompt PC demande donc de compléter la séance avant l'unique `publish_session`, sans republier.
 
 ## Procédure de test du verrou sur de vrais écrans (PC)
 
 Pourquoi une tâche planifiée : Claude Desktop est un paquet MSIX ; tout processus lancé depuis ses shells voit une **copie privée** de `%LOCALAPPDATA%\NemoPc` (journal, config, état) et ne s'affiche pas toujours sur le vrai bureau. Une tâche planifiée « interactive » tourne dans la session de l'élève : vrais écrans, vraie configuration. Les binaires (`%LOCALAPPDATA%\Programs\NemoPc`) sont partagés.
 
 1. Arrêter l'app réelle pour libérer l'écran : `schtasks /End /TN NemoPc` (et `schtasks /End /TN NemoPcHostsHelper` si le blocage de sites tourne).
-2. Enregistrer une tâche temporaire (Interactive, utilisateur courant, niveau normal) qui lance `NemoPc.exe --dev --test-lock N --test-url <url>` : `--dev` (Échap ×3 déverrouille, sécurité de l'essai), `N` en secondes, `<url>` une page de nemo-https (par exemple un problème d'un parcours, ou une page avec `?lockEnds=<ms epoch>`), sans serveur ni planning. Le mode test transmet l'origine de la page comme adresse du serveur ; sans cela (avant nemo-pc #32, en PR) la page n'est pas « de confiance » et la 2e fenêtre ne s'ouvre jamais, et il faut alors un build qui contient #32.
+2. Enregistrer une tâche temporaire (Interactive, utilisateur courant, niveau normal) qui lance `NemoPc.exe --dev --test-lock N --test-url <url>` : `--dev` (Échap ×3 déverrouille, sécurité de l'essai), `N` en secondes, `<url>` une page de nemo-https (par exemple un problème d'un parcours, ou une page avec `?lockEnds=<ms epoch>`), sans serveur ni planning. Le mode test transmet l'origine de la page comme adresse du serveur ; sans cela (avant nemo-pc #32, fusionné) la page n'est pas « de confiance » et la 2e fenêtre ne s'ouvre jamais, et il faut alors un build qui contient #32. Depuis nemo-pc #39, ces options de test ne sont acceptées que par un build Debug.
 3. La lancer avec `schtasks /Run /TN <nom>`, laisser l'app ouvrir les fenêtres (compter 5 à 10 s avec deux écrans), puis faire les gestes de la checklist.
 4. Capturer l'écran par une tâche planifiée interactive (la même, en enchaînant, ou une 2e) : script PowerShell qui se déclare « DPI aware » (`SetProcessDpiAwarenessContext(-4)`), crée un `Bitmap` de la taille de `SystemInformation.VirtualScreen` et appelle `Graphics.CopyFromScreen` ; écrire aussi les `Screen.AllScreens` (nom, rectangle, écran principal) à côté de l'image. Une capture de tous les écrans montre en noir la zone hors écran quand les écrans n'ont pas la même hauteur (essai du 15/11 : 3280 × 1080, 2e écran 1360 × 768 en (1920, 177)) ; pour juger une fenêtre, capturer un seul écran.
 5. Lire le journal réel (`%LOCALAPPDATA%\NemoPc\nemo-pc.log`) par une tâche planifiée qui le copie dans un dossier lisible, puis le comparer aux lignes attendues de la checklist `docs/verification-ecran-reel.md` de nemo-pc (`Double écran : Open …`, `Keep — à jour …`, `… — calée`).
@@ -121,24 +146,44 @@ Pourquoi une tâche planifiée : Claude Desktop est un paquet MSIX ; tout proces
 
 Options voisines de `NemoPc.exe` (README de nemo-pc) : `--self-complete MS` (la page poste un résultat « terminé » : teste le déverrouillage de bout en bout) et `--preview home|settings|resume|tray --shot fichier.png` (captures sans verrou).
 
-## État au 15/11/2026 : fusionné, déployé, encore en PR
+## État au 16/11/2026
 
-Vérifié avec `gh` en fin de journée. **Fusionné** = sur la branche par défaut ; pour nemo-https, déployé par la CI (run « Déploiement » vert) ; pour PC et Android, build CI disponible (installation à la demande de l'élève). Détail et liens : [docs/journal-2026-11-15.md](docs/journal-2026-11-15.md).
+Vérifié avec `gh`. **Fusionné** = sur la branche par défaut ; pour nemo-https, déployé par la CI ; pour PC et Android, build CI disponible (installation à la demande de l'élève). L'état du 15/11 en fin de journée, avec ses liens, est dans [docs/journal-2026-11-15.md](docs/journal-2026-11-15.md).
 
-| Sujet | Fusionné (et déployé pour le site) | Encore en PR |
+| Sujet | Fusionné | Encore en PR |
 |---|---|---|
-| Contrat de verrou `NEMO_LOCK` / `nemo:lock` | PC #20 ; Android #31 ; site : `session.js` (en ligne) | site : `problem.js` via `lock.js` (nemo-https #47, repris dans #60) |
-| Double écran (rôles, 2e fenêtre, garde) | site #50 et #54 (déployés, cache SW v34 puis v36) ; PC #23, #26, #29 (#22 et #27 fermées, remplacées) | PC #32 (outil de test seulement) |
-| Pause d'urgence PC | PC #21 | |
-| Reprise au temps restant | PC #28 | |
-| Remontée des erreurs de pages | | nemo-https #59 (repris dans #60) |
-| CSS/JS communs en cache | | nemo-https #61 (repris dans #60) |
-| SW réseau d'abord pour le lecteur | | nemo-https #57 (repris dans #60) |
-| `publish_session dryRun`, outils MCP clairs | | nemo-https #55 (repris dans #60) ; PC #31 (prompt court) |
-| Lecteur fidèle à la maquette | site #53 | une carte à la fois : #58 (repris dans #60) |
-| Android plus clair, adapter puis défiler | | nemo-app #36 ; #37 (empilée sur #36) |
+| Contrat de verrou `NEMO_LOCK` / `nemo:lock` | PC #20, Android #31, site (dans #60) | |
+| Double écran (rôles, 2e fenêtre, garde, un seul état) | site #50, #54, #66 ; PC #23, #26, #29, #32, #33, #35, #36 | |
+| Intégration du 15/11 (lecteur, erreurs de pages, CSS/JS en cache, SW réseau d'abord, `dryRun`) | nemo-https #60 | |
+| Écran de fin, leçons complètes, formules strictes, correction IA | nemo-https #63, #64, #68, #69, #73 | |
+| Lecteur concentré, cohérence entre écrans, perf et quotas | nemo-https #71, #77, #79, #80 ; PC #40, #42 ; Android #41, #42 | |
+| Livraison sûre (test de fumée, retour arrière) et sécurité des pages (CSP à nonce, sessions opaques) | nemo-https #72, #75 ; Android #39 ; PC #39 | |
+| Fin de séance confirmée par le serveur | PC #41, Android #43 | **nemo-https #76** (sans elle, les apps gardent le verrou jusqu'à l'heure de fin) |
+| Données et limites (plafonds IA, suppression complète, migrations, sauvegarde) | | nemo-https #78 |
+| Lexique commun, pages espace | | nemo-https #74, #81 |
+| Maintenance (dépendances, README, tests du routeur) | | nemo-https #82, #83 |
 
-**nemo-https #60** est la PR d'intégration qui réunit 12 PR (#45, #47, #48, #49, #51, #52, #55, #56, #57, #58, #59, #61) et un correctif, `npm test` 2087/2087 : la fusionner = un seul déploiement. Elle est ouverte : **rien de ce qu'elle contient n'est encore en ligne**. Rien de ce qui précède n'a été vérifié sur de vrais écrans ni sur un téléphone, sauf indication contraire dans le journal.
+Rien de ce qui précède n'a été vérifié sur de vrais écrans ni sur un téléphone, sauf indication contraire dans le journal.
+
+## Glossaire
+
+Mots employés dans les trois dépôts et à l'écran. Quand deux mots désignent la même chose, le premier est celui à écrire dans l'interface ; l'autre est un nom de code ou un ancien nom.
+
+| Mot | Ce que c'est | À ne pas confondre avec |
+|---|---|---|
+| **créneau** (`slot`) | une plage horaire du planning où l'élève doit travailler (début, fin). Il a un identifiant, est « réclamé » par un appareil, et peut être « fait ». | la séance |
+| **séance** (`session`) | le contenu travaillé pendant un créneau : une suite d'étapes (leçon, exercices, problèmes) publiée par l'assistant IA. Les noms de code `session`, `parcours` et « Ma session » (Android) désignent la même chose. | le créneau ; la session web (cookie de connexion) |
+| **série** | côté jeu, une suite d'exercices réussis ; sur l'accueil, la **série de jours** (« jours d'affilée ») : le nombre de jours de suite où l'élève a travaillé, avec ses jours de repos. Une seule définition pour le site, le PC et Android depuis le 15/11. | le combo |
+| **combo** | le nombre de bonnes réponses d'affilée dans une séance. Il se rompt à la première erreur. | la série de jours |
+| **jours d'affilée** | la formulation à l'écran de la série de jours. | |
+| **verrou** | l'état où l'appareil empêche de quitter la séance jusqu'à l'heure de fin ; c'est l'**app native** qui le tient. Contrat : `window.NEMO_LOCK`, `nemo:lock`. | le bail |
+| **bail** (`lease`) | le mécanisme serveur (`/api/lock/lease`) qui rattache plusieurs appareils d'un même profil au même créneau ; un seul verrou pour PC et téléphones. Le bail ne refuse plus personne. | le verrou |
+| **sortie d'urgence** | une pause de 5 minutes, 2 par jour et par profil (`/api/emergency/*`), qui ne rallonge jamais le créneau. Affichée « Pause 5 min (n restantes) » sur PC ; Android parle de « libération anticipée » pour la sortie à 30 minutes de la fin. | la libération confirmée (fin de séance) |
+| **fin confirmée** | une séance terminée dont le serveur a reçu et validé toutes les étapes ; seule elle libère l'appareil avant l'heure de fin. | un « terminé » déclaré par la page |
+| **double écran** | question sur l'écran principal, suivi et documents sur le 2e écran (PC). Rôles : `all`, `work`, `aside`, `docs`. | l'écran unique (adapter puis défiler) |
+| **planning non fiable** (`reliable:false`) | le serveur ne sait pas quels jours ont cours : les apps ne verrouillent pas. | |
+| **profil** | un élève (ou le profil principal de l'administrateur) avec son jeton ; ses données sont cloisonnées. | le compte EcoleDirecte |
+| **notion** | un point du cours suivi pour la révision espacée (« à revoir »). | un exercice |
 
 ## Mises à jour : qui construit, qui installe
 
