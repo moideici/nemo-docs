@@ -68,3 +68,18 @@
 .pj-tile small { margin-top: auto; padding-top: 8px; font: 500 11.5px var(--f-mono); color: var(--mute); }
 .pj-note { margin-top: 18px; font-size: 13.5px; color: var(--mute); }
 @media (max-width: 560px) { .pj-arch { padding: 14px; } .pj-box { flex-basis: 100%; } }
+
+/* sections riches (Janus) : avertissement, sommaire, blocs, tableaux */
+.pj-warn { margin: 22px 0 0; }
+.pj-toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; }
+.pj-toc a { padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--mute); font: 500 12.5px var(--f-mono); text-decoration: none; }
+.pj-toc a:hover { color: var(--accent); border-color: var(--accent); }
+.pj-blocks { display: grid; gap: 16px; }
+.pj-blocks > * { margin: 0; min-width: 0; }
+.pj-h { margin: 14px 0 0; font-size: 18px; letter-spacing: -.02em; }
+.pj-p { color: var(--mute); font-size: 15px; }
+.pj-ul { padding-left: 20px; display: grid; gap: 7px; color: var(--mute); font-size: 14.5px; }
+.pj-steps li span { color: var(--mute); font-size: 14.5px; }
+.pj-table td, .pj-table th { min-width: 110px; }
+.pj-table code, .pj-p code, .pj-ul code, .pj-card code, .pj-steps code { font: 500 12.5px var(--f-mono); }
+.pj-pre { white-space: pre; }

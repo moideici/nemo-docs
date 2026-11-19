@@ -3,12 +3,13 @@
    Pour ajouter un projet : compléter PROJ.list (puis créer <id>/index.html sur le modèle des autres), rien d'autre.
    Style : phrases courtes (accroche ≤ 30 mots, carte ≤ 25 mots, puce d'état ≤ 15 mots). Un chiffre ou un statut est à vérifier dans le dépôt. */
 window.PROJ = window.PROJ || {};
-PROJ.updated = "11/11/2026";
+PROJ.updated = "19/11/2026";
 PROJ.gh = "https://github.com/moideici/";
 PROJ.statuses = {
   actif: { t: "Actif", cls: "g" },
   veille: { t: "En pause", cls: "y" },
   plan: { t: "Phase de plan", cls: "s" },
+  recherche: { t: "Prototype de recherche", cls: "c" },
   outil: { t: "Outil", cls: "b" }
 };
 
@@ -465,6 +466,419 @@ PROJ.list = [
     { t: "TRANSITIONS, CLI, FIDELITY", f: "app/TRANSITIONS.md", d: "Atelier et recettes CLI." },
     { t: "POWERPOINT-CUSTOM", f: "app/POWERPOINT-CUSTOM.md", d: "Effets dans le PPTX." },
     { t: "MORPH-RESEARCH", f: "app/MORPH-RESEARCH.md", d: "Recherche sur la morphose." }
+  ]
+},
+
+/* ======================================================================== Janus */
+{
+  id: "janus", n: "Janus", title: "Janus", status: "recherche",
+  role: "Chiffrement de fichiers post-quantique, indistinguable de l'aléa, à deux visages",
+  lead: "Format de chiffrement de fichiers <b>post-quantique</b> (X-Wing : ML-KEM-768 + X25519) dont chaque octet est <b>indistinguable de l'aléa</b>, avec 16 emplacements de destinataires cachés et <b>deux visages</b> : un leurre et un secret dans le même fichier, pour un déni plausible.",
+  warn: "<b>Prototype de recherche, non audité.</b> Le format n'est <b>pas figé</b>, le code n'a eu <b>aucun audit externe</b> et les preuves de sécurité n'ont été relues par personne. Il n'existe <b>pas encore de release</b> (voir le <a href=\"#release\">plan de release</a>). <b>À ne pas utiliser pour de vrais secrets</b> : un fichier chiffré aujourd'hui pourrait ne plus s'ouvrir demain.",
+  toc: [["presentation", "Présentation"], ["visages", "Les deux visages"], ["format", "Le format"], ["crypto", "La cryptographie"], ["cli", "Ligne de commande"], ["inspect", "janus inspect"], ["preuves", "Preuves"], ["verifie", "Vérifications"], ["perfs", "Performances"], ["limites", "Limites"], ["release", "Plan de release"], ["etat", "État"], ["docs", "Documents"]],
+  repo: { name: "janus", branch: "main" }, tech: ["Rust", "ML-KEM-768 + X25519", "Kemeleon · Elligator 2", "ChaCha20-Poly1305", "Argon2id"], last: "19/11/2026",
+  facts: [
+    { v: "56", k: "tests, fuzzing de 50 000 mutations compris" }, { v: "26 208", k: "octets d'en-tête, toujours" },
+    { v: "16", k: "emplacements de destinataires, toujours présents" }, { v: "3", k: "preuves papier, non relues" }, { v: "0", k: "audit externe, aucune release" }
+  ],
+  arch: {
+    intro: "Un fichier <code>.janus</code> n'a aucun champ en clair : une en-tête de taille fixe, puis un corps où vivent les visages. Le code Rust (<code>janus-rs/</code>) suit le même découpage.",
+    layers: [
+      { name: "En-tête : H = 26 208 octets", items: [
+        { n: "T_0 et T_1", d: "Deux étiquettes d'en-tête de 32 octets (HMAC-SHA-256). Une par visage ; l'étiquette inutilisée est de l'aléa." },
+        { n: "sel", d: "32 octets, commun aux deux visages : un seul calcul Argon2id ouvre n'importe lequel des 16 emplacements." },
+        { n: "16 emplacements × 1632 octets", d: "Chacun porte r (32), κ (1536) et w (64). Les emplacements inutilisés sont de l'aléa : le nombre de destinataires ne se voit pas." }
+      ] },
+      { link: "w = K ‖ début ‖ longueur" },
+      { name: "Corps : F − 26 208 octets", items: [
+        { n: "Visage principal (le leurre)", d: "Commence au début du corps, comme l'unique visage d'un fichier ordinaire. Flux STREAM par blocs de 64 Kio." },
+        { n: "Réserve", d: "max(64 Kio, L/16) octets garantis, remplis d'aléa ou du visage caché. Sa taille ne dépend que du leurre." },
+        { n: "Visage caché", d: "Même forme qu'un visage ordinaire, à une position tirée au hasard. Dans un fichier sans secret, cette zone est de l'aléa." },
+        { n: "Aléa jusqu'à F", d: "F est tiré uniformément dans [Ref, PADMÉ(Ref)] : la taille ne révèle qu'une plage." }
+      ] },
+      { link: "janus-rs/src" },
+      { name: "Code Rust", items: [
+        { n: "format.rs", d: "Format v1 : deux étiquettes, sel commun, emplacements, réserve, deux visages STREAM par lots parallèles, ouverture en flux." },
+        { n: "xwing.rs, kemeleon.rs, elligator.rs", d: "X-Wing draft-11 et encapsulation cachée : point sale uniforme, Elligator 2, Kemeleon en temps constant, masquage de κ." },
+        { n: "inspect.rs", d: "Radiographie défensive d'un fichier sans clé : age, gpg, ZIP, 7-Zip, LUKS, KeePass, openssl, Janus." },
+        { n: "alea.rs, cles.rs, vecteurs.rs", d: "Aléa du système uniquement, encodage texte des clés (provisoire), vecteurs de test." }
+      ] }
+    ]
+  },
+  commands: [
+    { t: "Compiler et tester (depuis janus-rs/)", code: "cargo build --release\ncargo test --release          # les 56 tests" },
+    { t: "Créer une identité, chiffrer pour une clé publique, déchiffrer", code: "target/release/janus cles moi.cle > moi.pub\ntarget/release/janus chiffrer -R moi.pub photo.jpg photo.janus\ntarget/release/janus dechiffrer -i moi.cle photo.janus photo.jpg" },
+    { t: "Chiffrer par mot de passe", code: "target/release/janus chiffrer -m notes.txt notes.janus\ntarget/release/janus dechiffrer -m notes.janus notes.txt" },
+    { t: "Deux visages : un leurre et un secret", code: "target/release/janus chiffrer -m vacances.zip coffre.janus --cache -m journal.txt\ntarget/release/janus dechiffrer -m coffre.janus sortie    # ouvre le visage du mot de passe saisi" },
+    { t: "Voir ce qu'un tiers apprend d'un fichier", code: "target/release/janus inspect photo.janus archive.zip lettre.gpg" },
+    { t: "Vérifications et mesures", code: "cargo run --release --example banc      # banc d'essai\ncargo run --release --example dudect   # temps constant\nJANUS_FUZZ_ITER=100000 cargo test --release --test fuzz -- --nocapture" }
+  ],
+  sections: [
+    { id: "presentation", cap: "Présentation", title: "Ce que Janus fait autrement",
+      intro: "Un seul fichier, aucun octet reconnaissable, un nombre de destinataires caché et un second contenu possible. Comparaison avec gpg et age, d'après le README du dépôt.",
+      blocks: [
+        { table: { head: ["Propriété", "gpg", "age", "Janus"], rows: [
+          ["Post-quantique hybride (ML-KEM-768 + X25519)", "non (2.4)", "en option", "<b>oui, toujours</b>"],
+          ["L'outil se reconnaît au premier octet", "oui", "oui", "<b>non : tout le fichier ressemble à de l'aléa</b>"],
+          ["Le nombre de destinataires se voit", "oui, avec leurs identifiants", "oui", "<b>non</b> (16 emplacements toujours présents)"],
+          ["La taille du clair se lit", "à quelques octets près", "exactement", "<b>à quelques pour cent près</b> (bourrage PADMÉ aléatoire, et réserve)"],
+          ["Un même fichier s'ouvre sur deux contenus", "non", "non", "<b>oui : un leurre et un secret</b>"],
+          ["Engagement de clé", "non", "oui", "<b>oui</b>"]
+        ] } },
+        { cards: [
+          { t: "Post-quantique hybride", p: "X-Wing combine ML-KEM-768 et X25519 : le contenu reste secret tant que l'un des deux tient. Avec un mot de passe, tant qu'il n'est pas deviné." },
+          { t: "Indistinguable de l'aléa", p: "Ni nombre magique, ni version, ni longueur, ni liste d'algorithmes. Pour qui n'a pas de clé, chaque octet ressemble à de l'aléa ; la taille ne révèle qu'une plage." },
+          { t: "Destinataires cachés", p: "16 emplacements toujours présents, qu'il y ait 1 ou 16 destinataires. Les emplacements inutilisés sont de l'aléa." },
+          { t: "Deux visages", p: "Un leurre et un secret dans le même fichier. Sous contrainte, donner le mot de passe du leurre ; l'existence d'un second visage ne peut pas être prouvée." },
+          { t: "Engagement et intégrité", p: "Un fichier s'ouvre sur au plus deux clés, une par étiquette. Modifier, tronquer ou réordonner un octet du visage ouvert fait échouer l'ouverture." }
+        ] },
+        { h: "Ce que Janus ne garantit pas" },
+        { ul: [
+          "<b>L'authentification de l'expéditeur</b> : un destinataire peut fabriquer un autre fichier que les autres destinataires ouvriront (piste E de la conception).",
+          "<b>La confidentialité persistante</b> : si une clé privée fuit, tous les fichiers qui lui étaient destinés sont lisibles.",
+          "<b>La détection d'un retour en arrière complet</b> : le remplacement du fichier entier par une ancienne version valide.",
+          "<b>Le masquage de la longueur approximative du contenu</b> : la taille révèle une plage (voir « Le format »).",
+          "<b>L'IND-CCA au sens strict</b> : la garantie prouvée est IND-RCCA (voir « Preuves »)."
+        ] }
+      ] },
+
+    { id: "visages", cap: "Déni plausible", title: "Les deux visages",
+      intro: "Un fichier s'ouvre sur un <b>leurre</b> avec un premier mot de passe (ou une première clé), et sur le <b>vrai contenu</b> avec un second. Celui qui ne connaît que le premier ne peut pas <b>prouver</b> qu'il existe un second visage : tous les fichiers Janus ont la même forme, qu'ils en contiennent un ou non. Cela répond à la menace de la coercition (document 03).",
+      blocks: [
+        { cards: [
+          { t: "Ce qui est promis", p: "Un adversaire qui possède le fichier, connaît la spécification et a obtenu l'identifiant du leurre ne distingue pas un fichier avec visage caché d'un fichier sans, mieux que par hasard." },
+          { t: "Ce qui ne l'est pas", p: "Qu'il ne soupçonne rien : il sait que Janus permet un second visage. Le déni peut aussi aggraver une situation face à un adversaire jamais satisfait. Et Janus ne protège pas les traces laissées par le système (fichiers temporaires, documents récents, miniatures, fichier d'échange)." },
+          { t: "Règle 1 : une seule structure", p: "Le second visage est <b>le</b> format, pas une option. Chaque fichier contient deux étiquettes d'en-tête et une réserve ; inutilisées, elles sont de l'aléa." },
+          { t: "Règle 2 : chaque visage est complet", p: "Chaque visage a sa propre clé de fichier, sa propre étiquette et son propre flux STREAM. Ouvrir un visage n'apprend rien sur l'autre, et chacun reste engagé." },
+          { t: "Règle 3 : la taille ne dépend que du leurre", p: "La réserve est une fonction fixe et publique de la longueur du leurre. Une réserve variable trahirait le secret : le prix du déni est une réserve sur tous les fichiers." }
+        ] },
+        { h: "La réserve : max(64 Kio, L/16)" },
+        { code: "L₁       = longueur du leurre\nRéserve  = max(R_min, ⌈L₁ / ρ⌉) = max(65 536, ⌈L₁ / 16⌉)       fonction FIXE, publique\nRef      = H + c(L₁) + Réserve\nF        = entier uniforme dans [Ref, PADMÉ(Ref)]\nc(L)     = L + 16 × max(1, ⌈L / TB⌉)                            taille chiffrée d'un visage\ncapacité : c(L₂) ≤ Réserve" },
+        { p: "Le secret doit tenir dans la réserve : 1/16 de la taille du leurre, et au moins 64 Kio. Sinon Janus refuse et indique la capacité disponible. La réserve n'est <b>jamais</b> agrandie pour faire entrer un secret, car sa taille dépendrait alors du secret. La position du visage caché est tirée uniformément dans <code>[c(L₁), F − H − c(L₂)]</code>." },
+        { table: { head: ["Leurre", "Réserve fixe 64 Kio", "max(64 Kio, L₁/16) (retenue)", "max(64 Kio, L₁/8)"], rows: [
+          ["100 Ko", "secret ≤ 65 Ko, fichier +52 %", "idem", "idem"],
+          ["1 Mo", "secret ≤ 65 Ko, +7 %", "secret ≤ 65 Ko, +7 %", "secret ≤ 125 Ko, +13 %"],
+          ["10 Mo", "secret ≤ 65 Ko, +0,3 %", "secret ≤ 625 Ko, +6 %", "secret ≤ 1,25 Mo, +13 %"],
+          ["1 Go", "secret ≤ 65 Ko, +0 %", "secret ≤ 62 Mo, +6,5 %", "secret ≤ 125 Mo, +13 %"]
+        ] } },
+        { note: "Les pourcentages comparent la taille moyenne d'un fichier v1 à celle d'un fichier v0 de même contenu (document 03, § 5). Ce coût s'applique à <b>tous</b> les fichiers, même sans visage caché. Choix décidé le 18 novembre 2026 (QB-1) : environ 6 % de plus par fichier, de quoi cacher un document." },
+        { h: "Règles de remplissage R1 à R6" },
+        { table: { head: ["Règle", "Énoncé"], rows: [
+          ["<b>R1</b>", "Un visage protégé par mot de passe n'a <b>que</b> ce mot de passe : sinon, un destinataire à clé connaissant K pourrait recopier l'emplacement dans un faux fichier. Les deux visages peuvent chacun avoir leur mot de passe."],
+          ["<b>R2</b>", "Les emplacements des deux visages sont tirés au hasard parmi les 16, sans doublon. Les autres sont de l'aléa."],
+          ["<b>R3</b>", "Pas plus de 16 destinataires <b>au total</b> pour les deux visages."],
+          ["<b>R4</b>", "Le visage principal reçoit <code>T_0</code> ou <code>T_1</code> à pile ou face, le visage caché l'autre. Sans visage caché, l'autre étiquette est <code>aléa(32)</code>."],
+          ["<b>R5</b>", "Janus <b>refuse</b> : le même mot de passe pour les deux visages, la même clé publique dans les deux visages, un visage caché plus grand que la réserve."],
+          ["<b>R6</b>", "Le leurre est toujours le visage principal : il commence au début du corps, comme l'unique visage d'un fichier ordinaire. Un visage qui commence au milieu du corps n'existe que dans un fichier à deux visages : son identifiant ne doit <b>jamais</b> être donné sous la contrainte."]
+        ] } },
+        { h: "Pièges d'usage (10.1 à 10.9)" },
+        { table: { head: ["N°", "Piège", "Conseil ou conséquence"], rows: [
+          ["10.1", "<b>Plusieurs versions du même fichier.</b> Un adversaire qui voit deux versions dont le leurre n'a pas changé mais dont tous les octets ont changé peut se demander pourquoi. C'est le talon d'Achille connu des volumes cachés de VeraCrypt.", "Modifier le leurre chaque fois qu'on modifie le secret."],
+          ["10.2", "<b>Pas de modification en place.</b> Rechiffrer le leurre avec le seul mot de passe du leurre produit un fichier sans visage caché : le secret disparaît, sans avertissement possible.", "Refabriquer le fichier avec les deux visages."],
+          ["10.3", "<b>Le leurre doit être crédible.</b> La réserve est fixe : un leurre minuscule ne trahit rien par la taille, mais il est peu vraisemblable comme chose à chiffrer.", "La cryptographie ne remplace pas le bon sens."],
+          ["10.4", "<b>Deux visages au plus.</b> Avec deux étiquettes, l'adversaire sait qu'il n'existe pas de troisième visage ; avec deux identifiants valides, il sait qu'il a tout.", "Passer à 4 étiquettes ne coûterait que 64 octets (question ouverte QB-3)."],
+          ["10.5", "<b>Signature incompatible.</b> Un leurre signé reste possible, mais le secret ne doit pas être signé avec la même clé.", "Piste E, non réalisée."],
+          ["10.6", "<b>Traces du système.</b> Ouvrir le secret écrit son clair sur le disque.", "L'ouvrir dans un dossier lui-même chiffré, ou en mémoire seulement (commande future)."],
+          ["10.7", "<b>La ligne de commande doit rester muette.</b> Aucune option, aucun message, aucun code de retour ne doit différer selon qu'il existe un visage caché.", "Respecté : une seule erreur, « impossible de déchiffrer »."],
+          ["10.8", "<b>Un même fichier peut montrer deux contenus à deux destinataires.</b> Un auteur malveillant peut mettre Alice dans un visage et Bob dans l'autre.", "Comparer l'empreinte du <b>clair</b>, pas celle du fichier chiffré. Borné à deux contenus."],
+          ["10.9", "<b>Un tiers peut effacer le secret sans que le leurre s'en aperçoive</b>, en écrasant la réserve.", "Garder une copie, et vérifier de temps en temps que le secret s'ouvre avec le second identifiant."]
+        ] } },
+        { h: "Pourquoi l'adversaire contraint ne voit rien" },
+        { p: "Il possède le fichier et le leurre ouvert. Chaque élément du fichier, sans puis avec visage caché (document 03, § 9) :" },
+        { table: { head: ["Élément", "Sans visage caché", "Avec visage caché", "Pourquoi il ne distingue pas"], rows: [
+          ["Étiquette inutilisée par le leurre", "<code>aléa(32)</code>", "HMAC sous la clé du secret", "HMAC est une fonction pseudo-aléatoire ; la clé lui est inconnue"],
+          ["Emplacements hors leurre", "<code>aléa(1632)</code>", "emplacements du secret", "Encapsulation X-Wing cachée et AEAD sous une clé inconnue"],
+          ["<code>sel</code>", "aléa", "aléa, partagé", "identique"],
+          ["Réserve et fin du corps", "aléa", "flux ChaCha20-Poly1305", "un chiffré ChaCha20-Poly1305 est indistinguable de l'aléa"],
+          ["Taille <code>F</code>", "dépend de L₁ seul", "dépend de L₁ seul", "même loi de tirage"],
+          ["Position du leurre", "début du corps", "début du corps", "règle R6"],
+          ["Temps d'ouverture du leurre", "16 essais", "16 essais", "même travail, mesuré avec dudect"]
+        ] } },
+        { h: "Ce qui existe ailleurs" },
+        { table: { head: ["Système", "Niveau", "Différence avec Janus"], rows: [
+          ["VeraCrypt, volumes cachés", "volume disque", "mono-utilisateur, pas post-quantique, pas un fichier qu'on envoie"],
+          ["Shufflecake (2023)", "volume disque Linux", "plusieurs niveaux cachés, mais pour des disques"],
+          ["Rubberhose (1997)", "disque", "ancêtre du principe, abandonné"],
+          ["Deniable encryption (Canetti, Dwork, Naor, Ostrovsky, 1997)", "théorie", "autre notion : l'expéditeur fabrique un faux aléa"],
+          ["age, gpg", "fichier", "aucun déni ; leurs en-têtes affichent outil et destinataires"]
+        ] } },
+        { note: "À la connaissance des auteurs, aucun format de <b>fichier</b> ne combine déni à deux visages, chiffrement post-quantique hybride, plusieurs destinataires par visage et indistinguabilité totale pour les tiers.", cls: "ok" }
+      ] },
+
+    { id: "format", cap: "Spécification", title: "Le format",
+      intro: "Format v1 (documents 02 et 03). Aucun champ en clair : la version est dans les étiquettes de dérivation (<code>janus/v1/…</code>), un lecteur d'une autre version échoue comme pour un fichier qui ne lui est pas destiné.",
+      blocks: [
+        { code: " décalage   taille           contenu\n ────────   ──────────────   ─────────────────────────────────────────────\n 0          32               T_0      étiquette d'en-tête n° 0\n 32         32               T_1      étiquette d'en-tête n° 1\n 64         32               sel      sel Argon2id, commun aux deux visages\n 96         16 × 1632        E_0 … E_15   emplacements de destinataire\n 26 208     F − 26 208       corps    visage principal, réserve, visage caché" },
+        { p: "<code>H</code> = 96 + 16 × 1632 = <b>26 208</b> octets (25 888 pour le format v0). Constantes : 16 emplacements, blocs de clair <code>TB</code> = 65 536 octets, blocs chiffrés <code>TC</code> = 65 552 octets." },
+        { h: "Un emplacement (1632 octets)" },
+        { table: { head: ["Décalage", "Taille", "Champ", "Contenu"], rows: [
+          ["0", "32", "<code>r</code>", "représentant Elligator 2 (aléa pour un mot de passe)"],
+          ["32", "1536", "<code>κ</code>", "Kemeleon(ct_M), masqué (aléa pour un mot de passe)"],
+          ["1568", "64", "<code>w</code>", "AEAD(clé_emb, 0¹², K ‖ BE64(début) ‖ BE64(longueur))"]
+        ] } },
+        { p: "<code>w</code> transporte aussi <b>où commence</b> le visage dans le corps et la <b>longueur exacte</b> de son clair : un visage ne s'arrête plus à la fin du fichier. L'emplacement d'un mot de passe est un emplacement quelconque ; un emplacement inutilisé est <code>aléa(1632)</code>." },
+        { h: "Le corps" },
+        { code: "corps = [ visage principal ][ réserve : aléa ou visage caché, à une position aléatoire ][ aléa ]\n         début = 0            Réserve(L₁) octets garantis                              tirage PADMÉ" },
+        { p: "Chaque visage est un flux STREAM ordinaire qui commence à <code>début</code> et compte <code>n = max(1, ⌈longueur / TB⌉)</code> blocs, le dernier étant partiel et portant le drapeau « dernier ». Le bourrage chiffré de la v0 a disparu : la longueur est dans <code>w</code>, et tout ce qui n'appartient à aucun visage est de l'aléa. Le corps n'a plus besoin de finir sur une frontière de bloc : les 16 tailles sur 65 552 que la v0 ne produisait jamais deviennent possibles." },
+        { h: "Dérivations" },
+        { code: "K_entete      = HKDF(K, \"janus/v1/entete\")\nK_corps       = HKDF(K, \"janus/v1/corps\")\nclé_emb_i     = HKDF(ss_i, \"janus/v1/emballage/xwing\" ‖ octet(i))       clé publique\nA             = Argon2id(mdp, sel)                                       un seul calcul\nclé_emb_mdp_i = HKDF(A,    \"janus/v1/emballage/mdp\"   ‖ octet(i))        mot de passe\n\nT_visage = HMAC(K_entete, BE64(F) ‖ BE64(début) ‖ BE64(longueur) ‖ sel ‖ E_0 ‖ … ‖ E_15)" },
+        { cards: [
+          { t: "Un sel commun, à place fixe", p: "Un mot de passe ouvre n'importe lequel des 16 emplacements avec <b>un seul</b> Argon2id, suivi de 16 essais d'AEAD presque gratuits. Deux mots de passe différents partagent le sel sans inconvénient." },
+          { t: "T couvre début et longueur", p: "Sans cela, un auteur malveillant pourrait donner à deux destinataires d'un même visage la même clé mais deux positions, donc deux contenus. Réussir l'ouverture fixe K, début et longueur." },
+          { t: "T couvre F", p: "Ajouter ou retirer des octets à la fin du fichier fait échouer <b>les deux</b> visages : troncatures et ajouts restent détectés." },
+          { t: "Une seule erreur", p: "Toute erreur produit le même message : « impossible de déchiffrer ». Jamais de message du type « ce fichier contient un autre visage »." }
+        ] },
+        { h: "Taille du fichier" },
+        { p: "La taille <code>F</code> n'est pas <code>PADMÉ(Ref)</code> telle quelle : les tailles PADMÉ se terminent par beaucoup de bits à zéro, ce qui serait une signature. <code>F</code> est tiré <b>uniformément dans [Ref, PADMÉ(Ref)]</b>. Cette variante est propre à Janus et reste à analyser (question Q4). Toute la fuite tient en une plage de longueurs de clair compatibles avec <code>F</code> ; pour un fichier de 512 Mio, elle s'étend sur environ 0,8 %." },
+        { ul: [
+          "Surcoût du bourrage selon la spécification v0 : au plus environ 12 % pour les petits contenus, moins de 4 % au-delà de 4 Mio (mesuré sur 20 000 tailles).",
+          "Tags : 16 octets par bloc de 64 Kio, soit 0,02 %.",
+          "La v1 écrit environ 6 % d'octets en plus (la réserve)."
+        ] },
+        { h: "De la v0 à la v1" },
+        { table: { head: ["Point", "v0", "v1 (deux visages)"], rows: [
+          ["En-tête", "<code>T</code>, 16 × 1616", "<code>T_0</code>, <code>T_1</code>, <code>sel</code>, 16 × 1632 (+320 octets)"],
+          ["<code>w</code>", "<code>K</code>", "<code>K ‖ début ‖ longueur</code>"],
+          ["Mot de passe", "seulement en <code>E_0</code>", "dans n'importe quel emplacement, avec un seul Argon2id"],
+          ["Bourrage", "<code>0x80 ‖ 0x00*</code> chiffré", "aucun : la longueur est dans <code>w</code>, le reste est de l'aléa"],
+          ["Tailles impossibles", "16 sur 65 552", "aucune"],
+          ["P2 (intégrité)", "chaque octet du fichier", "chaque octet <b>du visage ouvert</b>, plus la taille totale <code>F</code>"],
+          ["P3 (engagement)", "une seule clé par fichier", "<b>au plus deux</b> clés, une par étiquette"],
+          ["P4 (cohérence)", "tous les destinataires lisent la même chose", "tous les destinataires <b>d'un même visage</b> ; deux visages peuvent montrer deux contenus (piège 10.8)"]
+        ] } }
+      ] },
+
+    { id: "crypto", cap: "Primitives et assemblage", title: "La cryptographie",
+      intro: "Aucune primitive n'est inventée : Janus invente une composition, un format et des propriétés. Les apports propres à Janus, donc les plus à risque, sont le <b>point sale combiné à X-Wing</b> et le <b>PADMÉ aléatoire</b>.",
+      blocks: [
+        { table: { head: ["Brique", "Référence ou paramètres", "Rôle dans Janus"], rows: [
+          ["X-Wing", "<code>draft-connolly-cfrg-xwing-kem-11</code> ; ML-KEM-768 + X25519 ; clé publique de 1216 octets (1184 + 32), identité = graine de 32 octets", "KEM hybride des destinataires à clé publique ; le vecteur de test officiel n° 1 est reproduit"],
+          ["Kemeleon", "<code>draft-irtf-cfrg-kemeleon-02</code>, variante sans échec, 1536 octets ; écrit sur place, en temps constant", "encode le chiffré ML-KEM pour qu'il ressemble à de l'aléa"],
+          ["Elligator 2", "RFC 9380, § 6.7.1 ; inverse maison pour un point quelconque (<code>fiat-crypto</code>)", "représente le point de courbe X25519 comme 32 octets uniformes"],
+          ["ChaCha20-Poly1305", "RFC 8439, sans données associées", "emballage <code>w</code> et blocs du corps"],
+          ["HKDF-SHA-256, HMAC-SHA-256", "sel vide, sortie de 32 octets", "dérivation de sous-clés et étiquettes d'en-tête"],
+          ["Argon2id", "version 0x13, 64 Mio, 3 passes, parallélisme 4, sortie de 32 octets (RFC 9106, seconde configuration recommandée)", "dérivation depuis un mot de passe ; paramètres fixes, absents du fichier"],
+          ["STREAM", "blocs de 64 Kio, nonce = compteur sur 11 octets + drapeau « dernier »", "chiffrement du corps, parallélisable par lots"],
+          ["PADMÉ", "taille tirée dans [Ref, PADMÉ(Ref)]", "masque la longueur du clair"]
+        ] } },
+        { h: "Encapsulation X-Wing rendue indistinguable" },
+        { p: "X-Wing produit un chiffré <code>ct_M ‖ ct_X</code> dont aucune partie ne ressemble à de l'aléa. Janus les <b>encode</b> sans toucher à la cryptographie d'X-Wing. Côté chiffrement, pour un destinataire <code>pk = pk_M ‖ pk_X</code> :" },
+        { ol: [
+          "<b>ML-KEM.</b> <code>(ss_M, ct_M) = ML-KEM-768.Encaps(pk_M)</code>.",
+          "<b>Éphémère X25519 « caché ».</b> Tirer le scalaire <code>e</code> <b>uniformément modulo ℓ</b> (64 octets d'aléa réduits), sans le clamper. Calculer <code>P = e·B + L</code>, où <code>L</code> est un point d'ordre faible tiré au hasard : le point « sale » est <b>uniforme sur toute la courbe</b>. Recommencer tant que <code>P</code> n'a pas de représentant Elligator 2 (environ une fois sur deux). <code>r</code> est un représentant aléatoire de <code>P</code> dont les 2 bits de poids fort sont aléatoires ; <code>ct_X</code> est la coordonnée u de <code>P</code> ; <code>ss_X = e·pk_X</code>.",
+          "<b>Combineur X-Wing.</b> <code>ss = SHA3-256(ss_M ‖ ss_X ‖ ct_X ‖ pk_X ‖ XWingLabel)</code>, selon le draft-11.",
+          "<b>Kemeleon.</b> <code>κ = Kemeleon.EncodeCtxt(ct_M)</code>, 1536 octets.",
+          "<b>Masquage de κ.</b> <code>κ' = κ ⊕ SHAKE256(\"janus/v1/masque\" ‖ ss_X ‖ ct_X, 1536 octets)</code>.",
+          "<b>Assemblage.</b> <code>E_i = r ‖ κ' ‖ AEAD(clé_emb_i, 0¹², …)</code>."
+        ] },
+        { p: "Côté déchiffrement : <code>ct_X</code> est retrouvé depuis <code>r</code> (2 bits de poids fort ignorés), <code>ss_X = X25519(sk_X, ct_X)</code>, <code>κ</code> est démasqué, <code>Kemeleon.DecodeCtxt</code> redonne <code>ct_M</code> (le décodage ne peut pas échouer), puis la décapsulation X-Wing standard conclut. La composante d'ordre faible <code>L</code> disparaît car le scalaire clampé du destinataire est multiple de 8." },
+        { cards: [
+          { t: "Elligator 2 et scalaire uniforme", p: "Le crate d'origine clampe le scalaire : le point ne couvre alors que la moitié du sous-groupe premier, ce qu'un ordinateur quantique sait tester. Janus tire <code>e</code> uniformément modulo ℓ et calcule lui-même l'inverse d'Elligator 2 (<code>src/elligator.rs</code>, en temps constant). Correctif issu de la preuve 04." },
+          { t: "Masquage de κ", p: "<code>κ</code> est masqué par un flux dérivé de X25519. Un emplacement à clé ne devient reconnaissable que si MLWE <b>et</b> X25519 tombent tous les deux : la discrétion est hybride, comme la confidentialité. Le masque ne dépend que de <code>ss_X</code> et <code>ct_X</code>, ce qui est nécessaire à la preuve IND-RCCA." },
+          { t: "Kemeleon en temps constant", p: "Implémentation propre à Janus (division par q sans l'instruction <code>div</code>), comparée à une implémentation de référence ; dudect ne détecte aucune fuite." },
+          { t: "STREAM", p: "Nonce compteur, drapeau « dernier » sur le bloc final, blocs indépendants chiffrés et déchiffrés en parallèle. Sûr parce que la clé <code>K</code> est neuve pour chaque fichier." },
+          { t: "PADMÉ aléatoire", p: "Taille tirée uniformément dans l'intervalle de PADMÉ, indépendante du nombre de destinataires. Les tailles de la v0 qui ne pouvaient jamais apparaître n'existent plus." },
+          { t: "Argon2id, un seul calcul", p: "Le sel est commun : un mot de passe coûte un Argon2id puis 16 essais d'AEAD. Les 16 essais et les 16 étiquettes sont <b>toujours</b> calculés, pour un temps d'ouverture indépendant de l'emplacement trouvé." }
+        ] },
+        { h: "Propriétés visées" },
+        { table: { head: ["Propriété", "Signification"], rows: [
+          ["<b>P1</b> Confidentialité hybride", "Le contenu reste secret tant que X25519 <b>ou</b> ML-KEM-768 tient ; pour un mot de passe, tant qu'il n'est pas deviné."],
+          ["<b>P2</b> Intégrité", "Modifier, ajouter, retirer, tronquer ou réordonner un octet du visage ouvert (ou la taille totale) fait échouer l'ouverture. Modifier la réserve ne gêne pas le leurre : c'est voulu."],
+          ["<b>P3</b> Engagement de clé", "Un fichier ne s'ouvre que sur au plus deux clés de fichier, une par étiquette."],
+          ["<b>P4</b> Cohérence", "Tous les destinataires d'un même visage lisent la même chose."],
+          ["<b>P5</b> Indistinguabilité", "Sans clé, chaque octet est indistinguable de l'aléa ; la taille ne dépend que de la longueur du leurre, arrondie."],
+          ["<b>P6</b> Destinataires cachés", "Ni le nombre ni l'identité des destinataires ne se voient, ni dans les octets, ni dans la taille."]
+        ] } }
+      ] },
+
+    { id: "cli", cap: "Utilisation", title: "La ligne de commande",
+      intro: "Le binaire <code>janus</code> se compile depuis <code>janus-rs/</code>. Les commandes sont : <code>cles</code>, <code>publique</code>, <code>chiffrer</code>, <code>dechiffrer</code> et <code>inspect</code>.",
+      blocks: [
+        { code: "# Une identité, puis un fichier pour une clé publique\njanus cles moi.cle > moi.pub\njanus chiffrer -R moi.pub photo.jpg photo.janus\njanus dechiffrer -i moi.cle photo.janus photo.jpg\njanus publique moi.cle                    # réaffiche la clé publique d'une identité\n\n# Par mot de passe\njanus chiffrer -m notes.txt notes.janus\n\n# Deux visages : tout ce qui suit --cache décrit le visage caché\njanus chiffrer -m vacances.zip coffre.janus --cache -m journal.txt\njanus chiffrer -R moi.pub rapport.pdf coffre.janus --cache -R moi-secret.pub notes.md\njanus dechiffrer -m coffre.janus sortie   # ouvre le visage du mot de passe saisi\n\n# Ce qu'un tiers voit, sans clé\njanus inspect coffre.janus archive.zip lettre.gpg" },
+        { table: { head: ["Option", "Rôle"], rows: [
+          ["<code>-r &lt;clé&gt;</code>", "passe une clé publique en argument"],
+          ["<code>-R &lt;fichier&gt;</code>", "lit une clé publique dans un fichier ; <code>-r</code> et <code>-R</code> se répètent, jusqu'à 16 destinataires au total pour les deux visages"],
+          ["<code>-m</code>", "utilise un mot de passe"],
+          ["<code>-i &lt;fichier&gt;</code>", "identité (clé privée) pour déchiffrer"],
+          ["<code>--cache</code>", "tout ce qui suit décrit le visage caché : ses destinataires (<code>-r</code>, <code>-R</code> ou <code>-m</code>), puis son fichier"]
+        ] } },
+        { cards: [
+          { t: "Capacité du visage caché", p: "Le secret doit tenir dans la réserve : 1/16 de la taille du leurre, et au moins 64 Kio. Sinon Janus refuse et indique la capacité disponible." },
+          { t: "Silence sur l'autre visage", p: "<code>dechiffrer</code> ne signale <b>jamais</b> l'existence d'un autre visage. Un mauvais identifiant donne l'unique message « impossible de déchiffrer »." },
+          { t: "Fichiers de clés", p: "UTF-8 ou UTF-16 : la redirection <code>&gt;</code> de PowerShell fonctionne directement. L'encodage texte des clés est provisoire." },
+          { t: "Traitement en flux", p: "Mémoire bornée quelle que soit la taille du fichier : environ 42 Mio, plus 64 Mio pour Argon2 avec un mot de passe." },
+          { t: "Pas de trace en cas d'échec", p: "Le résultat est écrit dans un fichier temporaire, renommé seulement si tout est valide. Un fichier refusé ne laisse aucune trace." },
+          { t: "Pas encore d'entrée standard", p: "Le chiffrement exige une entrée de longueur connue (un fichier). L'entrée standard n'est pas encore prise en charge." }
+        ] }
+      ] },
+
+    { id: "inspect", cap: "Vu de l'extérieur", title: "janus inspect : ce qu'un tiers voit",
+      intro: "<code>inspect</code> lit un fichier <b>sans clé</b>, sans rien déchiffrer ni écrire. Il dit ce que le fichier révèle : l'outil, les destinataires, les algorithmes, la taille du clair et la part d'aléa. Résultats sur les échantillons du dépôt (<code>tests/echantillons/</code>) :",
+      blocks: [
+        { table: { head: ["Fichier", "Outil", "Destinataires", "Algorithmes", "Taille du clair", "Noms de fichiers"], rows: [
+          ["gpg, 2 clés", "visible", "<b>identifiants de clé</b> en clair", "visibles", "à quelques octets près", "non"],
+          ["gpg, mot de passe", "visible", "1 mot de passe", "AES-256, SHA-512 sur 24 Mo", "à quelques octets près", "non"],
+          ["age (construit à la main)", "visible", "nombre et type, étiquette des clés SSH", "visibles", "<b>exacte</b>", "non"],
+          ["ZIP ZipCrypto", "visible", "sans objet", "ZipCrypto, <b>cassé</b>", "exacte, fichier par fichier, avec le CRC-32", "<b>en clair</b>"],
+          ["ZIP AES-256", "visible", "sans objet", "visibles", "exacte, fichier par fichier", "<b>en clair</b>"],
+          ["7-Zip sans <code>-mhe</code>", "visible", "sans objet", "non analysés", "non analysée", "lisibles par <code>7z l</code>"],
+          ["<b>Janus</b>", "<b>rien</b>", "<b>rien</b>", "<b>rien</b>", "une plage (environ 0,8 % de 512 Mio)", "non"]
+        ] } },
+        { p: "Pour un fichier sans signature, <code>inspect</code> teste l'hypothèse « fichier Janus v1 » : la taille est-elle possible, et le contenu indiscernable de l'aléa (χ² global et χ² par bloc de 4 Kio) ? Si oui, il calcule la plage de taille du leurre et la capacité d'un éventuel visage caché, dont il ne peut rien dire de plus. Il précise que cela <b>ne prouve pas</b> que le fichier vient de Janus." },
+        { cards: [
+          { t: "Aucun faux positif", p: "Sur 14 000 fichiers aléatoires, y compris en imposant chacun des 256 premiers octets possibles." },
+          { t: "Aucune panique", p: "Sur des échantillons tronqués à chaque longueur et abîmés 3 000 fois chacun." },
+          { t: "Rapide", p: "512 Mio analysés en 0,4 s." },
+          { t: "Limites d'inspect", p: "Les formats sont reconnus par leur structure, sans décodage complet : pas de décompression de l'en-tête 7z, pas d'analyse du JSON de LUKS2 ni de l'en-tête KeePass. Pour age, les tests portent sur des fichiers construits à la main (age n'est pas installé)." }
+        ] }
+      ] },
+
+    { id: "preuves", cap: "Sécurité prouvée, sur papier", title: "Les preuves de sécurité",
+      intro: "Trois documents (04, 05, 06) prouvent les propriétés du format par réduction : si quelqu'un savait gagner le jeu, on saurait attaquer l'une des briques (X-Wing, ChaCha20, HMAC, MLWE ou la devinette du mot de passe). Elles ne disent rien si une brique tombe.",
+      blocks: [
+        { note: "<b>Limite essentielle :</b> ces trois preuves sont des preuves « papier ». Aucune n'est <b>vérifiée par machine</b> ni <b>relue par un tiers</b>. Le modèle quantique de l'oracle aléatoire (QROM) n'est ni rédigé ni vérifié.", cls: "warn" },
+        { table: { head: ["Document", "Ce qui est prouvé", "Notion", "Hypothèses principales"], rows: [
+          ["<a href=\"https://github.com/moideici/janus/blob/main/docs/04-preuve-deux-visages.md\" target=\"_blank\" rel=\"noopener\">04, déni</a>", "l'adversaire qui possède le fichier et tous les secrets du leurre ne devine pas s'il existe un visage caché ; corollaire : un tiers ne distingue pas un fichier Janus de l'aléa", "jeu DENI, indistinguabilité", "MLWE <b>ou</b> gap-DH ; HKDF, SHA3 et Argon2id en oracles aléatoires ; ChaCha20-Poly1305 IND$ ; HMAC PRF ; Elligator statistique ; entropie du mot de passe"],
+          ["<a href=\"https://github.com/moideici/janus/blob/main/docs/05-preuve-integrite.md\" target=\"_blank\" rel=\"noopener\">05, intégrité</a>", "engagement (au plus deux clés par fichier), cohérence par visage, intégrité par visage, pas d'oracle de partition (au plus 2 mots de passe testés par ouverture)", "collisions, INT-CTXT", "résistance aux collisions de SHA-256 ; HMAC ; ChaCha20-Poly1305 INT-CTXT ; rejet implicite de ML-KEM"],
+          ["<a href=\"https://github.com/moideici/janus/blob/main/docs/06-preuve-confidentialite-active.md\" target=\"_blank\" rel=\"noopener\">06, confidentialité active</a>", "confidentialité face à un adversaire qui fait ouvrir des fichiers fabriqués ou modifiés", "<b>IND-RCCA</b>", "les précédentes, plus ML-KEM IND-CCA <b>ou</b> gap-DH"]
+        ] } },
+        { h: "04 : le déni" },
+        { p: "Le théorème borne l'avantage de l'adversaire par une somme de termes négligeables : mot de passe secret, MLWE ou gap-DH (le plus faible des deux, par destinataire caché), Elligator (statistique), AEAD, HMAC et collisions d'oracle. La borne ne dépend <b>ni</b> du leurre, <b>ni</b> du secret, <b>ni</b> du nombre de destinataires du leurre." },
+        { code: "Adv^DENI(𝒜) ≤ q_A / 2^h                                  (mot de passe secret, s'il y en a un)\n            + n₂ · ( min( Adv^MLWE + ε_K , Adv^gapDH ) + ε_E )\n            + n₂ · Adv^IND$_AEAD + Adv^PRF_HMAC + Adv^IND$_AEAD\n            + (n₂ + 2) · q_H / 2²⁵⁶" },
+        { note: "Avec un secret protégé par des <b>clés</b>, tous les termes sont négligeables. Avec un <b>mot de passe</b> secret, le terme <code>q_A / 2^h</code> domine : le déni ne vaut que ce que vaut le mot de passe caché (60 bits d'entropie et 2³⁰ essais Argon2id laissent un avantage de 2⁻³⁰)." },
+        { h: "Ce que les preuves ont révélé, et ce qui a été corrigé" },
+        { cards: [
+          { t: "04 : scalaire éphémère clampé", p: "Le code tirait l'éphémère X25519 clampé : le point ne couvrait que la moitié du sous-groupe premier. Un adversaire quantique pouvait le tester (avantage 0,105 par fichier pour un destinataire caché, environ 0,80 sur 100 fichiers) ; classiquement, environ 2¹²⁶ opérations. <b>Corrigé le 18 novembre 2026</b> : scalaire uniforme modulo ℓ et inverse d'Elligator 2 maison." },
+          { t: "04 : déni reposant sur MLWE seul", p: "La confidentialité était hybride, mais la discrétion de κ reposait sur MLWE seul. <b>Corrigé</b> : κ est masqué par un flux dérivé de X25519, la discrétion et le déni tiennent si MLWE <b>ou</b> X25519 tient." },
+          { t: "05 : la cohérence n'est plus globale", p: "Un auteur malveillant peut fabriquer un même fichier qu'Alice ouvre sur un contenu et Bob sur un autre (bornés à deux). Impossible à empêcher sans détruire le déni. <b>Documenté</b> (piège 10.8, P4 par visage)." },
+          { t: "05 : effacement silencieux", p: "Un tiers peut effacer le visage caché en écrasant la réserve sans que le leurre s'en aperçoive. Inhérent au déni. <b>Documenté</b> (piège 10.9) : garder une copie." },
+          { t: "05 : deux défauts d'implémentation", p: "Dédoublonnage sur K seul au lieu du triplet (K, début, longueur), et temps d'ouverture dépendant du nombre d'emplacements déballés (|t| = 2,85 avant correctif). <b>Corrigés le 18 novembre 2026</b> (|t| = 0,89 et 1,50 après)." },
+          { t: "06 : IND-RCCA, pas IND-CCA", p: "Avec deux visages, une copie modifiée hors du visage défi donne le même clair : IND-CCA strict est impossible, IND-RCCA est la bonne notion. Le masquage de κ est compatible avec la preuve parce que sa clé ne dépend que de <code>ct_X</code>." },
+          { t: "06 : sortie en flux", p: "Condition d'usage : jeter toute la sortie d'une ouverture ratée. La ligne de commande et <code>dechiffrer</code> le font ; <code>dechiffrer_flux</code> exige que l'appelant le fasse." },
+          { t: "06 : option QI-1 non retenue", p: "Faire couvrir tout le corps par chaque étiquette rendrait l'effacement visible, mais diviserait environ par deux le débit sur un cœur et changerait le format. Recommandation : ne pas le faire pour l'instant." }
+        ] },
+        { h: "Avantage de l'adversaire quantique avant le correctif (04, § 7.1)" },
+        { table: { head: ["Destinataires cachés", "Avantage sur un fichier"], rows: [["1", "0,105"], ["2", "0,209"], ["4", "0,422"], ["8", "0,787"]] } },
+        { h: "Ce que les preuves ne couvrent pas" },
+        { ul: [
+          "<b>Vérification par machine</b> : CryptoVerif est l'outil prévu pour les étapes G₁ à G₇ ; non fait.",
+          "<b>Relecture par un cryptographe</b> : indispensable avant toute publication ; non faite.",
+          "<b>Modèle QROM</b> (oracles aléatoires interrogés en superposition) : non rédigé.",
+          "<b>Plusieurs versions du même fichier</b> et <b>traces du système</b> : hors du modèle (pièges 10.1 et 10.6).",
+          "<b>Canaux auxiliaires</b> autres que le temps d'ouverture du leurre : ce dernier est mesuré par dudect, pas prouvé.",
+          "<b>L'authentification de l'expéditeur</b>, et le retour en arrière complet d'un fichier."
+        ] }
+      ] },
+
+    { id: "verifie", cap: "Tests et mesures", title: "Ce qui est vérifié",
+      intro: "56 tests (<code>cargo test --release</code>), des vecteurs de test, dudect, des tests statistiques et du fuzzing. Détails dans <code>janus-rs/README.md</code>. Les lignes « aucune fuite détectée » signifient « rien de détecté avec ce nombre de mesures », pas « preuve d'absence ».",
+      blocks: [
+        { cards: [
+          { t: "Conformité", p: "Le vecteur de test officiel n° 1 d'X-Wing (draft-11) est reproduit. Kemeleon : intervalles d'antécédents exacts, tailles du draft, décodage identique à une implémentation de référence. Division par q vérifiée exhaustivement jusqu'à 2²², puis sur un million de tirages jusqu'à 2⁴⁴." },
+          { t: "Discrétion", p: "Éphémère X25519 uniforme même face à un adversaire capable de calculer des logarithmes discrets : l'ancien tirage clampé tombait dans la moitié testée 2 000 fois sur 2 000, le nouveau environ une fois sur deux. χ² des κ masqués : 261 pour environ 255 attendus ; chiffrés ML-KEM bruts détectés (χ² = 3129 pour environ 1023). Fichiers Janus : χ² ≈ 265." },
+          { t: "Deux visages", p: "Chaque identifiant ouvre son visage et seulement le sien, dans toutes les combinaisons. Vue de l'adversaire contraint : test d'homogénéité du χ² sur 7,5 millions d'octets, χ² = 265,8, p = 0,31, avec un secret fait de zéros (pire cas) ; le test détecte un écart de 2 %. Capacité de la réserve exacte à l'octet." },
+          { t: "Robustesse : corpus piégé", p: "Bits inversés, troncatures (y compris entre deux lots), ajouts, blocs échangés ou dupliqués, début ou longueur falsifiés, emplacement greffé, fichier aléatoire : tous refusés par l'unique message « impossible de déchiffrer »." },
+          { t: "Robustesse : fuzzing", p: "<b>50 000 mutations</b> de 10 types, sur des fichiers à un et deux visages, relancées le 19 novembre 2026 après les correctifs (8 min 14 s). Aucune panique, jamais un autre clair que l'original. 11 339 mutations acceptées, toutes limitées à la réserve ou à l'étiquette de l'autre visage, vérifié octet par octet." },
+          { t: "Vecteurs de test", p: "7 fichiers <code>.janus</code> de référence (dont un à deux visages publié avec ses deux mots de passe) et un manifeste. Le chiffrement, avec un aléa déterministe, les reproduit octet pour octet : tout changement involontaire du format fait échouer les tests. Un fichier de 2 Gio abîmé au milieu est refusé sans laisser de trace." }
+        ] },
+        { h: "Temps constant (dudect, seuil |t| = 4,5)" },
+        { table: { head: ["Fonction mesurée", "Temps médian", "|t| max", "Verdict"], rows: [
+          ["<b>Témoin</b> : décodage num-bigint (20 000 mesures)", "167 µs", "<b>13 274</b>", "fuite détectée"],
+          ["Kemeleon.DecodeCtxt (20 000)", "227 µs", "0,92", "aucune fuite détectée"],
+          ["Kemeleon.EncodeCtxt (20 000)", "31 µs", "0,97", "aucune fuite détectée"],
+          ["Ouverture d'un emplacement, valide ou aléatoire (20 000)", "359 µs", "2,17", "aucune fuite détectée"],
+          ["Ouverture du leurre, fichier sans ou avec visage caché (1 000)", "8,1 ms", "1,34", "aucune fuite détectée"],
+          ["Inverse d'Elligator 2 maison, deux passages (10 000)", "26 µs", "1,13", "aucune fuite détectée"],
+          ["Ouverture ratée (2 000) ; avant le correctif de 05, |t| = 2,85", "12 ms", "1,50", "aucune fuite détectée"]
+        ] } },
+        { note: "<b>Le témoin prouve que la mesure sait repérer une fuite.</b> Leçon de méthode : dans une première version du banc, préparer chaque entrée juste avant sa mesure perturbait les caches et a produit deux fausses alertes, dont une sur Kemeleon (|t| = 27,8) dont le code n'avait pas changé. Toutes les entrées sont maintenant préparées avant les mesures." }
+      ] },
+
+    { id: "perfs", cap: "Mesures", title: "Performances",
+      intro: "Windows 11, 16 cœurs logiques.",
+      blocks: [
+        { note: "<b>Réserve sur les mesures.</b> Ne pas comparer deux jours : le 18 novembre au soir, Argon2id seul prenait 117 ms contre 83 ms le matin, à code identique. La machine était environ 40 % plus lente lors des mesures v1. Une seule machine, pas de comparaison avec age (non installé).", cls: "warn" },
+        { h: "Opérations sur l'en-tête (v1, soir)" },
+        { table: { head: ["Opération", "Durée"], rows: [
+          ["Encapsulation cachée, par destinataire (éphémère uniforme compris)", "0,32 ms"],
+          ["Ouverture par clé (16 emplacements, Kemeleon en temps constant, 16 étiquettes toujours calculées)", "8,8 ms"],
+          ["Ouverture par mot de passe (un Argon2id, puis 16 essais d'AEAD)", "125 à 140 ms, dont 117 ms d'Argon2id"],
+          ["Chiffrement pour 16 destinataires", "6,0 ms"]
+        ] } },
+        { h: "De bout en bout, disque compris" },
+        { table: { head: ["Opération", "Durée", "Pic mémoire"], rows: [
+          ["v1, chiffrer 2 Gio pour une clé", "2,3 s", "42 Mio"],
+          ["v1, déchiffrer ces 2 Gio", "2,2 s", "42 Mio"],
+          ["v1, chiffrer 2 Gio de leurre et un secret, par mots de passe", "2,6 s", "72 Mio, dont 64 pour Argon2id"],
+          ["v1, ouvrir le secret caché dans ce fichier", "0,7 s", "73 Mio"],
+          ["<i>v0, matin : chiffrer 2 Gio</i>", "<i>1,45 s</i>", "<i>26 Mio</i>"],
+          ["<i>v0, matin : déchiffrer 2 Gio</i>", "<i>1,62 s</i>", "<i>26 Mio</i>"],
+          ["gpg 2.4.9 (AES-256, sans compression), matin : chiffrer 256 Mio", "1,71 s", ""],
+          ["gpg 2.4.9, matin : déchiffrer 256 Mio", "1,59 s", ""]
+        ] } },
+        { p: "La v1 écrit 6 % d'octets en plus (la réserve). Même avec la machine ralentie, Janus traite 2 Gio dans un temps proche de celui que gpg mettait pour 256 Mio." }
+      ] },
+
+    { id: "limites", cap: "Honnêteté", title: "Limites connues",
+      intro: "Aucune de ces limites n'est présentée comme secondaire : elles conditionnent l'usage.",
+      blocks: [
+        { cards: [
+          { t: "Aucun audit externe", p: "Ni du code, ni du format. Les preuves sont des preuves papier, non vérifiées par machine ni relues." },
+          { t: "IND-RCCA plutôt qu'IND-CCA", p: "On peut fabriquer une autre version d'un fichier qui donne exactement le même clair, en modifiant la réserve ou l'étiquette de l'autre visage. On ne peut pas en fabriquer une qui donne un clair lié. Inévitable avec deux visages (document 06, § 1)." },
+          { t: "Sortie en flux", p: "<code>dechiffrer_flux</code> écrit les lots vérifiés au fur et à mesure : un programme qui l'utilise doit jeter toute la sortie si la fonction échoue. La ligne de commande et <code>dechiffrer</code> le font déjà." },
+          { t: "Prix du déni", p: "Un auteur malveillant peut faire lire deux contenus différents à deux destinataires d'un même fichier (comparer l'empreinte du clair). Un tiers peut effacer le secret en écrasant la réserve : garder une copie." },
+          { t: "Lecture du leurre", p: "Ouvrir le secret oblige à lire tout le leurre qui le précède (format en flux, sans saut). Sans conséquence pour la discrétion : l'ouverture du leurre prend le même temps avec ou sans secret." },
+          { t: "Mémoire et système", p: "<code>ml-kem</code> et <code>curve25519-elligator2</code> effacent leurs secrets à la destruction, mais les copies faites par le système (fichier d'échange, vidage mémoire) ne sont pas maîtrisées." },
+          { t: "Outillage de test", p: "Le fuzzing tourne en Rust stable par mutations ; <code>cargo-fuzz</code> avec mesure de couverture demande la toolchain nightly, non installée. Les tests n'ont tourné que sur une seule machine Windows." },
+          { t: "Fonctions manquantes", p: "Pas d'entrée standard, pas de <code>--version</code> ni d'aide complète, encodage texte des clés provisoire, pas de signature." }
+        ] }
+      ] },
+
+    { id: "release", cap: "Feuille de route", title: "Plan de release",
+      intro: "Plan du 19 novembre 2026. <b>Il n'existe pas de release aujourd'hui</b> : une release invite d'autres personnes à garder des fichiers chiffrés avec l'outil, ce qui engage.",
+      blocks: [
+        { h: "Pourquoi pas de release aujourd'hui" },
+        { cards: [
+          { t: "1. Le format bouge encore", p: "Il a changé trois fois depuis le 18 novembre (deux visages, éphémère uniforme, masquage de κ). L'encodage texte des clés est provisoire (Q7) ; deux choix restent ouverts : 2 ou 4 étiquettes (QB-3), étiquette sur tout le corps ou non (QI-1). Un fichier chiffré aujourd'hui pourrait ne plus s'ouvrir demain." },
+          { t: "2. Une seule machine", p: "Les tests n'ont tourné que sur une machine Windows : ni intégration continue, ni compilation pour Linux et macOS." },
+          { t: "3. Outillage de base manquant", p: "Pas de <code>janus --version</code>, pas d'aide complète, pas de <code>CHANGELOG</code>, pas de <code>SECURITY.md</code>, pas de binaires produits par l'intégration continue." }
+        ] },
+        { note: "Aucune de ces raisons n'est une faiblesse cryptographique connue : les preuves et les tests sont en place. Ce qui manque relève de la stabilité et de l'outillage." },
+        { h: "Les étapes" },
+        { table: { head: ["Version", "Contenu", "Critère ou effet"], rows: [
+          ["<b>v0.1.0-alpha</b><br>« aperçu »", "Pré-release GitHub pour essayer et critiquer Janus ; pas pour de vrais secrets", "voir ci-dessous"],
+          ["<b>v0.2.0-alpha</b>", "Figer l'encodage texte des clés (Q7) ; lire l'entrée standard et écrire sur la sortie standard ; trancher QB-3 et QI-1 ; batterie NIST STS et <code>cargo-fuzz</code> avec couverture ; comparaison avec age", "stabiliser ce qui touche l'utilisateur"],
+          ["<b>v0.9.0-beta</b>", "Format v1 candidat au gel, vecteurs de test définitifs publiés et signés ; modélisation CryptoVerif des preuves 04 à 06 (au moins G₁ à G₇) ; relecture par des cryptographes (forum CFRG, auteurs de Kemeleon et d'X-Wing)", "candidat au gel du format"],
+          ["<b>v1.0.0</b>", "Audit externe du code et du format ; format gelé (tout changement ultérieur = format v2, nouvelles étiquettes de dérivation) ; un fichier chiffré en v1.0 s'ouvrira avec toutes les versions 1.x", "format gelé, compatibilité garantie"]
+        ] } },
+        { h: "v0.1.0-alpha : le détail" },
+        { table: { head: ["Travail", "Critère de fin"], rows: [
+          ["Intégration continue GitHub Actions : compilation, 56 tests, <code>clippy</code>, sous Linux, Windows et macOS", "Les trois systèmes sont au vert"],
+          ["<code>janus --version</code> et <code>janus --help</code>, avec la mention « Janus v1, aperçu non figé »", "Les deux commandes répondent"],
+          ["Binaires Linux, Windows et macOS produits par l'intégration continue à chaque étiquette <code>v*</code>, avec leurs empreintes SHA-256", "Le premier tag produit les trois binaires"],
+          ["<code>CHANGELOG.md</code> et <code>SECURITY.md</code>", "Les deux fichiers sont présents"],
+          ["Notes de version claires : aperçu, format non figé, aucun audit, compatibilité non garantie", "Texte relu"],
+          ["Vérification des licences des dépendances (MIT, Apache-2.0 ou BSD)", "Liste jointe aux notes"]
+        ] } },
+        { p: "La release n'est déclenchée qu'une fois tous ces critères remplis, puis sur accord explicite de l'auteur. <b>Prêt dès maintenant :</b> le code, les 56 tests, les preuves, les vecteurs de test et la documentation sont publics sur <a href=\"https://github.com/moideici/janus\" target=\"_blank\" rel=\"noopener\">github.com/moideici/janus</a> ; chacun peut compiler et essayer Janus avec <code>cargo build --release</code>." }
+      ] }
+  ],
+  stateNote: "Selon le README, la spécification, les preuves et le plan de release du dépôt (19/11/2026) ; à vérifier dans le dépôt.",
+  state: {
+    done: ["Prototype Rust (bibliothèque et ligne de commande) du format v1 à deux visages", "56 tests, vecteurs de test, dudect, χ², fuzzing de 50 000 mutations", "Trois preuves papier (déni, intégrité, confidentialité active) et correctifs qui en sont issus"],
+    wip: ["Aucune release : v0.1.0-alpha d'abord (CI sur trois systèmes, --version, CHANGELOG, SECURITY.md, binaires)", "Format à figer : encodage des clés (Q7), 2 ou 4 étiquettes (QB-3), étiquette sur tout le corps (QI-1)", "NIST STS, cargo-fuzz avec couverture, comparaison avec age", "Vérification par machine (CryptoVerif) et relecture par des cryptographes"],
+    risks: ["Prototype non audité : à ne pas utiliser pour de vrais secrets", "Format non figé : un fichier chiffré aujourd'hui pourrait ne plus s'ouvrir demain", "Preuves papier, ni vérifiées par machine ni relues", "IND-RCCA et non IND-CCA ; prix du déni (deux contenus possibles, effacement silencieux de la réserve)", "Tests sur une seule machine Windows"]
+  },
+  docs: [
+    { t: "README du dépôt", f: "README.md", d: "Comparatif, deux visages, contenu du dépôt, vérifications." },
+    { t: "README de janus-rs", f: "janus-rs/README.md", d: "Commandes, vérifications, performances, limites." },
+    { t: "01 · Cartographie", f: "docs/01-cartographie.md", d: "Menaces, exigences J-01 à J-11, failles connues ailleurs, décisions." },
+    { t: "02 · Spécification v0", f: "docs/02-spec-v0.md", d: "Format de base : X-Wing caché, Kemeleon, Elligator 2, STREAM, PADMÉ." },
+    { t: "03 · Deux visages", f: "docs/03-deux-visages.md", d: "Format v1 : réserve, deux étiquettes, pièges d'usage." },
+    { t: "04 · Preuve de déni", f: "docs/04-preuve-deux-visages.md", d: "Séquence de jeux ; faiblesse quantique révélée puis corrigée." },
+    { t: "05 · Preuve d'intégrité", f: "docs/05-preuve-integrite.md", d: "Engagement, cohérence par visage, pas d'oracle de partition." },
+    { t: "06 · Confidentialité active", f: "docs/06-preuve-confidentialite-active.md", d: "IND-RCCA, et pourquoi IND-CCA strict est impossible." },
+    { t: "07 · Plan de release", f: "docs/07-plan-release.md", d: "Pas de release aujourd'hui ; étapes de v0.1.0-alpha à v1.0.0." }
   ]
 },
 

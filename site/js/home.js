@@ -11,7 +11,7 @@
   function norm(s) { return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
   function h(tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; }
   function plain(s) { var d = document.createElement("div"); d.innerHTML = s; return d.textContent; }
-  var COL = { g: "var(--d-green)", y: "var(--d-yellow)", p: "var(--d-pink)", s: "var(--d-sky)", b: "var(--accent)" };
+  var COL = { g: "var(--d-green)", y: "var(--d-yellow)", p: "var(--d-pink)", s: "var(--d-sky)", c: "var(--d-coral)", b: "var(--accent)" };
 
   /* Nemo est un projet comme les autres sur la racine : sa page est /nemo/, ses 4 dépôts sont détaillés plus bas. */
   var ALL = [{ id: "nemo", n: "Nemo", href: "nemo/", status: "actif", role: "Révision espacée pour un élève : serveur, apps Windows et Android, sessions construites par une IA",
@@ -33,7 +33,7 @@
   /* ----- carte orbitale ----- */
   var orbit = $("orbit");
   if (orbit) {
-    var ORDER = ["nemo", "agent-hub", "prisme", "cppt", "wikicards", "py2x", "outils", "multi", "garry"];
+    var ORDER = ["nemo", "agent-hub", "prisme", "cppt", "wikicards", "py2x", "outils", "multi", "garry", "janus"];
     var LINKS = [["nemo", "agent-hub", "agent-hub délègue à Codex le code de Nemo et des autres projets"], ["garry", "multi", "Garry doit fournir les bots de jeux de plateau à multi"], ["py2x", "outils", "la démo MindMap utilise py2x (elle reste dans le dossier ia)"]];
     var byId = {}; ALL.forEach(function (a) { byId[a.id] = a; });
     var N = ORDER.length, R = 168, C = 230, pos = {};

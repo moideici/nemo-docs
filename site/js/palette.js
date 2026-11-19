@@ -15,7 +15,11 @@
     .forEach(function (p) { add("Nemo", p[1], "Page de la documentation interactive de Nemo", base + "nemo/" + p[0] + ".html", "nemo"); });
   P.list.forEach(function (q) {
     add("Projet", q.n, q.role, base + q.id + "/", q.tech.join(" ") + " " + (q.repo ? q.repo.name : ""));
-    (q.sections || []).forEach(function (s) { (s.cards || []).forEach(function (c) { add("Contenu", c.t, q.n + " · " + s.title, base + q.id + "/", plain(c.p)); }); });
+    (q.sections || []).forEach(function (s) {
+      if (s.id) add("Contenu", s.title, q.n + " · " + s.cap, base + q.id + "/#" + s.id, s.intro ? plain(s.intro) : "");
+      var cs = (s.cards || []).slice(); (s.blocks || []).forEach(function (b) { if (b.cards) cs = cs.concat(b.cards); });
+      cs.forEach(function (c) { add("Contenu", c.t, q.n + " · " + s.title, base + q.id + "/" + (s.id ? "#" + s.id : ""), plain(c.p)); });
+    });
     (q.commands || []).forEach(function (c) { add("Commande", c.t, q.n + " · " + c.code.split("\n")[0].slice(0, 60), base + q.id + "/#commandes", c.code); });
     ["done", "wip", "risks"].forEach(function (k) { ((q.state || {})[k] || []).forEach(function (t) { add(k === "risks" ? "Risque" : k === "wip" ? "À faire" : "Réalisé", plain(t).slice(0, 90), q.n, base + q.id + "/#etat", plain(t)); }); });
     (q.docs || []).forEach(function (d) { if (q.repo && !q.repo.nourl) add("Document", d.t, q.n + " · " + d.f, P.gh + q.repo.name + "/blob/" + q.repo.branch + "/" + d.f, d.d, true); });

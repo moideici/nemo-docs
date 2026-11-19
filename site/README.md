@@ -1,14 +1,14 @@
 # Site de documentation (racine `docs.moideici.tech` + documentation de Nemo)
 
-Dernière mise à jour : 11/11/2026
+Dernière mise à jour : 19/11/2026
 
 Le dossier `site/` est un site **100 % statique** (HTML, CSS, JavaScript sans dépendance ni étape de build) qui contient trois choses :
 
 | Chemin | Contenu |
 |---|---|
-| `/` (`index.html`) | la **racine de la documentation** : carte orbitale des projets, grille filtrable des neuf projets (Nemo compris), activité récente, détail de Nemo (statuts et 24 documents filtrables) et parcours de lecture ; recherche globale `Ctrl K` |
+| `/` (`index.html`) | la **racine de la documentation** : carte orbitale des projets, grille filtrable des dix projets (Nemo compris), activité récente, détail de Nemo (statuts et 24 documents filtrables) et parcours de lecture ; recherche globale `Ctrl K` |
 | `/nemo/` | la **documentation interactive de Nemo**, en 8 pages (voir plus bas) |
-| `/agent-hub/`, `/prisme/`, `/multi/`, `/garry/`, `/wikicards/`, `/py2x/`, `/cppt/`, `/outils/` | la **documentation des autres projets**, une page par projet (voir « Pages de projets ») |
+| `/agent-hub/`, `/prisme/`, `/multi/`, `/garry/`, `/wikicards/`, `/py2x/`, `/cppt/`, `/janus/`, `/outils/` | la **documentation des autres projets**, une page par projet (voir « Pages de projets ») |
 
 Le style est volontairement **neutre et moderne** (surfaces claires, filets fins, un seul accent bleu, ombres douces, police Inter),
 avec un **arrière-plan animé** (aurore + réseau de points, `js/bg.js`) qui suit le thème clair/sombre, réagit à la souris et au
@@ -68,7 +68,7 @@ Fichiers : `js/home.js` (racine), `js/palette.js` (toutes les pages de projets e
 
 Une page par projet : **agent-hub** (délégation à Codex), **Prisme** (éditeur d'images, dépôt `photo-editor`), **multi** (mini-jeux multijoueurs),
 **Garry** (IA de jeux, modèle unique Optimus, maths et Input, dépôt `logic-lab`), **WikiCards**, **py2x** (dépôt `py2x`, extrait du dossier `ia`) et **cppt** (dépôt `C-suit`, branche `cppt`),
-plus une page **Petits outils** (mindmap-portable, agent-ia, ecole2recte). Chaque page donne un résumé, des chiffres clés, un schéma d'architecture cliquable,
+plus **Janus** (format de chiffrement post-quantique à deux visages, dépôt public `janus`, prototype de recherche non audité ; page longue avec sommaire et tableaux) et une page **Petits outils** (mindmap-portable, agent-ia, ecole2recte). Chaque page donne un résumé, des chiffres clés, un schéma d'architecture cliquable,
 les commandes utiles (avec bouton Copier), le contenu fonctionnel, l'état (réalisé, en cours, limites et risques) et les documents du dépôt.
 
 | Fichier | Rôle |
@@ -77,6 +77,8 @@ les commandes utiles (avec bouton Copier), le contenu fonctionnel, l'état (réa
 | `js/proj-data.js` | **les données** de tous les projets (`PROJ.list`) : à éditer pour corriger un texte ou ajouter un projet |
 | `js/proj.js` | construit la page à partir des données (navigation, schéma, commandes, cartes, état, documents, pager) |
 | `css/proj.css` | styles propres à ces pages et aux tuiles de projet |
+
+Sections riches (optionnelles, utilisées par Janus) : `warn` (avertissement sous l'en-tête), `toc` (sommaire), `stateNote`, et, pour chaque section, `id` et `blocks` (`h`, `p`, `table`, `code`, `note`, `ul`, `ol`, `cards`). Le statut `recherche` (« Prototype de recherche ») est dans `PROJ.statuses`.
 
 Pour ajouter un projet : ajouter une entrée à `PROJ.list`, copier le dossier d'une autre page en changeant `data-project` et le `<title>`. La racine affiche
 automatiquement une tuile, un nœud ne s'ajoute à la carte orbitale que si son id figure dans `ORDER` de `js/home.js`. Sources : README et plans de chaque dépôt, bilan des projets du 01/11/2026, `git log`. Les statuts sont **à vérifier dans les dépôts** ;

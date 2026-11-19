@@ -39,10 +39,15 @@
     "<h1>" + esc(p.title) + '</h1><p class="lead">' + p.lead + '</p><div class="pj-cta">' + cta + "</div></div></div>");
 
   html.push('<div class="wrap">');
+  /* ----- avertissement (optionnel : p.warn) ----- */
+  if (p.warn) html.push('<div class="note warn pj-warn reveal" role="note">' + p.warn + "</div>");
   /* ----- chiffres clés ----- */
   html.push('<section class="page-sec"><div class="pj-facts" data-stagger>' + p.facts.map(function (f) {
     return '<div class="pj-fact reveal"><b>' + esc(f.v) + "</b><span>" + esc(f.k) + "</span></div>";
   }).join("") + "</div></section>");
+
+  /* ----- sommaire de la page (optionnel : p.toc = [[id, libellé], …]) ----- */
+  if (p.toc) html.push('<nav class="pj-toc" aria-label="Sur cette page">' + p.toc.map(function (t) { return '<a href="#' + t[0] + '">' + esc(t[1]) + "</a>"; }).join("") + "</nav>");
 
   /* ----- architecture ----- */
   if (p.arch) {
@@ -64,21 +69,36 @@
   }
 
   /* ----- sections de contenu ----- */
+  /* Blocs optionnels d'une section (s.blocks) : { h }, { p }, { table: { head, rows } }, { code }, { note, cls }, { ul }, { ol }, { cards }.
+     Le HTML est admis dans les cellules, les paragraphes et les listes ; le code est échappé. */
+  function cardsHtml(cs) { return '<div class="pj-cards" data-stagger>' + cs.map(function (c) { return '<div class="pj-card reveal"><h3>' + esc(c.t) + "</h3><p>" + c.p + "</p></div>"; }).join("") + "</div>"; }
+  function blockHtml(b) {
+    if (b.h) return '<h3 class="pj-h reveal">' + esc(b.h) + "</h3>";
+    if (b.p) return '<p class="pj-p reveal">' + b.p + "</p>";
+    if (b.table) return '<div class="table-wrap pj-table reveal"><table><thead><tr>' + b.table.head.map(function (c) { return "<th>" + c + "</th>"; }).join("") + "</tr></thead><tbody>" +
+      b.table.rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>";
+    if (b.code) return '<pre class="pj-pre reveal">' + esc(b.code) + "</pre>";
+    if (b.note) return '<div class="note' + (b.cls ? " " + b.cls : "") + ' reveal">' + b.note + "</div>";
+    if (b.ul) return '<ul class="pj-ul reveal">' + b.ul.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul>";
+    if (b.ol) return '<ol class="steps pj-steps reveal">' + b.ol.map(function (t) { return "<li><span>" + t + "</span></li>"; }).join("") + "</ol>";
+    if (b.cards) return cardsHtml(b.cards);
+    return "";
+  }
   p.sections.forEach(function (s, k) {
     var link = s.repoLink ? ' <a class="btn small" style="margin-left:10px;vertical-align:middle" href="' + P.gh + s.repoLink.name + '" target="_blank" rel="noopener">Dépôt · ' + esc(s.repoLink.name) + "</a>" : "";
-    html.push('<section class="page-sec"><div class="sec-head reveal"><div class="cap">' + esc(s.cap) + "</div><h2>" + esc(s.title) + link + "</h2>" + (s.intro ? "<p>" + s.intro + "</p>" : "") + '</div><div class="pj-cards" data-stagger>' +
-      s.cards.map(function (c) { return '<div class="pj-card reveal"><h3>' + esc(c.t) + "</h3><p>" + c.p + "</p></div>"; }).join("") + "</div></section>");
+    html.push('<section' + (s.id ? ' id="' + s.id + '"' : "") + ' class="page-sec"><div class="sec-head reveal"><div class="cap">' + esc(s.cap) + "</div><h2>" + esc(s.title) + link + "</h2>" + (s.intro ? "<p>" + s.intro + "</p>" : "") + "</div>" +
+      (s.cards ? cardsHtml(s.cards) : "") + (s.blocks ? '<div class="pj-blocks">' + s.blocks.map(blockHtml).join("") + "</div>" : "") + "</section>");
   });
 
   /* ----- état ----- */
   var st = p.state;
   function col(cls, title, items) { return items && items.length ? '<div class="pj-col ' + cls + ' reveal"><h3><i></i>' + title + "</h3><ul>" + items.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul></div>" : ""; }
-  html.push('<section id="etat" class="page-sec"><div class="sec-head reveal"><div class="cap">État</div><h2>Où en est <mark>le projet</mark>.</h2><p>Selon les README et le bilan du 01/11/2026 ; à vérifier dans le dépôt.</p></div><div class="pj-state">' +
+  html.push('<section id="etat" class="page-sec"><div class="sec-head reveal"><div class="cap">État</div><h2>Où en est <mark>le projet</mark>.</h2><p>' + (p.stateNote || "Selon les README et le bilan du 01/11/2026 ; à vérifier dans le dépôt.") + '</p></div><div class="pj-state">' +
     col("g", "Réalisé", st.done) + col("y", "En cours ou à faire", st.wip) + col("p", "Limites et risques", st.risks) + "</div></section>");
 
   /* ----- documents ----- */
   if (p.docs && p.docs.length) {
-    html.push('<section id="docs" class="page-sec"><div class="sec-head reveal"><div class="cap">Documents</div><h2>Pour aller <mark>plus loin</mark>.</h2><p>Liens GitHub (dépôt privé : connexion requise).</p></div><div class="pj-docs" data-stagger>' +
+    html.push('<section id="docs" class="page-sec"><div class="sec-head reveal"><div class="cap">Documents</div><h2>Pour aller <mark>plus loin</mark>.</h2><p>' + (p.repo && p.repo.priv ? "Liens GitHub (dépôt privé : connexion requise)." : "Liens GitHub (dépôt public).") + '</p></div><div class="pj-docs" data-stagger>' +
       p.docs.map(function (d) {
         var u = p.repo && !p.repo.nourl ? fileUrl(d.f) : null;
         return (u ? '<a class="pj-doc reveal" href="' + u + '" target="_blank" rel="noopener">' : '<div class="pj-doc reveal">') + "<b>" + esc(d.t) + "</b><span>" + esc(d.d) + "</span><span><code>" + esc(d.f) + "</code></span>" + (u ? "</a>" : "</div>");

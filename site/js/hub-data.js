@@ -4,7 +4,7 @@
 window.HUB = window.HUB || {};
 
 HUB.updated = "27/10/2026";   // date des index de dépôts dont viennent les statuts
-HUB.siteUpdated = "11/11/2026";
+HUB.siteUpdated = "19/11/2026";
 
 /* statuts : définition donnée par les index des dépôts */
 HUB.statuses = [
@@ -68,5 +68,6 @@ HUB.paths = [
   { t: "Installer et exploiter Nemo", s: "Mettre en route et garder à jour.", steps: [["Installer et mettre à jour", "nemo/installer.html"], ["Le serveur MCP", "nemo/mcp.html"], ["Le verrou et ses garde-fous", "nemo/verrou.html"]] },
   { t: "Travailler avec des agents", s: "Déléguer du code et garder la main.", steps: [["agent-hub : déléguer à Codex", "agent-hub/"], ["Architecture de Nemo (outils de travail)", "https://github.com/moideici/nemo-docs/blob/main/ARCHITECTURE.md"], ["agent-ia : le plan d'un agent personnel", "outils/"]] },
   { t: "Jeux et IA", s: "Des jeux multijoueurs aux modèles qui y jouent.", steps: [["multi : 33 mini-jeux", "multi/"], ["Garry et Logic Lab : l'IA des jeux", "garry/"], ["WikiCards : cartes à collectionner", "wikicards/"]] },
+  { t: "Chiffrement et vie privée", s: "Un format de fichier post-quantique, indistinguable de l'aléa, à deux visages.", steps: [["Janus : présentation et avertissement", "janus/"], ["Les deux visages", "janus/#visages"], ["Les preuves de sécurité", "janus/#preuves"]] },
   { t: "Outils de création", s: "Images, présentations, code converti.", steps: [["Prisme : éditeur d'images", "prisme/"], ["cppt : rendu fidèle de PowerPoint", "cppt/"], ["py2x : Python vers C++ et Kotlin", "py2x/"]] }
 ];
