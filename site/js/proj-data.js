@@ -474,11 +474,11 @@ PROJ.list = [
   id: "janus", n: "Janus", title: "Janus", status: "recherche",
   role: "Chiffrement de fichiers post-quantique, indistinguable de l'aléa, à deux visages",
   lead: "Format de chiffrement de fichiers <b>post-quantique</b> (X-Wing : ML-KEM-768 + X25519) dont chaque octet est <b>indistinguable de l'aléa</b>, avec 16 emplacements de destinataires cachés et des <b>visages</b> multiples : un leurre et jusqu'à <b>3 secrets</b> dans le même fichier, pour un déni plausible.",
-  warn: "<b>Prototype de recherche, non audité.</b> Une pré-release <b>v0.1.0-alpha</b> est publiée (<a href=\"https://github.com/moideici/janus/releases/tag/v0.1.0-alpha\" target=\"_blank\" rel=\"noopener\">binaires Linux, Windows et macOS arm64</a>), mais c'est un <b>aperçu</b> : le format n'est <b>pas figé</b>, le code n'a eu <b>aucun audit externe</b> et les preuves de sécurité n'ont été relues par personne. Les fichiers créés avec la v0.1.0-alpha <b>ne s'ouvrent déjà plus</b> avec la version en développement (<code>main</code>) : voir le <a href=\"#release\">plan de release</a>. <b>À ne pas utiliser pour de vrais secrets</b> : un fichier chiffré aujourd'hui pourrait ne plus s'ouvrir demain.",
+  warn: "<b>Prototype de recherche, non audité.</b> Une pré-release <b>v0.1.0-alpha</b> est publiée (<a href=\"https://github.com/moideici/janus/releases/tag/v0.1.0-alpha\" target=\"_blank\" rel=\"noopener\">binaires Linux, Windows et macOS arm64</a>), mais c'est un <b>aperçu</b> : le format v1 est <b>candidat au gel</b> (depuis le 19 novembre 2026 : toutes les questions de format sont tranchées et plus aucun changement n'est prévu, sauf faille trouvée par une relecture ou un audit ; le gel ne sera <b>définitif qu'en v1.0</b>), le code n'a eu <b>aucun audit externe</b> et les preuves de sécurité n'ont été relues par personne. Les fichiers créés avec la v0.1.0-alpha <b>ne s'ouvrent pas</b> avec le format v1 de la version en développement (<code>main</code>) : voir le <a href=\"#release\">plan de release</a>. <b>À ne pas utiliser pour de vrais secrets</b> : c'est un prototype non audité, et, tant que la v1.0 n'est pas publiée, une faille trouvée par une relecture ou un audit pourrait encore rendre un fichier illisible.",
   toc: [["presentation", "Présentation"], ["visages", "Les deux visages"], ["format", "Le format"], ["crypto", "La cryptographie"], ["cli", "Ligne de commande"], ["inspect", "janus inspect"], ["preuves", "Preuves"], ["verifie", "Vérifications"], ["perfs", "Performances"], ["limites", "Limites"], ["release", "Plan de release"], ["etat", "État"], ["docs", "Documents"]],
   repo: { name: "janus", branch: "main" }, tech: ["Rust", "ML-KEM-768 + X25519", "Kemeleon · Elligator 2", "ChaCha20-Poly1305", "Argon2id"], last: "19/11/2026",
   facts: [
-    { v: "61", k: "tests, fuzzing compris" }, { v: "26 272", k: "octets d'en-tête, toujours" },
+    { v: "66", k: "tests, fuzzing compris" }, { v: "26 272", k: "octets d'en-tête, toujours" },
     { v: "16", k: "emplacements de destinataires, toujours présents" }, { v: "3", k: "preuves papier, non relues" }, { v: "0", k: "audit externe ; pré-release alpha seulement" }
   ],
   arch: {
@@ -501,12 +501,12 @@ PROJ.list = [
         { n: "format.rs", d: "Format v1 : quatre étiquettes, sel commun, emplacements, réserve, un leurre et jusqu'à 3 visages cachés en STREAM par lots parallèles, ouverture en flux." },
         { n: "xwing.rs, kemeleon.rs, elligator.rs", d: "X-Wing draft-11 et encapsulation cachée : point sale uniforme, Elligator 2, Kemeleon en temps constant, masquage de κ." },
         { n: "inspect.rs", d: "Radiographie défensive d'un fichier sans clé : age, gpg, ZIP, 7-Zip, LUKS, KeePass, openssl, Janus." },
-        { n: "alea.rs, cles.rs, vecteurs.rs", d: "Aléa du système uniquement, encodage texte des clés (provisoire), vecteurs de test." }
+        { n: "alea.rs, cles.rs, vecteurs.rs", d: "Aléa du système uniquement, encodage texte des clés (Bech32m, figé), vecteurs de test." }
       ] }
     ]
   },
   commands: [
-    { t: "Compiler et tester (depuis janus-rs/)", code: "cargo build --release\ncargo test --release          # les 61 tests" },
+    { t: "Compiler et tester (depuis janus-rs/)", code: "cargo build --release\ncargo test --release          # les 66 tests" },
     { t: "Créer une identité, chiffrer pour une clé publique, déchiffrer", code: "target/release/janus cles moi.cle > moi.pub\ntarget/release/janus chiffrer -R moi.pub photo.jpg photo.janus\ntarget/release/janus dechiffrer -i moi.cle photo.janus photo.jpg" },
     { t: "Chiffrer par mot de passe", code: "target/release/janus chiffrer -m notes.txt notes.janus\ntarget/release/janus dechiffrer -m notes.janus notes.txt" },
     { t: "Deux visages : un leurre et un secret", code: "target/release/janus chiffrer -m vacances.zip coffre.janus --cache -m journal.txt\ntarget/release/janus dechiffrer -m coffre.janus sortie    # ouvre le visage du mot de passe saisi" },
@@ -610,7 +610,7 @@ PROJ.list = [
       ] },
 
     { id: "format", cap: "Spécification", title: "Le format",
-      intro: "Format v1, tel qu'il est sur <code>main</code> (documents 02 et 03) ; les fichiers de la v0.1.0-alpha, à deux étiquettes, ne s'ouvrent plus. Aucun champ en clair : la version est dans les étiquettes de dérivation (<code>janus/v1/…</code>), un lecteur d'une autre version échoue comme pour un fichier qui ne lui est pas destiné.",
+      intro: "Format v1, tel qu'il est sur <code>main</code> (documents 02 et 03) ; les fichiers de la v0.1.0-alpha, à deux étiquettes, ne s'ouvrent plus. Aucun champ en clair : la version est dans les étiquettes de dérivation (<code>janus/v1/…</code>), un lecteur d'une autre version échoue comme pour un fichier qui ne lui est pas destiné. Ce format est <b>candidat au gel</b> depuis le 19 novembre 2026 (tableau des décisions dans le <a href=\"#release\">plan de release</a>) ; gel définitif en v1.0.",
       blocks: [
         { code: " décalage   taille           contenu\n ────────   ──────────────   ─────────────────────────────────────────────\n 0          32               T_0      étiquette d'en-tête n° 0\n 32         32               T_1      étiquette d'en-tête n° 1\n 64         32               T_2      étiquette d'en-tête n° 2\n 96         32               T_3      étiquette d'en-tête n° 3\n 128        32               sel      sel Argon2id, commun à tous les visages\n 160        16 × 1632        E_0 … E_15   emplacements de destinataire\n 26 272     F − 26 272       corps    visage principal, réserve, visages cachés" },
         { p: "<code>H</code> = 160 + 16 × 1632 = <b>26 272</b> octets (26 208 dans la v0.1.0-alpha, 25 888 pour le format v0). Constantes : 16 emplacements, blocs de clair <code>TB</code> = 65 536 octets, blocs chiffrés <code>TC</code> = 65 552 octets." },
@@ -712,7 +712,8 @@ PROJ.list = [
         { cards: [
           { t: "Capacité des visages cachés", p: "Les secrets doivent tenir ensemble dans la réserve : 1/16 de la taille du leurre, et au moins 64 Kio. Sinon Janus refuse et indique la capacité disponible." },
           { t: "Silence sur l'autre visage", p: "<code>dechiffrer</code> ne signale <b>jamais</b> l'existence d'un autre visage. Un mauvais identifiant donne l'unique message « impossible de déchiffrer »." },
-          { t: "Fichiers de clés", p: "UTF-8 ou UTF-16 : la redirection <code>&gt;</code> de PowerShell fonctionne directement. L'encodage texte des clés est provisoire." },
+          { t: "Fichiers de clés", p: "UTF-8 ou UTF-16 : la redirection <code>&gt;</code> de PowerShell fonctionne directement. Les clés sont en <b>Bech32m</b> (BIP 350), comme age : une identité <code>JANUS-SECRET-KEY-1…</code> (76 caractères, majuscules ; la somme de contrôle garantit la détection de 4 fautes de frappe au plus) et une clé publique <code>janus1…</code> (minuscules, environ 1958 caractères). Les identités de l'aperçu (<code>JANUS-SECRET-V0-…</code>) restent lisibles jusqu'à la v1.0 ; les anciennes clés publiques <code>janus-pub-v0-…</code> ne sont plus acceptées : <code>janus publique moi.cle</code> donne la nouvelle. Vecteurs dans <code>janus-rs/vecteurs/cles.json</code>." },
+          { t: "Version", p: "<code>janus --version</code> répond « format Janus v1, candidat au gel : il ne changerait plus que pour corriger une faille trouvée par une relecture ou un audit », suivi de l'avertissement « Prototype de recherche non audité : ne pas l'utiliser pour de vrais secrets »." },
           { t: "Traitement en flux", p: "Mémoire bornée quelle que soit la taille du fichier : environ 42 Mio, plus 64 Mio pour Argon2 avec un mot de passe." },
           { t: "Pas de trace en cas d'échec", p: "Le résultat est écrit dans un fichier temporaire, renommé seulement si tout est valide. Un fichier refusé ne laisse aucune trace." },
           { t: "Entrée et sortie standard", p: "<code>-</code> désigne l'entrée ou la sortie standard. <code>dechiffrer … -</code> déchiffre et vérifie tout <b>en mémoire</b> avant d'écrire quoi que ce soit : aucun clair n'est créé sur le disque. Pour <code>chiffrer</code>, l'entrée standard est lue en entier en mémoire, car Janus doit connaître sa longueur à l'avance." },
@@ -764,12 +765,13 @@ PROJ.list = [
           { t: "05 : deux défauts d'implémentation", p: "Dédoublonnage sur K seul au lieu du triplet (K, début, longueur), et temps d'ouverture dépendant du nombre d'emplacements déballés (|t| = 2,85 avant correctif). <b>Corrigés le 18 novembre 2026</b> (|t| = 0,89 et 1,50 après)." },
           { t: "06 : IND-RCCA, pas IND-CCA", p: "Avec plusieurs visages, une copie modifiée hors du visage défi donne le même clair : IND-CCA strict est impossible, IND-RCCA est la bonne notion. Le masquage de κ est compatible avec la preuve parce que sa clé ne dépend que de <code>ct_X</code>." },
           { t: "06 : sortie en flux", p: "Condition d'usage : jeter toute la sortie d'une ouverture ratée. La ligne de commande et <code>dechiffrer</code> le font ; <code>dechiffrer_flux</code> exige que l'appelant le fasse." },
-          { t: "06 : option QI-1 non retenue", p: "Faire couvrir tout le corps par chaque étiquette rendrait l'effacement visible, mais diviserait environ par deux le débit sur un cœur et changerait le format. Recommandation : ne pas le faire pour l'instant." }
+          { t: "06 : QI-1 tranché, pas d'étiquette sur tout le corps", p: "Faire couvrir tout le corps par chaque étiquette rendrait l'effacement visible, mais diviserait environ par deux le débit sur un cœur, empêcherait de chiffrer dans un tube sans tout garder en mémoire et changerait le format. Décision du gel (19 novembre 2026) : non, pas en v1. La confidentialité active reste IND-RCCA dans tous les cas, et la parade à l'effacement silencieux reste une copie de sauvegarde (piège 10.9)." }
         ] },
         { h: "Avantage de l'adversaire quantique avant le correctif (04, § 7.1)" },
         { table: { head: ["Destinataires cachés", "Avantage sur un fichier"], rows: [["1", "0,105"], ["2", "0,209"], ["4", "0,422"], ["8", "0,787"]] } },
         { h: "Ce que les preuves ne couvrent pas" },
         { ul: [
+          "<b>Questions de preuve restantes</b> (le format, lui, est candidat au gel) : IND-CCA du point sale (Q2) et fuite exacte du bourrage (Q4).",
           "<b>Vérification par machine</b> : CryptoVerif est l'outil prévu pour les étapes G₁ à G₇ ; non fait.",
           "<b>Relecture par un cryptographe</b> : indispensable avant toute publication ; non faite.",
           "<b>Modèle QROM</b> (oracles aléatoires interrogés en superposition) : non rédigé.",
@@ -780,7 +782,7 @@ PROJ.list = [
       ] },
 
     { id: "verifie", cap: "Tests et mesures", title: "Ce qui est vérifié",
-      intro: "61 tests (<code>cargo test --release</code>), des vecteurs de test, dudect, des tests statistiques et du fuzzing ; l'intégration continue est au vert sous Linux, Windows et macOS. Détails dans <code>janus-rs/README.md</code>. Les lignes « aucune fuite détectée » signifient « rien de détecté avec ce nombre de mesures », pas « preuve d'absence ».",
+      intro: "66 tests (<code>cargo test --release</code>), des vecteurs de test, dudect, des tests statistiques et du fuzzing ; l'intégration continue est au vert sous Linux, Windows et macOS. Détails dans <code>janus-rs/README.md</code>. Les lignes « aucune fuite détectée » signifient « rien de détecté avec ce nombre de mesures », pas « preuve d'absence ».",
       blocks: [
         { cards: [
           { t: "Conformité", p: "Le vecteur de test officiel n° 1 d'X-Wing (draft-11) est reproduit. Kemeleon : intervalles d'antécédents exacts, tailles du draft, décodage identique à une implémentation de référence. Division par q vérifiée exhaustivement jusqu'à 2²², puis sur un million de tirages jusqu'à 2⁴⁴." },
@@ -839,45 +841,61 @@ PROJ.list = [
           { t: "Lecture du leurre", p: "Ouvrir le secret oblige à lire tout le leurre qui le précède (format en flux, sans saut). Sans conséquence pour la discrétion : l'ouverture du leurre prend le même temps avec ou sans secret." },
           { t: "Mémoire et système", p: "<code>ml-kem</code> et <code>curve25519-elligator2</code> effacent leurs secrets à la destruction, mais les copies faites par le système (fichier d'échange, vidage mémoire) ne sont pas maîtrisées." },
           { t: "Outillage de test", p: "Le fuzzing tourne en Rust stable par mutations ; <code>cargo-fuzz</code> avec mesure de couverture demande la toolchain nightly, non installée. Les mesures et les tests locaux n'ont tourné que sur une seule machine Windows ; l'intégration continue exécute aussi les tests sous Linux et macOS." },
-          { t: "Compatibilité non garantie", p: "Les fichiers créés avec la v0.1.0-alpha ne s'ouvrent plus avec <code>main</code> (QB-3 a changé l'en-tête, de 26 208 à 26 272 octets). Un fichier d'aperçu peut cesser de s'ouvrir à la version suivante." },
-          { t: "Fonctions manquantes", p: "Encodage texte des clés provisoire, pas de signature, pas de mise à jour d'un visage sans passer par <code>modifier</code> et tous les identifiants." }
+          { t: "Compatibilité non garantie", p: "Les fichiers créés avec la v0.1.0-alpha ne s'ouvrent plus avec <code>main</code> (QB-3 a changé l'en-tête, de 26 208 à 26 272 octets). Le gel ne change pas les fichiers <code>.janus</code> : seul le texte des clés a changé. Le format n'est toutefois définitivement gelé qu'en v1.0 : une faille trouvée par une relecture ou un audit pourrait encore le modifier." },
+          { t: "Fonctions manquantes", p: "Pas de signature, pas de mise à jour d'un visage sans passer par <code>modifier</code> et tous les identifiants." }
         ] }
       ] },
 
     { id: "release", cap: "Feuille de route", title: "Plan de release",
-      intro: "Plan du 19 novembre 2026. La <b>pré-release v0.1.0-alpha est publiée</b> (<a href=\"https://github.com/moideici/janus/releases/tag/v0.1.0-alpha\" target=\"_blank\" rel=\"noopener\">page de la release</a> : binaires Linux, Windows et macOS arm64, avec <code>SHA256SUMS</code>). C'est un <b>aperçu non audité</b>, au format non figé : une release invite d'autres personnes à garder des fichiers chiffrés avec l'outil, ce qui engage.",
+      intro: "Plan du 19 novembre 2026. La <b>pré-release v0.1.0-alpha est publiée</b> (<a href=\"https://github.com/moideici/janus/releases/tag/v0.1.0-alpha\" target=\"_blank\" rel=\"noopener\">page de la release</a> : binaires Linux, Windows et macOS arm64, avec <code>SHA256SUMS</code>). C'est un <b>aperçu non audité</b>, dont le format v1 est <b>candidat au gel</b> (pas encore définitivement gelé) : une release invite d'autres personnes à garder des fichiers chiffrés avec l'outil, ce qui engage.",
       blocks: [
         { h: "Pourquoi un aperçu et pas une version stable" },
         { cards: [
-          { t: "1. Le format bouge encore", p: "Il a changé quatre fois depuis le 18 novembre (deux visages, éphémère uniforme, masquage de κ, puis QB-3 et ses 4 étiquettes). L'encodage texte des clés est provisoire (Q7) ; un choix reste ouvert : étiquette sur tout le corps ou non (QI-1). Un fichier chiffré aujourd'hui pourrait ne plus s'ouvrir demain." },
+          { t: "1. Le format est candidat au gel, pas gelé", p: "Il a changé quatre fois depuis le 18 novembre (deux visages, éphémère uniforme, masquage de κ, puis QB-3 et ses 4 étiquettes). Depuis le 19 novembre toutes les questions de format sont tranchées (Q7 : clés en Bech32m ; QI-1 : pas d'étiquette sur tout le corps) et plus aucun changement n'est prévu, sauf faille trouvée par une relecture ou un audit. Le gel ne sera <b>définitif qu'en v1.0</b> : un fichier chiffré aujourd'hui pourrait donc encore ne plus s'ouvrir plus tard." },
           { t: "2. Les fichiers de la v0.1.0-alpha ne s'ouvrent plus avec main", p: "QB-3 (4 étiquettes) fait passer l'en-tête de 26 208 à 26 272 octets : jusqu'à 3 visages cachés, au lieu d'un. Les changements iront dans une future v0.2.0-alpha ; la v0.1.0-alpha publiée reste celle à 2 étiquettes." },
           { t: "3. Ni audit ni relecture", p: "Le code n'a eu aucun audit externe et les preuves papier n'ont été relues par personne. Le plan ci-dessous mène à l'audit avant la v1.0.0." }
         ] },
         { note: "Ces limites ne sont pas des faiblesses cryptographiques connues : les preuves et les tests sont en place. Ce qui manque relève de la stabilité du format et de la relecture." },
+        { h: "Gel du format v1 (19 novembre 2026)" },
+        { p: "Toutes les questions de format sont tranchées. Le format v1 est <b>candidat au gel</b> : aucun changement n'est plus prévu, et il ne bougerait encore que si une relecture ou un audit y trouvait une faille. Il ne sera définitivement gelé qu'en v1.0. Décisions (les numéros renvoient aux documents du dépôt) :" },
+        { table: { head: ["Question", "Décision", "Où"], rows: [
+          ["QB-1 Réserve", "<code>max(64 Kio, ⌈L₁/16⌉)</code>", "03, § 5"],
+          ["QB-2 Option « sans réserve »", "Non", "03, § 14"],
+          ["QB-3 Nombre d'étiquettes", "4 : un leurre et jusqu'à 3 visages cachés", "03, § 14"],
+          ["QB-4 v1 remplace v0", "Oui", "03, § 14"],
+          ["QI-1 Étiquette sur tout le corps", "Non", "06, § 6"],
+          ["Q3 Version de Kemeleon", "<code>draft-irtf-cfrg-kemeleon-02</code>, figée par les vecteurs", "02, § 12"],
+          ["Q5 Nombre d'emplacements", "16", "02, § 12"],
+          ["Q6 Argon2id", "64 Mio, t = 3, p = 4", "02, § 3.2"],
+          ["Q7 Encodage des clés", "Bech32m, préfixes <code>janus</code> et <code>JANUS-SECRET-KEY-</code>", "02, § 3.1"],
+          ["Q10 Ordre des octets de Kemeleon", "Gros-boutiste", "02, § 12"]
+        ] } },
+        { note: "Restent ouvertes des questions de <b>preuve</b>, pas de format : IND-CCA du point sale (Q2), fuite exacte du bourrage (Q4), vérification par machine, modèle quantique de l'oracle aléatoire (QROM). Les fichiers <code>.janus</code> ne changent pas avec ce gel ; seul le texte des clés change." },
         { h: "Les étapes" },
         { table: { head: ["Version", "Contenu", "Critère ou effet"], rows: [
           ["<b>v0.1.0-alpha</b><br>« aperçu »", "<b>Publiée le 19 novembre 2026</b> : pré-release GitHub pour essayer et critiquer Janus (binaires Linux, Windows, macOS arm64) ; pas pour de vrais secrets", "<a href=\"https://github.com/moideici/janus/releases/tag/v0.1.0-alpha\" target=\"_blank\" rel=\"noopener\">publiée</a>, voir ci-dessous"],
-          ["<b>v0.2.0-alpha</b>", "Figer l'encodage texte des clés (Q7) ; entrée et sortie standard et <code>janus modifier</code> (faits, sur <code>main</code>) ; QB-3 tranché : 4 étiquettes (fait, sur <code>main</code>, pas encore dans une release) ; reste QI-1 ; batterie NIST STS et <code>cargo-fuzz</code> avec couverture ; comparaison avec age", "stabiliser ce qui touche l'utilisateur ; en cours"],
-          ["<b>v0.9.0-beta</b>", "Format v1 candidat au gel, vecteurs de test définitifs publiés et signés ; modélisation CryptoVerif des preuves 04 à 06 (au moins G₁ à G₇) ; relecture par des cryptographes (forum CFRG, auteurs de Kemeleon et d'X-Wing)", "candidat au gel du format"],
+          ["<b>v0.2.0-alpha</b>", "Encodage texte des clés figé (Q7 : Bech32m, fait) ; entrée et sortie standard et <code>janus modifier</code> (faits, sur <code>main</code>) ; QB-3 tranché : 4 étiquettes (fait, sur <code>main</code>, pas encore dans une release) ; QI-1 tranché : non (fait) ; batterie NIST STS et <code>cargo-fuzz</code> avec couverture ; comparaison avec age", "stabiliser ce qui touche l'utilisateur ; en cours"],
+          ["<b>v0.9.0-beta</b>", "Format v1 déclaré candidat au gel (fait le 19 novembre 2026, sur <code>main</code>) ; vecteurs de test définitifs publiés et signés ; modélisation CryptoVerif des preuves 04 à 06 (au moins G₁ à G₇) ; relecture par des cryptographes (forum CFRG, auteurs de Kemeleon et d'X-Wing)", "candidat au gel du format (déclaré) ; à confirmer par la relecture"],
           ["<b>v1.0.0</b>", "Audit externe du code et du format ; format gelé (tout changement ultérieur = format v2, nouvelles étiquettes de dérivation) ; un fichier chiffré en v1.0 s'ouvrira avec toutes les versions 1.x", "format gelé, compatibilité garantie"]
         ] } },
         { h: "v0.1.0-alpha : le détail" },
         { table: { head: ["Travail", "Critère de fin", "État"], rows: [
-          ["Intégration continue GitHub Actions : compilation, tests (56 dans la v0.1.0-alpha, 61 sur <code>main</code>), <code>clippy</code>, sous Linux, Windows et macOS", "Les trois systèmes sont au vert", "<b>Fait</b>"],
-          ["<code>janus --version</code> et <code>janus --help</code>, avec la mention « Janus v1, aperçu non figé »", "Les deux commandes répondent", "<b>Fait</b>"],
+          ["Intégration continue GitHub Actions : compilation, tests (56 dans la v0.1.0-alpha, 66 sur <code>main</code>), <code>clippy</code>, sous Linux, Windows et macOS", "Les trois systèmes sont au vert", "<b>Fait</b>"],
+          ["<code>janus --version</code> et <code>janus --help</code>, avec la mention du format (« Janus v1, aperçu non figé » dans la v0.1.0-alpha ; « candidat au gel » sur <code>main</code>)", "Les deux commandes répondent", "<b>Fait</b>"],
           ["Binaires Linux, Windows et macOS produits par l'intégration continue à chaque étiquette <code>v*</code>, avec leurs empreintes SHA-256", "Le premier tag produit les trois binaires", "<b>Fait</b>"],
           ["<code>CHANGELOG.md</code> et <code>SECURITY.md</code>", "Les deux fichiers sont présents", "<b>Fait</b>"],
-          ["Notes de version claires : aperçu, format non figé, aucun audit, compatibilité non garantie", "Texte relu", "<b>Fait</b>"],
+          ["Notes de version claires : aperçu, format alors non figé, aucun audit, compatibilité non garantie", "Texte relu", "<b>Fait</b>"],
           ["Vérification des licences des dépendances (MIT, Apache-2.0 ou BSD)", "Liste jointe aux notes", "<b>Fait</b>"]
         ] } },
-        { p: "La release a été déclenchée une fois tous ces critères remplis, sur accord explicite de l'auteur : étiquette <code>v0.1.0-alpha</code> du 19 novembre 2026, avec ses binaires Linux, Windows et macOS arm64 et le fichier <code>SHA256SUMS</code>, sur la <a href=\"https://github.com/moideici/janus/releases/tag/v0.1.0-alpha\" target=\"_blank\" rel=\"noopener\">page de la release</a>. Le code, les 61 tests, les preuves, les vecteurs de test et la documentation sont publics sur <a href=\"https://github.com/moideici/janus\" target=\"_blank\" rel=\"noopener\">github.com/moideici/janus</a> ; chacun peut aussi compiler et essayer Janus avec <code>cargo build --release</code>. Rappel : <b>un aperçu non audité, au format non figé</b>." }
+        { p: "La release a été déclenchée une fois tous ces critères remplis, sur accord explicite de l'auteur : étiquette <code>v0.1.0-alpha</code> du 19 novembre 2026, avec ses binaires Linux, Windows et macOS arm64 et le fichier <code>SHA256SUMS</code>, sur la <a href=\"https://github.com/moideici/janus/releases/tag/v0.1.0-alpha\" target=\"_blank\" rel=\"noopener\">page de la release</a>. Le code, les 66 tests, les preuves, les vecteurs de test et la documentation sont publics sur <a href=\"https://github.com/moideici/janus\" target=\"_blank\" rel=\"noopener\">github.com/moideici/janus</a> ; chacun peut aussi compiler et essayer Janus avec <code>cargo build --release</code>. Rappel : <b>un aperçu non audité, dont le format v1 est candidat au gel mais pas définitivement gelé</b>." }
       ] }
   ],
   stateNote: "Selon le README, la spécification, les preuves et le plan de release du dépôt (19/11/2026) ; à vérifier dans le dépôt.",
   state: {
-    done: ["Prototype Rust (bibliothèque et ligne de commande) du format v1 : un leurre et jusqu'à 3 visages cachés (QB-3, sur main)", "Pré-release v0.1.0-alpha publiée (binaires Linux, Windows, macOS arm64, SHA256SUMS) ; CI au vert sur trois systèmes", "61 tests, vecteurs de test (dont quatre-visages.janus), dudect, χ², fuzzing (50 000 puis 30 000 mutations)", "Entrée et sortie standard (-), janus modifier, --version et --help", "Trois preuves papier (déni, intégrité, confidentialité active), étendues à 4 étiquettes, et correctifs qui en sont issus"],
-    wip: ["Prochaine pré-release : v0.2.0-alpha (QB-3, entrée et sortie standard, modifier ; ses fichiers ne s'ouvrent pas avec la v0.1.0-alpha)", "Format à figer : encodage des clés (Q7), étiquette sur tout le corps (QI-1)", "NIST STS, cargo-fuzz avec couverture, comparaison avec age", "Vérification par machine (CryptoVerif) et relecture par des cryptographes"],
-    risks: ["Prototype non audité : à ne pas utiliser pour de vrais secrets", "Format non figé : un fichier chiffré aujourd'hui pourrait ne plus s'ouvrir demain", "Preuves papier, ni vérifiées par machine ni relues", "IND-RCCA et non IND-CCA ; prix du déni (plusieurs contenus possibles, effacement silencieux de la réserve)", "Fichiers de la v0.1.0-alpha illisibles avec main (QB-3)", "Mesures et tests locaux sur une seule machine Windows"]
+    done: ["Prototype Rust (bibliothèque et ligne de commande) du format v1 : un leurre et jusqu'à 3 visages cachés (QB-3, sur main)", "Pré-release v0.1.0-alpha publiée (binaires Linux, Windows, macOS arm64, SHA256SUMS) ; CI au vert sur trois systèmes", "66 tests, vecteurs de test (dont quatre-visages.janus), dudect, χ², fuzzing (50 000 puis 30 000 mutations)", "Entrée et sortie standard (-), janus modifier, --version et --help",
+      "Format v1 déclaré candidat au gel le 19/11/2026 : clés en Bech32m (Q7), pas d'étiquette sur tout le corps (QI-1), Kemeleon figé à draft-02, 16 emplacements, Argon2id 64 Mio", "Trois preuves papier (déni, intégrité, confidentialité active), étendues à 4 étiquettes, et correctifs qui en sont issus"],
+    wip: ["Prochaine pré-release : v0.2.0-alpha (QB-3, entrée et sortie standard, modifier ; ses fichiers ne s'ouvrent pas avec la v0.1.0-alpha)", "Format v1 candidat au gel (19/11/2026) : toutes les questions de format tranchées, gel définitif en v1.0", "NIST STS, cargo-fuzz avec couverture, comparaison avec age", "Vérification par machine (CryptoVerif) et relecture par des cryptographes"],
+    risks: ["Prototype non audité : à ne pas utiliser pour de vrais secrets", "Format candidat au gel, pas définitivement gelé : une faille trouvée par une relecture ou un audit pourrait encore le changer avant la v1.0", "Preuves papier, ni vérifiées par machine ni relues", "IND-RCCA et non IND-CCA ; prix du déni (plusieurs contenus possibles, effacement silencieux de la réserve)", "Fichiers de la v0.1.0-alpha illisibles avec main (QB-3)", "Mesures et tests locaux sur une seule machine Windows"]
   },
   docs: [
     { t: "README du dépôt", f: "README.md", d: "Comparatif, deux visages, contenu du dépôt, vérifications." },
@@ -888,7 +906,7 @@ PROJ.list = [
     { t: "04 · Preuve de déni", f: "docs/04-preuve-deux-visages.md", d: "Séquence de jeux ; faiblesse quantique révélée puis corrigée." },
     { t: "05 · Preuve d'intégrité", f: "docs/05-preuve-integrite.md", d: "Engagement, cohérence par visage, pas d'oracle de partition." },
     { t: "06 · Confidentialité active", f: "docs/06-preuve-confidentialite-active.md", d: "IND-RCCA, et pourquoi IND-CCA strict est impossible." },
-    { t: "07 · Plan de release", f: "docs/07-plan-release.md", d: "v0.1.0-alpha publiée ; étapes jusqu'à v1.0.0." }
+    { t: "07 · Plan de release", f: "docs/07-plan-release.md", d: "v0.1.0-alpha publiée ; gel du format v1 (décisions) ; étapes jusqu'à v1.0.0." }
   ]
 },
 
