@@ -583,7 +583,7 @@ PROJ.list = [
           ["10.5", "<b>Signature incompatible.</b> Un leurre signé reste possible, mais le secret ne doit pas être signé avec la même clé.", "Piste E, non réalisée."],
           ["10.6", "<b>Traces du système.</b> Ouvrir le secret écrit son clair sur le disque.", "L'ouvrir dans un dossier lui-même chiffré, ou en mémoire : <code>janus dechiffrer -m coffre.janus - | less</code> vérifie tout avant d'écrire et ne crée aucun fichier en clair."],
           ["10.7", "<b>La ligne de commande doit rester muette.</b> Aucune option, aucun message, aucun code de retour ne doit différer selon qu'il existe un visage caché.", "Respecté : une seule erreur, « impossible de déchiffrer »."],
-          ["10.8", "<b>Un même fichier peut montrer deux contenus à deux destinataires.</b> Un auteur malveillant peut mettre Alice dans un visage et Bob dans l'autre.", "Comparer l'empreinte du <b>clair</b>, pas celle du fichier chiffré. Borné à deux contenus."],
+          ["10.8", "<b>Un même fichier peut montrer des contenus différents à plusieurs destinataires.</b> Un auteur malveillant peut mettre Alice dans un visage et Bob dans un autre.", "Comparer l'empreinte du <b>clair</b>, pas celle du fichier chiffré. Borné à quatre contenus, un par étiquette."],
           ["10.9", "<b>Un tiers peut effacer le secret sans que le leurre s'en aperçoive</b>, en écrasant la réserve.", "Garder une copie, et vérifier de temps en temps que le secret s'ouvre avec le second identifiant."],
           ["10.10", "<b><code>janus modifier</code> ne conserve que les visages dont on donne l'identifiant.</b> Avec 4 étiquettes, Janus ne peut pas savoir combien de visages cachés existent (le savoir ferait tomber le déni). Un visage dont l'identifiant est oublié est perdu dans le nouveau fichier ; l'ancien reste intact.", "Donner <b>tous</b> les identifiants à <code>modifier</code>, et garder l'ancien fichier jusqu'à avoir vérifié le nouveau."]
         ] } },
@@ -648,7 +648,7 @@ PROJ.list = [
           ["Tailles impossibles", "16 sur 65 552", "aucune"],
           ["P2 (intégrité)", "chaque octet du fichier", "chaque octet <b>du visage ouvert</b>, plus la taille totale <code>F</code>"],
           ["P3 (engagement)", "une seule clé par fichier", "<b>au plus quatre</b> clés, une par étiquette"],
-          ["P4 (cohérence)", "tous les destinataires lisent la même chose", "tous les destinataires <b>d'un même visage</b> ; deux visages peuvent montrer deux contenus (piège 10.8)"]
+          ["P4 (cohérence)", "tous les destinataires lisent la même chose", "tous les destinataires <b>d'un même visage</b> ; des visages différents peuvent montrer des contenus différents, quatre au plus (piège 10.8)"]
         ] } }
       ] },
 
@@ -759,7 +759,7 @@ PROJ.list = [
         { cards: [
           { t: "04 : scalaire éphémère clampé", p: "Le code tirait l'éphémère X25519 clampé : le point ne couvrait que la moitié du sous-groupe premier. Un adversaire quantique pouvait le tester (avantage 0,105 par fichier pour un destinataire caché, environ 0,80 sur 100 fichiers) ; classiquement, environ 2¹²⁶ opérations. <b>Corrigé le 18 novembre 2026</b> : scalaire uniforme modulo ℓ et inverse d'Elligator 2 maison." },
           { t: "04 : déni reposant sur MLWE seul", p: "La confidentialité était hybride, mais la discrétion de κ reposait sur MLWE seul. <b>Corrigé</b> : κ est masqué par un flux dérivé de X25519, la discrétion et le déni tiennent si MLWE <b>ou</b> X25519 tient." },
-          { t: "05 : la cohérence n'est plus globale", p: "Un auteur malveillant peut fabriquer un même fichier qu'Alice ouvre sur un contenu et Bob sur un autre (bornés à deux). Impossible à empêcher sans détruire le déni. <b>Documenté</b> (piège 10.8, P4 par visage)." },
+          { t: "05 : la cohérence n'est plus globale", p: "Un auteur malveillant peut fabriquer un même fichier qu'Alice ouvre sur un contenu et Bob sur un autre (bornés à quatre, un par étiquette). Impossible à empêcher sans détruire le déni. <b>Documenté</b> (piège 10.8, P4 par visage)." },
           { t: "05 : effacement silencieux", p: "Un tiers peut effacer le visage caché en écrasant la réserve sans que le leurre s'en aperçoive. Inhérent au déni. <b>Documenté</b> (piège 10.9) : garder une copie." },
           { t: "05 : deux défauts d'implémentation", p: "Dédoublonnage sur K seul au lieu du triplet (K, début, longueur), et temps d'ouverture dépendant du nombre d'emplacements déballés (|t| = 2,85 avant correctif). <b>Corrigés le 18 novembre 2026</b> (|t| = 0,89 et 1,50 après)." },
           { t: "06 : IND-RCCA, pas IND-CCA", p: "Avec plusieurs visages, une copie modifiée hors du visage défi donne le même clair : IND-CCA strict est impossible, IND-RCCA est la bonne notion. Le masquage de κ est compatible avec la preuve parce que sa clé ne dépend que de <code>ct_X</code>." },
@@ -835,7 +835,7 @@ PROJ.list = [
           { t: "Aucun audit externe", p: "Ni du code, ni du format. Les preuves sont des preuves papier, non vérifiées par machine ni relues." },
           { t: "IND-RCCA plutôt qu'IND-CCA", p: "On peut fabriquer une autre version d'un fichier qui donne exactement le même clair, en modifiant la réserve ou l'étiquette d'un autre visage. On ne peut pas en fabriquer une qui donne un clair lié. Inévitable avec plusieurs visages (document 06, § 1)." },
           { t: "Sortie en flux", p: "<code>dechiffrer_flux</code> écrit les lots vérifiés au fur et à mesure : un programme qui l'utilise doit jeter toute la sortie si la fonction échoue. La ligne de commande et <code>dechiffrer</code> le font déjà." },
-          { t: "Prix du déni", p: "Un auteur malveillant peut faire lire deux contenus différents à deux destinataires d'un même fichier (comparer l'empreinte du clair). Un tiers peut effacer le secret en écrasant la réserve : garder une copie." },
+          { t: "Prix du déni", p: "Un auteur malveillant peut faire lire des contenus différents (quatre au plus) à plusieurs destinataires d'un même fichier (comparer l'empreinte du clair). Un tiers peut effacer le secret en écrasant la réserve : garder une copie." },
           { t: "Lecture du leurre", p: "Ouvrir le secret oblige à lire tout le leurre qui le précède (format en flux, sans saut). Sans conséquence pour la discrétion : l'ouverture du leurre prend le même temps avec ou sans secret." },
           { t: "Mémoire et système", p: "<code>ml-kem</code> et <code>curve25519-elligator2</code> effacent leurs secrets à la destruction, mais les copies faites par le système (fichier d'échange, vidage mémoire) ne sont pas maîtrisées." },
           { t: "Outillage de test", p: "Le fuzzing tourne en Rust stable par mutations ; <code>cargo-fuzz</code> avec mesure de couverture demande la toolchain nightly, non installée. Les mesures et les tests locaux n'ont tourné que sur une seule machine Windows ; l'intégration continue exécute aussi les tests sous Linux et macOS." },
