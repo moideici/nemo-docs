@@ -7,6 +7,7 @@ Toutes les évolutions notables de ce projet. Les versions suivent [SemVer](http
 Instantané du dépôt au moment de son ouverture au public. Détail de l'historique ci-dessous, par mois.
 
 ### 2026-11
+- Page Janus mise à jour : pré-release v0.1.0-alpha publiée, QB-3 (4 étiquettes : un leurre et jusqu'à 3 visages cachés, en-tête de 26 272 octets), ligne de commande (`--cache` répétable, `-`, `modifier`), 61 tests, preuves étendues
 - Documentation de Janus (prototype de recherche, non audité) : page /janus/ (deux visages, format, cryptographie, ligne de commande, preuves, vérifications, plan de release), ajout aux listes de la racine ; pages de projets : avertissement, sommaire et blocs de tableaux optionnels
 - py2x a son dépôt (extrait de ia) ; logic-lab à jour : Garry Optimus 0.1 (P0, P1), Gomoku et Hex à la main, maths vague 1
 - Favicon : icône de la doc (anneau bleu) à la racine et sur les projets ; la bulle Nemo reste sur /nemo/
