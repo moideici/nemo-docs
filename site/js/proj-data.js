@@ -881,10 +881,10 @@ PROJ.list = [
         { h: "v0.1.0-alpha : le détail" },
         { table: { head: ["Travail", "Critère de fin", "État"], rows: [
           ["Intégration continue GitHub Actions : compilation, tests (56 dans la v0.1.0-alpha, 66 sur <code>main</code>), <code>clippy</code>, sous Linux, Windows et macOS", "Les trois systèmes sont au vert", "<b>Fait</b>"],
-          ["<code>janus --version</code> et <code>janus --help</code>, avec la mention du format (« Janus v1, aperçu non figé » dans la v0.1.0-alpha ; « candidat au gel » sur <code>main</code>)", "Les deux commandes répondent", "<b>Fait</b>"],
+          ["<code>janus --version</code> et <code>janus --help</code>, avec la mention du format (« aperçu » dans la v0.1.0-alpha ; « candidat au gel » sur <code>main</code>)", "Les deux commandes répondent", "<b>Fait</b>"],
           ["Binaires Linux, Windows et macOS produits par l'intégration continue à chaque étiquette <code>v*</code>, avec leurs empreintes SHA-256", "Le premier tag produit les trois binaires", "<b>Fait</b>"],
           ["<code>CHANGELOG.md</code> et <code>SECURITY.md</code>", "Les deux fichiers sont présents", "<b>Fait</b>"],
-          ["Notes de version claires : aperçu, format alors non figé, aucun audit, compatibilité non garantie", "Texte relu", "<b>Fait</b>"],
+          ["Notes de version claires : aperçu, format encore ouvert à l'époque, aucun audit, compatibilité non garantie", "Texte relu", "<b>Fait</b>"],
           ["Vérification des licences des dépendances (MIT, Apache-2.0 ou BSD)", "Liste jointe aux notes", "<b>Fait</b>"]
         ] } },
         { p: "La release a été déclenchée une fois tous ces critères remplis, sur accord explicite de l'auteur : étiquette <code>v0.1.0-alpha</code> du 19 novembre 2026, avec ses binaires Linux, Windows et macOS arm64 et le fichier <code>SHA256SUMS</code>, sur la <a href=\"https://github.com/moideici/janus/releases/tag/v0.1.0-alpha\" target=\"_blank\" rel=\"noopener\">page de la release</a>. Le code, les 66 tests, les preuves, les vecteurs de test et la documentation sont publics sur <a href=\"https://github.com/moideici/janus\" target=\"_blank\" rel=\"noopener\">github.com/moideici/janus</a> ; chacun peut aussi compiler et essayer Janus avec <code>cargo build --release</code>. Rappel : <b>un aperçu non audité, dont le format v1 est candidat au gel mais pas définitivement gelé</b>." }
